@@ -83,17 +83,17 @@
                     "type": "object",
                     "description": "Indicate the typical sleep time range on weekdays.",
                     "properties": {
-                        "lastest_start_hour": {
+                        "start_hour": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 23,
-                            "description": "Hour of the day (0-23) when occupants typically go to sleep"
+                            "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekdays"
                         },
-                        "earliest_end_hour": {
+                        "end_hour": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 23,
-                            "description": "Hour of the day (0-23) when occupants typically wake up"
+                            "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekdays"
                         }
                     }
                 },
@@ -101,21 +101,22 @@
                     "type": "object",
                     "description": "Indicate the typical sleep time range on weekends.",
                     "properties": {
-                        "lastest_start_hour": {
+                        "start_hour": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 23,
-                            "description": "Hour of the day (0-23) when occupants typically go to sleep"
+                            "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekends"
                         },
-                        "earliest_end_hour": {
+                        "end_hour": {
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 23,
-                            "description": "Hour of the day (0-23) when occupants typically wake up"
+                            "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekends"
                         }
+                    }
                 }
-                }
-            }
+            },
+            "required": ["num_occupants", "household_composition", "weekday_no_one_home", "weekend_no_one_home", "weekday_sleep_time", "weekend_sleep_time"]
         }
     }
 }
