@@ -1,0 +1,121 @@
+{
+    "title": "OB Profile Schema",
+    "type": "object",
+    "description": "The profile of occupant behavior in an household for stochastic schedule generation.",
+    "properties": {
+        "occupancy":{
+            "type": "object",
+            "description": "The occupancy of the household (number of occupants, household composition, occupancy patterns).",
+            "properties": {
+                "num_occupants": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "The number of occupants in the household."
+                },
+                "household_composition": {
+                    "type": "object",
+                    "description": "The composition of the household.",
+                    "properties": {
+                        "fulltime_workers": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of full-time workers in the household."
+                        },
+                        "hybrid_workers": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of hybrid workers in the household."
+                        },
+                        "stayathome": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of mostly at home individuals (remote worker, kids, retired, stayathome parent) in the household."
+                        },
+                        "k12":{
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of K-12 students in the household."
+                        },
+                        "college_students":{
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of college students in the household."
+                        }
+                    }
+                },
+                "weekday_no_one_home":{
+                    "type": "object",
+                    "description": "Indicate the time range when no one is home on weekdays.",
+                    "properties": {
+                        "start_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when no one is home"
+                        },
+                        "end_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when someone returns home"
+                        }
+                    }
+                },
+                "weekend_no_one_home":{
+                    "type": "object",
+                    "description": "Indicate the time range when no one is home on weekdays.",
+                    "properties": {
+                        "start_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when no one is home"
+                        },
+                        "end_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when someone returns home"
+                        }
+                    }
+                },
+                "weekday_sleep_time":{
+                    "type": "object",
+                    "description": "Indicate the typical sleep time range on weekdays.",
+                    "properties": {
+                        "lastest_start_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when occupants typically go to sleep"
+                        },
+                        "earliest_end_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when occupants typically wake up"
+                        }
+                    }
+                },
+                "weekend_sleep_time":{
+                    "type": "object",
+                    "description": "Indicate the typical sleep time range on weekends.",
+                    "properties": {
+                        "lastest_start_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when occupants typically go to sleep"
+                        },
+                        "earliest_end_hour": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23,
+                            "description": "Hour of the day (0-23) when occupants typically wake up"
+                        }
+                }
+                }
+            }
+        }
+    }
+}
