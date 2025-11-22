@@ -1,0 +1,28 @@
+{
+  "occupancy": {
+    "num_occupants": 2,
+    "household_composition": {
+      "fulltime_workers": 0,
+      "hybrid_workers": 1,
+      "stayathome": 1,
+      "k12": 0,
+      "college_students": 0
+    },
+    "weekday_no_one_home": {
+      "start_hour": 0,
+      "end_hour": 0
+    },
+    "weekend_no_one_home": {
+      "start_hour": 13,
+      "end_hour": 17
+    },
+    "weekday_sleep_time": {
+      "start_hour": 0,
+      "end_hour": 7
+    },
+    "weekend_sleep_time": {
+      "start_hour": 1,
+      "end_hour": 9
+    }
+  }
+}

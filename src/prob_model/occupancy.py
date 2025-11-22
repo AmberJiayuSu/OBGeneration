@@ -1,26 +1,19 @@
 from dataclasses import dataclass
-from distribution.distribution import Distribution
+from stochastic.distribution import Distribution
 
 @dataclass
-class ProbHouseholdComposition:
-    fulltime_workers: Distribution
-    hybrid_workers: Distribution
-    stayathome: Distribution
-    k12: Distribution
-    college_students: Distribution
-
-
-@dataclass
-class ProbTimeRange:
-    start_hour: Distribution
-    end_hour: Distribution
-
+class SingleOccupant:
+    occupation_type: str  # 'fulltime_worker', 'hybrid_worker', 'stayathome', 'k12_student', 'college_student'
+    weekday_leave_time: Distribution
+    weekday_return_time: Distribution
+    weekend_leave_time: Distribution
+    weekend_return_time: Distribution
 
 @dataclass
-class ProbOccupancy:
-    num_occupants: Distribution
-    household_composition: ProbHouseholdComposition
-    weekday_no_one_home: ProbTimeRange
-    weekend_no_one_home: ProbTimeRange
-    weekday_sleep_time: ProbTimeRange
-    weekend_sleep_time: ProbTimeRange
+class HouseholdOccupancy:
+    num_occupants: int
+    occupants: list[SingleOccupant]
+    weekday_sleep_start: Distribution
+    weekday_sleep_end: Distribution
+    weekend_sleep_start: Distribution
+    weekend_sleep_end: Distribution
