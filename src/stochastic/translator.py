@@ -10,7 +10,117 @@ def sample_single_occupant( start_dist, end_dist) -> tuple[int, int]:
         if end_time > start_time:
             return start_time, end_time
 
-def translate_occupancy_presumption_weekday(occupancy: Occuapancy.Occupancy) -> list[int]:
+
+def translate_occupancy_variance_weekday(occupancy: Occuapancy.Occupancy) -> list[float]:
+    variance = {
+        "fulltime_worker": 1.0,
+        "hybrid_worker": 2.0,
+        "stayathome": 3.0,
+        "k12_student": 1.0,
+        "college_student": 3.0
+    }
+    leave_time = occupancy.weekday_no_one_home.start_hour
+    return_time = occupancy.weekday_no_one_home.end_hour
+    weekday_leaves = []
+    weekday_returns = []
+    for _ in range(5):
+        daily_leaves = []
+        daily_returns = []
+        cnt = 0
+        comp = occupancy.household_composition
+        if comp.fulltime_workers > 0:
+            for _ in range(comp.fulltime_workers):
+                start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["fulltime_worker"])
+                end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["fulltime_worker"])
+                start, end = sample_single_occupant(
+                    start_dist,
+                    end_dist)
+                daily_leaves.append(start)
+                daily_returns.append(end)
+            cnt += comp.fulltime_workers
+        if comp.hybrid_workers > 0:
+            for _ in range(comp.hybrid_workers):
+                start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["hybrid_worker"])
+                end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["hybrid_worker"])
+                start, end = sample_single_occupant(
+                    start_dist,
+                    end_dist)
+                daily_leaves.append(start)
+                daily_returns.append(end)
+            cnt += comp.hybrid_workers
+        if comp.stayathome > 0:
+            for _ in range(comp.stayathome):
+                start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["stayathome"])
+                end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["stayathome"])
+                start, end = sample_single_occupant(
+                    start_dist,
+                    end_dist)
+                daily_leaves.append(start)
+                daily_returns.append(end)
+            cnt += comp.stayathome
+        if comp.k12 > 0:
+            for _ in range(comp.k12):
+                start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["k12_student"])
+                end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["k12_student"])
+                start, end = sample_single_occupant( 
+                    start_dist,
+                end_dist)
+                daily_leaves.append(start)
+                daily_returns.append(end)
+            cnt += comp.k12
+        if comp.college_students > 0:
+            for _ in range(comp.college_students):
+                start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["college_student"])
+                end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["college_student"])
+                start, end = sample_single_occupant(
+                    start_dist,
+                    end_dist)
+                daily_leaves.append(start)
+                daily_returns.append(end)
+            cnt += comp.college_students
+        if cnt < occupancy.num_occupants:
+            needed = occupancy.num_occupants - cnt
+            daily_leaves.extend([leave_time] * needed)
+            daily_returns.extend([return_time] * needed)
+        weekday_leaves.append(daily_leaves)
+        weekday_returns.append(daily_returns)
+
+    weekday_sch = get_schedule_variance(
+        weekday_leaves,
+        weekday_returns,
+        occupancy.num_occupants
+    )
+    return weekday_sch
+
+def get_schedule_variance(
+        leaves: list[list[int]], 
+        returns: list[list[int]], 
+        num_occupants: int,
+    ) -> list[float]:
+    """basic schedule generator without hard constraints"""
+    schedule = []
+    ratio = 1.0 / num_occupants
+    for day_idx in range(len(leaves)):
+        day_leaves = leaves[day_idx]
+        day_returns = returns[day_idx]
+        for h in range(24):
+            people_present = 0
+            for i in range(num_occupants):
+                if h < day_leaves[i] or h >= day_returns[i]:
+                    people_present += 1
+            frac = round(people_present * ratio, 4)
+            schedule.append(frac)
+    return schedule
+
+
+
+
+
+
+
+
+
+def translate_occupancy_presumption_weekday(occupancy: Occuapancy.Occupancy) -> list[float]:
     noone = True
     if occupancy.weekday_no_one_home.start_hour == occupancy.weekday_no_one_home.end_hour:
         noone = False
