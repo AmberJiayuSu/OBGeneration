@@ -9,8 +9,8 @@
       "college_students": 0
     },
     "weekday_no_one_home": {
-      "start_hour": 0,
-      "end_hour": 0
+      "start_hour": 13,
+      "end_hour": 16
     },
     "weekend_no_one_home": {
       "start_hour": 13,

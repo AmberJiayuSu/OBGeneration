@@ -116,7 +116,7 @@
                     }
                 }
             },
-            "required": ["num_occupants", "household_composition", "weekday_no_one_home", "weekend_no_one_home", "weekday_sleep_time", "weekend_sleep_time"]
+            "required": ["num_occupants", "household_composition"]
         }
     }
 }

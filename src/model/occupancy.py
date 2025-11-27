@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field
+from typing import Optional
+from pydantic import BaseModel, Field, computed_field
 from enum import Enum
 
 
@@ -22,11 +23,27 @@ class TimeRange(BaseModel):
     """
     Represents a time range with start and end hours.
     Attributes:
-        start_hour (int): The hour of the day (0-23) when the time range starts.
-        end_hour (int): The hour of the day (0-23) when the time range ends.
+        start_hour (int): The hour of the day (0-23) when the time range starts, inclusive.
+        end_hour (int): The hour of the day (0-23) when the time range ends, exclusive.
+        wraps_midnight (bool): True if the range crosses midnight (end_hour < start_hour logically means next day)
     """
     start_hour: int = Field(default=0, ge=0, le=23) 
     end_hour: int = Field(default=0, ge=0, le=23)
+
+    @computed_field
+    @property
+    def wraps_midnight(self) -> bool:
+        """Automatically computed: True if range crosses midnight."""
+        return self.end_hour < self.start_hour
+
+    
+    def contains_hour(self, hour: int) -> bool:
+        """Check if a given hour falls within this time range."""
+        if not self.wraps_midnight:
+            return self.start_hour <= hour < self.end_hour
+        else:
+            return hour >= self.start_hour or hour < self.end_hour
+    
 
 class Occupancy(BaseModel):
     """
@@ -34,8 +51,8 @@ class Occupancy(BaseModel):
     """
     num_occupants: int = Field(ge=1)
     household_composition: HouseholdComposition
-    weekday_no_one_home: TimeRange
-    weekend_no_one_home: TimeRange
-    weekday_sleep_time: TimeRange
-    weekend_sleep_time: TimeRange
+    weekday_no_one_home: Optional[TimeRange] = None
+    weekend_no_one_home: Optional[TimeRange] = None
+    weekday_sleep_time: Optional[TimeRange] = None
+    weekend_sleep_time: Optional[TimeRange] = None
 
