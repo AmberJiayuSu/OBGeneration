@@ -6,10 +6,34 @@ class FieldRule(Protocol):
     def __call__(self, *values: Any, context: dict[str, Any] | None = None) -> Distribution.Distribution: ...
 
 class RuleSet:
-    def int_normal_distribution_rule() -> FieldRule:
+
+    def uniform_distribution_rule() -> FieldRule:
         def rule(
             *values: Any,
-            context: dict[str, Any] | None = None
+            context: dict[str, Any] | None = None,
+            int: bool = True
+        ) -> Distribution.Distribution:
+            if len(values) < 2:
+                raise ValueError("uniform_distribution_rule requires one value for lower and one for upper")
+            lower = float(values[0])  
+            upper = float(values[1])
+
+            if context:
+                lower = context.get("lower", lower)
+                upper = context.get("upper", upper)
+
+            return Distribution.UniformDistribution(
+                lower=lower,
+                upper=upper,
+                int=int
+            )
+        return rule
+
+    def normal_distribution_rule() -> FieldRule:
+        def rule(
+            *values: Any,
+            context: dict[str, Any] | None = None,
+            int: bool = True
         ) -> Distribution.Distribution:
             if len(values) < 2:
                 raise ValueError("normal_distribution_int_rule requires one value for mu and one for sigma")
@@ -22,11 +46,12 @@ class RuleSet:
                 lb = context.get("lower", lb)
                 ub = context.get("upper", ub)
 
-            return Distribution.IntNormalDistribution(
+            return Distribution.NormalDistribution(
                 mean=mu,
                 stddev=sigma,
                 lower=lb,
-                upper=ub
+                upper=ub,
+                int=int
             )
         return rule
     

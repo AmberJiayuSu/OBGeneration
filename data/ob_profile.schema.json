@@ -117,6 +117,24 @@
                 }
             },
             "required": ["num_occupants", "household_composition"]
+        },
+        "lighting":{
+            "type": "object",
+            "description": "The lighting usage profile of the household.",
+            "properties": {
+                "LED": {
+                    "type": "boolean",
+                    "description": "Indicates whether the household uses LED lighting."
+                },
+                "usage_patterns":{
+                    "type": "string",
+                    "description": "Typical lighting usage patterns.",
+                    "enum": ["always_on", "mostly_on", "necessary_on", "sensor"]
+                }
+            },
+            "required": [
+                "usage_patterns"
+            ]
         }
     }
 }

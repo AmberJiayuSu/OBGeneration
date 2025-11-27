@@ -1,11 +1,16 @@
 from itertools import count
 from stochastic.distribution import Distribution
 import model.occupancy as Occuapancy
+import model.lighting as Lighting
 import prob_model.occupancy as ProbOccupancy
 import stochastic.translation_rule as TranslationRule
 
 
 class OccupancyTranslator:
+
+    def __init__(self, occupancy: Occuapancy.Occupancy):
+        self.occupancy = occupancy
+        self.weekly_schedule = []
 
     @staticmethod
     def _sample_single_occupant( start_dist, end_dist, wraps_midnight: bool = False) -> tuple[int, int]:
@@ -24,9 +29,7 @@ class OccupancyTranslator:
         while True:
             end_time = end_dist.sample()
             if wraps_midnight or end_time > start_time:
-                return start_time, end_time
-            
-    
+                return start_time, end_time    
             
     @staticmethod
     def get_schedule_by_no_one_home(
@@ -76,7 +79,61 @@ class OccupancyTranslator:
         return schedule
     
     @staticmethod
-    def translate_occupancy_presumption_weekday(occupancy: Occuapancy.Occupancy) -> list[float]:
+    def _get_schedule_no_constraint(
+        leaves: list[list[int]], 
+        returns: list[list[int]], 
+        num_occupants: int,
+        ) -> list[float]:
+        """basic schedule generator without hard constraints"""
+        schedule = []
+        ratio = 1.0 / num_occupants
+        for day_idx in range(len(leaves)):
+            day_leaves = leaves[day_idx]
+            day_returns = returns[day_idx]
+            for h in range(24):
+                people_present = 0
+                for i in range(num_occupants):
+                    leave_time = day_leaves[i]
+                    return_time = day_returns[i]
+                    away_range = Occuapancy.TimeRange(start_hour=leave_time, end_hour=return_time)
+                    if not away_range.contains_hour(h):
+                       people_present += 1
+                frac = round(people_present * ratio, 4)
+                schedule.append(frac)
+        return schedule
+
+    @staticmethod
+    def _is_time_range_occupied(self, day_offset: int, start_hour: int, end_hour: int, wraps_midnight: bool = False) -> bool:
+        """
+        Checks if all hours in a time range are occupied (non-zero) in the weekly schedule.
+        Args:
+            day_offset: Day index (0-6) within the week
+            start_hour: Starting hour (0-23)
+            end_hour: Ending hour (0-23)
+            wraps_midnight: If True, the range crosses midnight (e.g., 23:00 to 6:00)
+
+        Returns:
+            True if all hours in the range are occupied, False otherwise
+        """
+        if wraps_midnight:
+            # Check from start_hour to end of day
+            for hour in range(start_hour, 24):
+                if self.weekly_schedule[day_offset * 24 + hour] == 0.0:
+                    return False
+            # Check from start of next day to end_hour
+            next_day_offset = (day_offset + 1) % 7
+            for hour in range(0, end_hour):
+                if self.weekly_schedule[next_day_offset * 24 + hour] == 0.0:
+                    return False
+        else:
+            # Normal range within same day
+            for hour in range(start_hour, end_hour):
+                if self.weekly_schedule[day_offset * 24 + hour] == 0.0:
+                    return False
+        return True
+    
+    def translate_occupancy_presumption_weekday(self) -> list[float]:
+        occupancy = self.occupancy
         # Determine if there's a no-one-home period
         if occupancy.weekday_no_one_home is None:
             # No one leaves - everyone stays home all day
@@ -85,27 +142,27 @@ class OccupancyTranslator:
             no_one_home_range = occupancy.weekday_no_one_home
             
             # Create distributions for sampling the no-one-home period
-            weekday_start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(
+            weekday_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 no_one_home_range.start_hour,
                 1.0,
                 context={"lower": 0, "upper": no_one_home_range.end_hour})
             
-            weekday_end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(
+            weekday_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 no_one_home_range.end_hour,
                 1.0,
                 context={"lower": no_one_home_range.start_hour, "upper": 23})
         
         # Presumption distributions for different occupant types
-        worker_start_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(8.0, 0.5)
-        worker_end_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(18.0, 0.5)
-        hybrid_start_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(9.0, 2.0)
-        hybrid_end_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(17.0, 2.0)
-        stayathome_start_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(12.0, 3.0)
-        stayathome_end_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(16.0, 3.0)
-        k12_start_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(8.0, 0.5)  
-        k12_end_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(15.0, 0.5)
-        college_start_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(10.0,3.0)
-        college_end_presumption = TranslationRule.RuleSet.int_normal_distribution_rule()(18.0, 3.0)
+        worker_start_presumption = TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5)
+        worker_end_presumption = TranslationRule.RuleSet.normal_distribution_rule()(18.0, 0.5)
+        hybrid_start_presumption = TranslationRule.RuleSet.normal_distribution_rule()(9.0, 2.0)
+        hybrid_end_presumption = TranslationRule.RuleSet.normal_distribution_rule()(17.0, 2.0)
+        stayathome_start_presumption = TranslationRule.RuleSet.normal_distribution_rule()(12.0, 3.0)
+        stayathome_end_presumption = TranslationRule.RuleSet.normal_distribution_rule()(16.0, 3.0)
+        k12_start_presumption = TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5)  
+        k12_end_presumption = TranslationRule.RuleSet.normal_distribution_rule()(15.0, 0.5)
+        college_start_presumption = TranslationRule.RuleSet.normal_distribution_rule()(10.0,3.0)
+        college_end_presumption = TranslationRule.RuleSet.normal_distribution_rule()(18.0, 3.0)
 
         weekday_leaves = []
         weekday_returns = []
@@ -182,31 +239,154 @@ class OccupancyTranslator:
         )
                 
         return weekday_sch
+    
+    def translate_occupancy_presumption_weekend(self) -> list[float]:
+        occupancy = self.occupancy
+        # Determine if there's a no-one-home period
+        if occupancy.weekend_no_one_home is None:
+            return [1.0] * 24 * 2  # Everyone stays home all day on weekends
+        else:
+            no_one_home_range = occupancy.weekend_no_one_home
+            
+            # Create distributions for sampling the no-one-home period
+            weekend_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                no_one_home_range.start_hour,
+                2.0,
+                context={"lower": 0, "upper": no_one_home_range.end_hour})
+            
+            weekend_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                no_one_home_range.end_hour,
+                2.0,
+                context={"lower": no_one_home_range.start_hour, "upper": 23})
+        
 
-    @staticmethod
-    def _get_schedule_variance(
-        leaves: list[list[int]], 
-        returns: list[list[int]], 
-        num_occupants: int,
-        ) -> list[float]:
-        """basic schedule generator without hard constraints"""
-        schedule = []
-        ratio = 1.0 / num_occupants
-        for day_idx in range(len(leaves)):
-            day_leaves = leaves[day_idx]
-            day_returns = returns[day_idx]
-            for h in range(24):
-                people_present = 0
-                for i in range(num_occupants):
-                    if h < day_leaves[i] or h >= day_returns[i]:
-                        people_present += 1
-                frac = round(people_present * ratio, 4)
-                schedule.append(frac)
-        return schedule
+            weekend_leaves = []
+            weekend_returns = []
 
-    @staticmethod
-    def translate_occupancy_variance_weekday(occupancy: Occuapancy.Occupancy) -> list[float]:
+            for _ in range(2):
+                daily_leaves = []
+                daily_returns = []
+                for _ in range(occupancy.num_occupants):
+                    start_time,end_time = OccupancyTranslator._sample_single_occupant(weekend_start_dist, weekend_end_dist, wraps_midnight=no_one_home_range.wraps_midnight)
+                    daily_leaves.append(start_time)
+                    daily_returns.append(end_time)
+                weekend_leaves.append(daily_leaves)
+                weekend_returns.append(daily_returns)
+
+        weekend_sch = OccupancyTranslator._get_schedule_no_constraint(
+            weekend_leaves,
+            weekend_returns,
+            occupancy.num_occupants,
+        )
+                
+        return weekend_sch
+
+    def translate_occupancy_presumption(self) -> list[float]:
+        """ Translates occupancy profile into a full week schedule based on presumption method."""
+        weekday_schedule = self.translate_occupancy_presumption_weekday()
+        weekend_schedule = self.translate_occupancy_presumption_weekend()
+        full_week_schedule = weekday_schedule + weekend_schedule
+        self.weekly_schedule = full_week_schedule
+        return full_week_schedule
+    
+
+    def translate_occupancy_sleep_time(self) -> list[tuple[int,int] | None]:
+        """
+        Translates sleep time ranges into sampled sleep schedules, ensuring sleep periods
+        fall entirely within occupied hours.
+
+        Returns:
+            List of 7 tuples (sleep_hour, wake_hour) or None for each day of the week
+        """
+        occupancy = self.occupancy
+        if self.weekly_schedule == []:
+            self.translate_occupancy_presumption()
+
+        MAX_ATTEMPTS = 100  # Safety limit to prevent infinite loops
+
+        weekday_sleep = []
+        weekend_sleep = []
+
+        if occupancy.weekday_sleep_time is None:
+            weekday_sleep = [None] * 5
+        else:
+            sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                occupancy.weekday_sleep_time.start_hour,
+                1.0,
+                context={"lower": 0, "upper": 23})
+            sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                occupancy.weekday_sleep_time.end_hour,
+                1.0,
+                context={"lower": 0, "upper": 23})
+
+            wraps_midnight = occupancy.weekday_sleep_time.wraps_midnight
+
+            for day in range(5):
+                # Sample sleep times ensuring the entire period is within occupied hours
+                valid_sleep_found = False
+                for _ in range(MAX_ATTEMPTS):
+                    sleep_hour, wake_hour = self._sample_single_occupant(
+                        sleep_start_dist,
+                        sleep_end_dist,
+                        wraps_midnight=wraps_midnight)
+
+                    # Validate entire sleep range is occupied
+                    if self._is_time_range_occupied(day, sleep_hour, wake_hour, wraps_midnight):
+                        weekday_sleep.append((sleep_hour, wake_hour))
+                        valid_sleep_found = True
+                        break
+
+                if not valid_sleep_found:
+                    # Fallback: use the mean values if no valid sample found
+                    weekday_sleep.append((
+                        occupancy.weekday_sleep_time.start_hour,
+                        occupancy.weekday_sleep_time.end_hour
+                    ))
+
+        if occupancy.weekend_sleep_time is None:
+            weekend_sleep = [None] * 2
+        else:
+            sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                occupancy.weekend_sleep_time.start_hour,
+                1.0,
+                context={"lower": 0, "upper": 23})
+            sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
+                occupancy.weekend_sleep_time.end_hour,
+                1.0,
+                context={"lower": 0, "upper": 23})
+
+            wraps_midnight = occupancy.weekend_sleep_time.wraps_midnight
+
+            for day in range(2):
+                weekend_day_offset = 5 + day  # Weekend starts after 5 weekdays
+
+                # Sample sleep times ensuring the entire period is within occupied hours
+                valid_sleep_found = False
+                for _ in range(MAX_ATTEMPTS):
+                    sleep_hour, wake_hour = self._sample_single_occupant(
+                        sleep_start_dist,
+                        sleep_end_dist,
+                        wraps_midnight=wraps_midnight)
+
+                    # Validate entire sleep range is occupied
+                    if self._is_time_range_occupied(weekend_day_offset, sleep_hour, wake_hour, wraps_midnight):
+                        weekend_sleep.append((sleep_hour, wake_hour))
+                        valid_sleep_found = True
+                        break
+
+                if not valid_sleep_found:
+                    # Fallback: use the mean values if no valid sample found
+                    weekend_sleep.append((
+                        occupancy.weekend_sleep_time.start_hour,
+                        occupancy.weekend_sleep_time.end_hour
+                    ))
+
+        return weekday_sleep + weekend_sleep
+
+    
+    def translate_occupancy_variance_weekday(self) -> list[float]:
         """ Generates a weekday schedule based on occupancy variance using no one home time as mean without further assumptions."""
+        occupancy = self.occupancy
         variance = {
             "fulltime_worker": 1.0,
             "hybrid_worker": 2.0,
@@ -225,8 +405,8 @@ class OccupancyTranslator:
             comp = occupancy.household_composition
             if comp.fulltime_workers > 0:
                 for _ in range(comp.fulltime_workers):
-                    start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["fulltime_worker"])
-                    end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["fulltime_worker"])
+                    start_dist = TranslationRule.RuleSet.normal_distribution_rule()(leave_time, variance["fulltime_worker"])
+                    end_dist = TranslationRule.RuleSet.normal_distribution_rule()(return_time, variance["fulltime_worker"])
                     start, end = OccupancyTranslator._sample_single_occupant(
                         start_dist,
                         end_dist)
@@ -235,8 +415,8 @@ class OccupancyTranslator:
                 cnt += comp.fulltime_workers
             if comp.hybrid_workers > 0:
                 for _ in range(comp.hybrid_workers):
-                    start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["hybrid_worker"])
-                    end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["hybrid_worker"])
+                    start_dist = TranslationRule.RuleSet.normal_distribution_rule()(leave_time, variance["hybrid_worker"])
+                    end_dist = TranslationRule.RuleSet.normal_distribution_rule()(return_time, variance["hybrid_worker"])
                     start, end = OccupancyTranslator._sample_single_occupant(
                         start_dist,
                         end_dist)
@@ -245,8 +425,8 @@ class OccupancyTranslator:
                 cnt += comp.hybrid_workers
             if comp.stayathome > 0:
                 for _ in range(comp.stayathome):
-                    start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["stayathome"])
-                    end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["stayathome"])
+                    start_dist = TranslationRule.RuleSet.normal_distribution_rule()(leave_time, variance["stayathome"])
+                    end_dist = TranslationRule.RuleSet.normal_distribution_rule()(return_time, variance["stayathome"])
                     start, end = OccupancyTranslator._sample_single_occupant(
                         start_dist,
                         end_dist)
@@ -255,8 +435,8 @@ class OccupancyTranslator:
                 cnt += comp.stayathome
             if comp.k12 > 0:
                 for _ in range(comp.k12):
-                    start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["k12_student"])
-                    end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["k12_student"])
+                    start_dist = TranslationRule.RuleSet.normal_distribution_rule()(leave_time, variance["k12_student"])
+                    end_dist = TranslationRule.RuleSet.normal_distribution_rule()(return_time, variance["k12_student"])
                     start, end = OccupancyTranslator._sample_single_occupant( 
                         start_dist,
                     end_dist)
@@ -265,8 +445,8 @@ class OccupancyTranslator:
                 cnt += comp.k12
             if comp.college_students > 0:
                 for _ in range(comp.college_students):
-                    start_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(leave_time, variance["college_student"])
-                    end_dist = TranslationRule.RuleSet.int_normal_distribution_rule()(return_time, variance["college_student"])
+                    start_dist = TranslationRule.RuleSet.normal_distribution_rule()(leave_time, variance["college_student"])
+                    end_dist = TranslationRule.RuleSet.normal_distribution_rule()(return_time, variance["college_student"])
                     start, end = OccupancyTranslator._sample_single_occupant(
                         start_dist,
                         end_dist)
@@ -280,7 +460,7 @@ class OccupancyTranslator:
             weekday_leaves.append(daily_leaves)
             weekday_returns.append(daily_returns)
 
-        weekday_sch = OccupancyTranslator._get_schedule_variance(
+        weekday_sch = OccupancyTranslator._get_schedule_no_constraint(
             weekday_leaves,
             weekday_returns,
             occupancy.num_occupants
@@ -290,8 +470,60 @@ class OccupancyTranslator:
 
 
 class LightingTranslator:
-    # Placeholder for future lighting translation methods
-    pass
+
+    def __init__(self, lighting: Lighting.Lighting):
+        self.lighting = lighting
+
+    def get_lighting_power_density(self) -> float:
+        """ Calculates lighting power density based on LED status. (W/sqm) """
+        LED_presumption_dist = TranslationRule.RuleSet.normal_distribution_rule()(7.0, 1.0) 
+        nonLED_presumption_dist = TranslationRule.RuleSet.normal_distribution_rule()(15.0, 2.0)
+        if self.lighting.LED:
+            return LED_presumption_dist.sample()
+        else:
+            return nonLED_presumption_dist.sample()
+
+
+    def translate_lighting_schedule(self, occupancy_weekly:list[float], sleep_weekly:list[tuple[int,int] | None]) -> list[float]:
+        """ Translates lighting usage pattern into a full week schedule based on occupancy and sleep times."""
+        lighting = self.lighting
+        schedule = []
+        # assume always full on even when not occupied
+        if lighting.usage_pattern == Lighting.LightingBehavior.ALWAYS_ON:
+            schedule = [1.0] * 24 * 7
+        # assume full on only when occupied
+        elif lighting.usage_pattern == Lighting.LightingBehavior.MOSTLY_ON:
+            for hour in range(24 * 7):
+                if occupancy_weekly[hour] > 0:
+                    schedule.append(1.0)
+                else:
+                    schedule.append(0.0)
+        # assume partially on (adjusted by the occupancy level) when occupied
+        else:
+            for hour in range(24 * 7):
+                schedule.append(occupancy_weekly[hour])
+        # Adjust for sleep times 
+        # Assumption: during sleep time, lighting usage is zero
+        for day in range(7):
+            sleep_info = sleep_weekly[day]
+            if sleep_info is not None:
+                sleep_hour, wake_hour = sleep_info
+                if sleep_hour < wake_hour:
+                    for h in range(sleep_hour, wake_hour):
+                        schedule[day * 24 + h] = 0.0
+                else:
+                    for h in range(sleep_hour, 24):
+                        schedule[day * 24 + h] = 0.0
+                    for h in range(0, wake_hour):
+                        schedule[day * 24 + h] = 0.0                 
+        return schedule
+        
+    
+    def get_dimming(self) -> bool:
+        """ Determines if dimming is used based on usage pattern. """
+        if self.lighting.usage_pattern != Lighting.LightingBehavior.ALWAYS_ON:
+            return True
+        return False
 
 class ApplianceTranslator:
     # Placeholder for future appliance translation methods

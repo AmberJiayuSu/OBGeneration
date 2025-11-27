@@ -30,11 +30,12 @@ class DefiniteValue(Distribution):
         return f"DefiniteValue({self._value})"
     
 
-class IntNormalDistribution(Distribution):
+class NormalDistribution(Distribution):
     """
     SciPy truncated normal with optional integer sampling.
     """
-    def __init__(self, mean, stddev, lower=-math.inf, upper=math.inf):
+    def __init__(self, mean, stddev, lower=-math.inf, upper=math.inf,int: bool = True):
+        self._int = int
         if stddev <= 0:
             raise ValueError("stddev must be positive")
         if lower > upper:
@@ -66,12 +67,11 @@ class IntNormalDistribution(Distribution):
     def sample(self):
         x = self._dist.rvs()
 
-        xi = int(round(x))
+        xi = int(round(x)) if self._int else x
         if xi < self._lower:
-            xi = int(self._lower)
+            xi = int(self._lower) if self._int else self._lower
         if xi > self._upper:
-            xi = int(self._upper)
-
+            xi = int(self._upper) if self._int else self._upper
         return xi
 
     def mean(self):
@@ -81,3 +81,22 @@ class IntNormalDistribution(Distribution):
         return (f"NormalDistribution(mean={self._mean}, stddev={self._stddev}, "
                 f"lower={self._lower}, upper={self._upper}")
     
+
+class UniformDistribution(Distribution):
+    def __init__(self, lower: float, upper: float,int: bool = True):
+        if lower > upper:
+            raise ValueError("lower must be <= upper")
+        self._lower = float(lower)
+        self._upper = float(upper)
+        self._int = int
+
+    def sample(self) -> float:
+        x = random.uniform(self._lower, self._upper)
+        return int(round(x)) if self._int else x
+
+    def mean(self) -> float:
+        return (self._lower + self._upper) / 2
+
+    def __repr__(self) -> str:
+        return (f"UniformDistribution(lower={self._lower}, "
+                f"upper={self._upper}, int={self._int})")
