@@ -1,14 +1,14 @@
 from itertools import count
 from stochastic.distribution import Distribution
-import model.occupancy as Occuapancy
+import model.occupancy as Occupancy
 import model.lighting as Lighting
-import prob_model.occupancy as ProbOccupancy
+import model.hvac as HVAC
 import stochastic.translation_rule as TranslationRule
 
 
 class OccupancyTranslator:
 
-    def __init__(self, occupancy: Occuapancy.Occupancy):
+    def __init__(self, occupancy: Occupancy.Occupancy):
         self.occupancy = occupancy
         self.weekly_schedule = []
 
@@ -36,7 +36,7 @@ class OccupancyTranslator:
         leaves: list[list[int]], 
         returns: list[list[int]], 
         num_occupants: int,
-        no_one_home_ranges: list[Occuapancy.TimeRange]
+        no_one_home_ranges: list[Occupancy.TimeRange]
     ) -> list[float]:
         """
         Generates the final schedule with strict enforcement of the 'Last Man Standing'
@@ -62,7 +62,7 @@ class OccupancyTranslator:
                 for i in range(num_occupants):
                     leave_time = day_leaves[i]
                     return_time = day_returns[i]
-                    away_range = Occuapancy.TimeRange(start_hour=leave_time, end_hour=return_time)
+                    away_range = Occupancy.TimeRange(start_hour=leave_time, end_hour=return_time)
                     if not away_range.contains_hour(h):
                        people_present += 1
 
@@ -95,7 +95,7 @@ class OccupancyTranslator:
                 for i in range(num_occupants):
                     leave_time = day_leaves[i]
                     return_time = day_returns[i]
-                    away_range = Occuapancy.TimeRange(start_hour=leave_time, end_hour=return_time)
+                    away_range = Occupancy.TimeRange(start_hour=leave_time, end_hour=return_time)
                     if not away_range.contains_hour(h):
                        people_present += 1
                 frac = round(people_present * ratio, 4)
@@ -137,7 +137,7 @@ class OccupancyTranslator:
         # Determine if there's a no-one-home period
         if occupancy.weekday_no_one_home is None:
             # No one leaves - everyone stays home all day
-            no_one_home_range = Occuapancy.TimeRange(start_hour=23, end_hour=0)  # Zero duration
+            no_one_home_range = Occupancy.TimeRange(start_hour=23, end_hour=0)  # Zero duration
         else:
             no_one_home_range = occupancy.weekday_no_one_home
             
@@ -173,7 +173,7 @@ class OccupancyTranslator:
                 daily_range = no_one_home_range
             else:
                 start_time,end_time = OccupancyTranslator._sample_single_occupant(weekday_start_dist, weekday_end_dist, wraps_midnight=occupancy.weekday_no_one_home.wraps_midnight)
-                daily_range = Occuapancy.TimeRange(start_hour=start_time, end_hour=end_time)
+                daily_range = Occupancy.TimeRange(start_hour=start_time, end_hour=end_time)
 
             
             weekday_ranges.append(daily_range)
@@ -289,7 +289,6 @@ class OccupancyTranslator:
         self.weekly_schedule = full_week_schedule
         return full_week_schedule
     
-
     def translate_occupancy_sleep_time(self) -> list[tuple[int,int] | None]:
         """
         Translates sleep time ranges into sampled sleep schedules, ensuring sleep periods
@@ -312,11 +311,11 @@ class OccupancyTranslator:
         else:
             sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 occupancy.weekday_sleep_time.start_hour,
-                1.0,
+                0.5,
                 context={"lower": 0, "upper": 23})
             sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 occupancy.weekday_sleep_time.end_hour,
-                1.0,
+                0.5,
                 context={"lower": 0, "upper": 23})
 
             wraps_midnight = occupancy.weekday_sleep_time.wraps_midnight
@@ -348,11 +347,11 @@ class OccupancyTranslator:
         else:
             sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 occupancy.weekend_sleep_time.start_hour,
-                1.0,
+                0.5,
                 context={"lower": 0, "upper": 23})
             sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
                 occupancy.weekend_sleep_time.end_hour,
-                1.0,
+                0.5,
                 context={"lower": 0, "upper": 23})
 
             wraps_midnight = occupancy.weekend_sleep_time.wraps_midnight
@@ -382,7 +381,6 @@ class OccupancyTranslator:
                     ))
 
         return weekday_sleep + weekend_sleep
-
     
     def translate_occupancy_variance_weekday(self) -> list[float]:
         """ Generates a weekday schedule based on occupancy variance using no one home time as mean without further assumptions."""
@@ -467,6 +465,23 @@ class OccupancyTranslator:
         )
         return weekday_sch
 
+    @staticmethod
+    def revise_by_sleep(sleep_weekly:list[tuple[int,int]] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Revisions to an existing schedule based on sleep times."""
+        revised_schedule = existing_schedule.copy()
+        for day in range(7):
+            sleep_info = sleep_weekly[day]
+            if sleep_info is not None:
+                sleep_hour, wake_hour = sleep_info
+                if sleep_hour < wake_hour:
+                    for h in range(sleep_hour, wake_hour):
+                        revised_schedule[day * 24 + h] =value
+                else:
+                    for h in range(sleep_hour, 24):
+                        revised_schedule[day * 24 + h] = value
+                    for h in range(0, wake_hour):
+                        revised_schedule[day * 24 + h] = value                 
+        return revised_schedule
 
 
 class LightingTranslator:
@@ -504,18 +519,7 @@ class LightingTranslator:
                 schedule.append(occupancy_weekly[hour])
         # Adjust for sleep times 
         # Assumption: during sleep time, lighting usage is zero
-        for day in range(7):
-            sleep_info = sleep_weekly[day]
-            if sleep_info is not None:
-                sleep_hour, wake_hour = sleep_info
-                if sleep_hour < wake_hour:
-                    for h in range(sleep_hour, wake_hour):
-                        schedule[day * 24 + h] = 0.0
-                else:
-                    for h in range(sleep_hour, 24):
-                        schedule[day * 24 + h] = 0.0
-                    for h in range(0, wake_hour):
-                        schedule[day * 24 + h] = 0.0                 
+        schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, 0.0)       
         return schedule
         
     
@@ -530,7 +534,131 @@ class ApplianceTranslator:
     pass
 
 class HVACTranslator:
-    pass
+    def __init__(self, hvac: HVAC.HVAC):
+        self.hvac = hvac
+
+    def translate_heating_setpoint_schedule(self, occupancy_weekly:list[float], sleep_weekly:list[tuple[int,int] | None]) -> list[float]:
+        """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
+        hvac = self.hvac
+        if hvac.heating.control.setpoint.setpoint_celsius is not None:
+            schedule =  [self.hvac.heating.control.setpoint.setpoint_celsius] * 24 * 7 
+        else:
+            schedule = [20.0] * 24 * 7  # default setpoint if not specified
+        # adjust for setback
+        if hvac.heating.control.setpoint.setback_sleep_celsius is not None:
+            setback = hvac.heating.control.setpoint.setback_sleep_celsius
+            schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, setback)  
+        
+        # adjust for absence
+        if hvac.heating.control.setpoint.setback_absent_celsius is not None:
+            setback = hvac.heating.control.setpoint.setback_absent_celsius
+            for hour in range(24 * 7):
+                if occupancy_weekly[hour] == 0.0:
+                    schedule[hour] = setback
+
+        return schedule
+    
+    def translate_cooling_setpoint_schedule(self, occupancy_weekly:list[float], sleep_weekly:list[tuple[int,int] | None]) -> list[float]:
+        """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
+        hvac = self.hvac
+        if hvac.cooling.control.setpoint.setpoint_celsius is not None:
+            schedule =  [self.hvac.cooling.control.setpoint.setpoint_celsius] * 24 * 7
+        else:
+            schedule = [24.0] * 24 * 7  # default setpoint if not specified
+        # adjust for setback
+        if hvac.cooling.control.setpoint.setback_sleep_celsius is not None:
+            setback = hvac.cooling.control.setpoint.setback_sleep_celsius
+            schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, setback)  
+        
+        # adjust for absence
+        if hvac.cooling.control.setpoint.setback_absent_celsius is not None:
+            setback = hvac.cooling.control.setpoint.setback_absent_celsius
+            for hour in range(24 * 7):
+                if occupancy_weekly[hour] == 0.0:
+                    schedule[hour] = setback
+
+        return schedule
+    
+    def translate_heating_availability_schedule(self, occupancy_weekly:list[float], sleep_weekly:list[tuple[int,int] | None]) -> list[bool]:
+        """ Translates HVAC heating availability schedule into a full week schedule."""
+        hvac = self.hvac
+        if not hvac.heating.onoff_control:
+            return [True] * 24 * 7
+        else:
+            if hvac.heating.control.type == "none":
+                schedule = []
+                for hour in range(24 * 7):
+                    if occupancy_weekly[hour] > 0.0:
+                        schedule.append(hvac.heating.control.onoff.active)
+                    else:
+                        schedule.append(hvac.heating.control.onoff.absent)
+                schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, hvac.heating.control.onoff.sleep)  
+                return schedule
+            elif hvac.heating.control.type in ["thermostat_setpoint", "valve"]:
+                schedule = []
+                for hour in range(24 * 7):
+                    if occupancy_weekly[hour] > 0.0:
+                        if hvac.heating.control.valve.heating_valve_active_percentage is not None and hvac.heating.control.valve.heating_valve_active_percentage > 0:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                    else:
+                        if hvac.heating.control.valve.heating_valve_absent_percentage is not None and hvac.heating.control.valve.heating_valve_absent_percentage > 0:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                sleep_cond = hvac.heating.control.valve.heating_valve_sleep_percentage is not None and hvac.heating.control.valve.heating_valve_sleep_percentage > 0
+                schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule,  sleep_cond)  
+                return schedule
+            else:
+                schedule = []
+                for hour in range(24 * 7):
+                    if occupancy_weekly[hour] > 0.0:
+                        if hvac.heating.control.setpoint.setpoint_celsius is not None:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                    else:
+                        if hvac.heating.control.setpoint.setback_absent_celsius is not None:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                sleep_cond = hvac.heating.control.setpoint.setback_sleep_celsius is not None
+                schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule,  sleep_cond)
+                return schedule
+
+            
+    def translate_cooling_availability_schedule(self, occupancy_weekly:list[float], sleep_weekly:list[tuple[int,int] | None]) -> list[bool]:
+        """ Translates HVAC cooling availability schedule into a full week schedule."""
+        hvac = self.hvac
+        if not hvac.cooling.onoff_control:
+            return [True] * 24 * 7
+        else:
+            if hvac.cooling.control.type == "none":
+                schedule = []
+                for hour in range(24 * 7):
+                    if occupancy_weekly[hour] > 0.0:
+                        schedule.append(hvac.cooling.control.onoff.active)
+                    else:
+                        schedule.append(hvac.cooling.control.onoff.absent)
+                schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, hvac.cooling.control.onoff.sleep)  
+                return schedule
+            elif hvac.cooling.control.type == "thermostat_setpoint":
+                schedule = []
+                for hour in range(24 * 7):
+                    if occupancy_weekly[hour] > 0.0:
+                        if hvac.cooling.control.setpoint.setpoint_celsius is not None:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                    else:
+                        if hvac.cooling.control.setpoint.setback_absent_celsius is not None:
+                            schedule.append(True)
+                        else:
+                            schedule.append(False)
+                sleep_cond = hvac.cooling.control.setpoint.setback_sleep_celsius is not None
+                schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule,  sleep_cond)  
+                return schedule
 
 class WindowTranslator:
     pass

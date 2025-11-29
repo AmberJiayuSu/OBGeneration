@@ -3,7 +3,7 @@
     "type": "object",
     "description": "The profile of occupant behavior in an household for stochastic schedule generation.",
     "properties": {
-        "occupancy":{
+        "occupancy": {
             "type": "object",
             "description": "The occupancy of the household (number of occupants, household composition, occupancy patterns).",
             "properties": {
@@ -31,19 +31,19 @@
                             "minimum": 0,
                             "description": "Number of mostly at home individuals (remote worker, kids, retired, stayathome parent) in the household."
                         },
-                        "k12":{
+                        "k12": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "Number of K-12 students in the household."
                         },
-                        "college_students":{
+                        "college_students": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "Number of college students in the household."
                         }
                     }
                 },
-                "weekday_no_one_home":{
+                "weekday_no_one_home": {
                     "type": "object",
                     "description": "Indicate the time range when no one is home on weekdays.",
                     "properties": {
@@ -61,7 +61,7 @@
                         }
                     }
                 },
-                "weekend_no_one_home":{
+                "weekend_no_one_home": {
                     "type": "object",
                     "description": "Indicate the time range when no one is home on weekdays.",
                     "properties": {
@@ -79,7 +79,7 @@
                         }
                     }
                 },
-                "weekday_sleep_time":{
+                "weekday_sleep_time": {
                     "type": "object",
                     "description": "Indicate the typical sleep time range on weekdays.",
                     "properties": {
@@ -97,7 +97,7 @@
                         }
                     }
                 },
-                "weekend_sleep_time":{
+                "weekend_sleep_time": {
                     "type": "object",
                     "description": "Indicate the typical sleep time range on weekends.",
                     "properties": {
@@ -116,9 +116,12 @@
                     }
                 }
             },
-            "required": ["num_occupants", "household_composition"]
+            "required": [
+                "num_occupants",
+                "household_composition"
+            ]
         },
-        "lighting":{
+        "lighting": {
             "type": "object",
             "description": "The lighting usage profile of the household.",
             "properties": {
@@ -126,15 +129,226 @@
                     "type": "boolean",
                     "description": "Indicates whether the household uses LED lighting."
                 },
-                "usage_patterns":{
+                "usage_patterns": {
                     "type": "string",
                     "description": "Typical lighting usage patterns.",
-                    "enum": ["always_on", "mostly_on", "necessary_on", "sensor"]
+                    "enum": [
+                        "always_on",
+                        "mostly_on",
+                        "necessary_on",
+                        "sensor"
+                    ]
                 }
             },
             "required": [
                 "usage_patterns"
             ]
+        },
+        "hvac": {
+            "type": "object",
+            "description": "The HVAC usage profile of the household.",
+            "properties": {
+                "heating": {
+                    "type": "object",
+                    "description": "Heating system control profile.",
+                    "properties": {
+                        "onoff_control": {
+                            "type": "boolean",
+                            "description": "Indicates whether the occupant can use on/off control."
+                        },
+                        "control": {
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "description": "Thermostat setpoint control configuration.",
+                                    "properties": {
+                                        "type": {
+                                            "const": "thermostat_setpoint",
+                                            "description": "Setpoint-based temperature control."
+                                        },
+                                        "setpoint": {
+                                            "type": "object",
+                                            "description": "Preferred heating setpoint temperature (in celsius).",
+                                            "properties": {
+                                                "setpoint_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred heating setpoint temperature in celsius."
+                                                },
+                                                "setback_sleep_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred heating setback temperature during sleep time in celsius."
+                                                },
+                                                "setback_absent_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred heating setback temperature during absence in celsius."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "type",
+                                        "setpoint"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Valve percentage control configuration.",
+                                    "properties": {
+                                        "type": {
+                                            "const": "valve",
+                                            "description": "Valve-based temperature control."
+                                        },
+                                        "valve": {
+                                            "type": "object",
+                                            "description": "Preferred heating valve control settings.",
+                                            "properties": {
+                                                "heating_valve_active_percentage": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 100,
+                                                    "description": "Preferred heating valve opening percentage (0-100%)."
+                                                },
+                                                "heating_valve_sleep_percentage": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 100,
+                                                    "description": "Preferred heating valve opening percentage during sleep time (0-100%)."
+                                                },
+                                                "heating_valve_absent_percentage": {
+                                                    "type": "number",
+                                                    "minimum": 0,
+                                                    "maximum": 100,
+                                                    "description": "Preferred heating valve opening percentage during absence (0-100%)."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "type",
+                                        "valve"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "No temperature control (explicit none).",
+                                    "properties": {
+                                        "type": {
+                                            "const": "none",
+                                            "description": "No active temperature control for heating."
+                                        },
+                                        "onoff": {
+                                            "type": "object",
+                                            "description": "On or off when active",
+                                            "properties": {
+                                                "active": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the heating is active when occupant is home."
+                                                },
+                                                "sleep": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the heating is active during sleep time."
+                                                },
+                                                "absent": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the heating is active during absence."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "type"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "onoff_control",
+                        "control"
+                    ]
+                },
+                "cooling": {
+                    "type": "object",
+                    "description": "Cooling system control profile.",
+                    "properties": {
+                        "onoff_control": {
+                            "type": "boolean",
+                            "description": "Indicates whether the occupant can use on/off control."
+                        },
+                        "control": {
+                            "oneOf": [
+                                {
+                                    "type": "object",
+                                    "description": "Thermostat setpoint control configuration.",
+                                    "properties": {
+                                        "type": {
+                                            "const": "thermostat_setpoint",
+                                            "description": "Setpoint-based temperature control."
+                                        },
+                                        "setpoint": {
+                                            "type": "object",
+                                            "description": "Preferred cooling setpoint temperature (in celsius).",
+                                            "properties": {
+                                                "setpoint_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred cooling setpoint temperature in celsius."
+                                                },
+                                                "setback_sleep_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred cooling setback temperature during sleep time in celsius."
+                                                },
+                                                "setback_absent_celsius": {
+                                                    "type": "number",
+                                                    "description": "Preferred cooling setback temperature during absence in celsius."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "type",
+                                        "setpoint"
+                                    ]
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "No temperature control (explicit none).",
+                                    "properties": {
+                                        "type": {
+                                            "const": "none",
+                                            "description": "No active temperature control for cooling."
+                                        },
+                                        "onoff": {
+                                            "type": "object",
+                                            "description": "On or off when active",
+                                            "properties": {
+                                                "active": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the cooling is active when occupant is home."
+                                                },
+                                                "sleep": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the cooling is active during sleep time."
+                                                },
+                                                "absent": {
+                                                    "type": "boolean",
+                                                    "description": "Indicates whether the cooling is active during absence."
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "type"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "required": [
+                        "onoffcontrol",
+                        "control"
+                    ]
+                }
+            }
         }
     }
 }
