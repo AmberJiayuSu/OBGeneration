@@ -594,7 +594,7 @@ class HVACTranslator:
                         schedule.append(hvac.heating.control.onoff.absent)
                 schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, hvac.heating.control.onoff.sleep)  
                 return schedule
-            elif hvac.heating.control.type in ["thermostat_setpoint", "valve"]:
+            elif hvac.heating.control.type == "valve":
                 schedule = []
                 for hour in range(24 * 7):
                     if occupancy_weekly[hour] > 0.0:
