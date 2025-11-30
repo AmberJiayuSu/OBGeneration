@@ -349,6 +349,78 @@
                     ]
                 }
             }
+        },
+        "equipment":{
+            "type": "object",
+            "description": "The equipment usage profile of the household.",
+            "properties": {
+                "laundry": {
+                    "type": "object",
+                    "description": "Laundry usage profile.",
+                    "properties": {
+                        "has_washer": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has a washer."
+                        },
+                        "washer_efficient":{
+                            "type": "boolean",
+                            "description": "Indicates whether the household has an efficient washer."
+                        },
+                        "has_dryer": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has a dryer."
+                        },
+                        "dryer_efficient":{
+                            "type": "boolean",
+                            "description": "Indicates whether the household has an efficient dryer."
+                        },
+                        "usage_frequency_per_week": {
+                            "type": "object",
+                            "description": "Frequency of laundry usage per week.",
+                            "properties": {
+                                "min":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Lower bound of laundry usage frequency per week."
+                                },
+                                "max":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Upper bound of laundry usage frequency per week."
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "has_washer",
+                        "has_dryer"
+                    ]
+                },
+                "refrigerator":{
+                    "type": "object",
+                    "description": "Refrigerator usage profile.",
+                    "properties": {
+                        "has_refrigerator": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has a refrigerator."
+                        },
+                        "efficient_refrigerator": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has an efficient refrigerator."
+                        },
+                        "size":{
+                            "type": "string",
+                            "description": "Size of the refrigerator.",
+                            "enum": [
+                                "mini",
+                                "small",
+                                "medium",
+                                "large"
+                            ]
+                        }
+                    }
+                }
+            }
         }
     }
 }

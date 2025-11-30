@@ -100,3 +100,31 @@ class UniformDistribution(Distribution):
     def __repr__(self) -> str:
         return (f"UniformDistribution(lower={self._lower}, "
                 f"upper={self._upper}, int={self._int})")
+
+
+class WeightedValueDistribution(Distribution):
+    def __init__(self, values_with_weights: dict[float, list[float]]):
+        self._values = []
+        self._weights = []
+        for weight, vals in values_with_weights.items():
+            for v in vals:
+                self._values.append(v)
+                self._weights.append(weight)
+    
+    def update_weights(self, weight_to_update: dict[float, list[float]]):
+        for weight, vals in weight_to_update.items():
+            for v in vals:
+                if v in self._values:
+                    idx = self._values.index(v)
+                    self._weights[idx] = weight
+                    
+    def sample(self) -> float:
+        return random.choices(self._values, weights=self._weights, k=1)[0]
+    
+    def mean(self) -> float:
+        total_weight = sum(self._weights)
+        weighted_sum = sum(v * w for v, w in zip(self._values, self._weights))
+        return weighted_sum / total_weight if total_weight > 0 else 0
+    
+    def __repr__(self) -> str:
+        return f"AssignedValueDistribution(values={self._values}, weights={self._weights})"

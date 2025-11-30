@@ -64,3 +64,16 @@ class RuleSet:
                 raise ValueError("definite_value_rule requires at least one value for the value")
             return Distribution.DefiniteValue(float(values[0]))
         return rule
+    
+    def weighted_value_distribution_rule() -> FieldRule:
+        def rule(
+            *values: Any,
+            context: dict[str, Any] | None = None
+        ) -> Distribution.Distribution:
+            if len(values) == 0 or len(values) % 1 != 0:
+                raise ValueError("assigned_value_distribution_rule requires dict of weight-value pairs")
+            values_with_weights = values[0]
+            return Distribution.WeightedValueDistribution(values_with_weights)
+        return rule
+    
+    
