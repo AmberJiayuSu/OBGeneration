@@ -68,6 +68,14 @@
       "has_refrigerator": true,
       "efficient_refrigerator": true,
       "size": "large"
+    },
+    "dishwasher": {
+      "has_dishwasher": true,
+      "dishwasher_efficient": true,
+      "usage_frequency_per_week": {
+        "min": 3,
+        "max": 7
+      }
     }
   }
 }

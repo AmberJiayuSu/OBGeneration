@@ -418,7 +418,41 @@
                                 "large"
                             ]
                         }
-                    }
+                    },
+                    "required": ["has_refrigerator"]
+                },
+                "dishwasher": {
+                    "type": "object",
+                    "description": "Dishwasher usage profile.",
+                    "properties": {
+                        "has_dishwasher": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has a dishwasher."
+                        },
+                        "efficient_dishwasher":{
+                            "type": "boolean",
+                            "description": "Indicates whether the household has an efficient dishwasher."
+                        },
+                        "usage_frequency_per_week": {
+                            "type": "object",
+                            "description": "Frequency of dishwasher usage per week.",
+                            "properties": {
+                                "min":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Lower bound of dishwasher usage frequency per week."
+                                },
+                                "max":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Upper bound of dishwasher usage frequency per week."
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "has_dishwasher"
+                    ]
                 }
             }
         }

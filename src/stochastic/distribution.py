@@ -117,8 +117,17 @@ class WeightedValueDistribution(Distribution):
                 if v in self._values:
                     idx = self._values.index(v)
                     self._weights[idx] = weight
+    
+    def update_weights_by_factor(self, weight_to_update: dict[float, list[float]]):
+        for change_factor, vals in weight_to_update.items():
+            for v in vals:
+                if v in self._values:
+                    idx = self._values.index(v)
+                    self._weights[idx] = self._weights[idx] * change_factor
                     
     def sample(self) -> float:
+        if sum(self._weights) == 0:
+            return None
         return random.choices(self._values, weights=self._weights, k=1)[0]
     
     def mean(self) -> float:

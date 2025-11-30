@@ -24,6 +24,11 @@ class RefrigerationEquipment(BaseModel):
     efficient_refrigerator: bool = Field(default=True)
     size: RefrigerationSize = Field(default=RefrigerationSize.MEDIUM)
 
+class DishwasherEquipment(BaseModel):
+    has_dishwasher: bool = Field(default=False)
+    dishwasher_efficient: bool = Field(default=True)
+    usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
+
 
 class Equipment(BaseModel):
     """
@@ -34,4 +39,5 @@ class Equipment(BaseModel):
     """
     laundry: LaundryEquipment = Field(default_factory=LaundryEquipment)
     refrigeration: RefrigerationEquipment = Field(default_factory=RefrigerationEquipment)
+    dishwasher: DishwasherEquipment = Field(default_factory=DishwasherEquipment)
     
