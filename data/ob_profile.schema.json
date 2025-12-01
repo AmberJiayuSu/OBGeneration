@@ -453,6 +453,48 @@
                     "required": [
                         "has_dishwasher"
                     ]
+                },
+                "kitchen":{
+                    "type": "object",
+                    "description": "Kitchen equipment usage profile.",
+                    "properties": {
+                        "has_kitchen_equipment": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has kitchen equipment."
+                        },
+                        "cooktop_fuel": {
+                            "type": "string",
+                            "description": "Fuel type of the cooktop.",
+                            "enum": [
+                                "electric",
+                                "gas",
+                                "other"
+                            ]
+                        },
+                        "efficient": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has efficient kitchen equipment."
+                        },
+                        "usage_frequency_per_week": {
+                            "type": "object",
+                            "description": "Frequency of kitchen equipment usage per week.",
+                            "properties": {
+                                "min":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Lower bound of kitchen equipment usage frequency per week."
+                                },
+                                "max":{
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Upper bound of kitchen equipment usage frequency per week."
+                                }
+                            }
+                        }
+                    },
+                    "required": [
+                        "has_kitchen_equipment"
+                    ]
                 }
             }
         }

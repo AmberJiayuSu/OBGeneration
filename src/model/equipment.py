@@ -19,6 +19,11 @@ class RefrigerationSize(Enum):
     MEDIUM = "medium"
     LARGE = "large"
 
+class FuelType(Enum):
+    ELECTRIC = "electric"
+    GAS = "gas"
+    OTHER = "other"
+
 class RefrigerationEquipment(BaseModel):
     has_refrigerator: bool = Field(default=True)
     efficient_refrigerator: bool = Field(default=True)
@@ -29,15 +34,24 @@ class DishwasherEquipment(BaseModel):
     dishwasher_efficient: bool = Field(default=True)
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
+class KitchenEquipment(BaseModel):
+    has_kitchen_equipment: bool = Field(default=True)
+    cooktop_fuel: FuelType = Field(default=FuelType.ELECTRIC)
+    efficient: bool = Field(default=True)
+    usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
+
 
 class Equipment(BaseModel):
     """
     Represents the equipment profile of a household.
     Attributes:
-        has_washing_machine: Indicates if the household has a washing machine.
-        has_dishwasher: Indicates if the household has a dishwasher.
+        laundry (LaundryEquipment): Laundry equipment details.
+        refrigeration (RefrigerationEquipment): Refrigeration equipment details.
+        dishwasher (DishwasherEquipment): Dishwasher equipment details.
+
     """
     laundry: LaundryEquipment = Field(default_factory=LaundryEquipment)
     refrigeration: RefrigerationEquipment = Field(default_factory=RefrigerationEquipment)
     dishwasher: DishwasherEquipment = Field(default_factory=DishwasherEquipment)
+    kitchen: KitchenEquipment = Field(default_factory=KitchenEquipment)
     

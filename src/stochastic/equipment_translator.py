@@ -9,6 +9,35 @@ from stochastic.translator_utils import Utils
 
 
 class EquipmentTranslator:
+    laundry_power_map = {
+        "efficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0),
+        "inefficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(1600.0, 150.0),
+        "efficient_dryer": TranslationRule.RuleSet.normal_distribution_rule()(2500.0, 200.0),
+        "inefficient_dryer": TranslationRule.RuleSet.normal_distribution_rule()(4000.0, 300.0),
+    }
+    laundry_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(2.5, 0.5, context={"lower":1, "upper":4})
+    refrigeration_power_map = {
+        Equipment.RefrigerationSize.MINI: TranslationRule.RuleSet.normal_distribution_rule()(100.0, 25.0),
+        Equipment.RefrigerationSize.SMALL: TranslationRule.RuleSet.normal_distribution_rule()(300.0, 30.0),
+        Equipment.RefrigerationSize.MEDIUM: TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0),
+        Equipment.RefrigerationSize.LARGE: TranslationRule.RuleSet.normal_distribution_rule()(600.0, 75.0),
+    }
+    refrigeration_efficiency_dist = TranslationRule.RuleSet.normal_distribution_rule()(1.3, 0.1)
+    dishwasher_power_map = {
+        "efficient_dishwasher": TranslationRule.RuleSet.normal_distribution_rule()(1200.0, 100.0),
+        "inefficient_dishwasher": TranslationRule.RuleSet.normal_distribution_rule()(1800.0, 150.0),
+    }
+    dishwasher_cycle_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(1.5, 0.3, context={"lower":1, "upper":3}, int = True)
+    kitchen_power_dist_map ={
+        "all_elec_efficient": TranslationRule.RuleSet.normal_distribution_rule()(2000.0, 200.0),
+        "all_elec_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(4000.0, 400.0),
+        "notallelec_forelec_efficient": TranslationRule.RuleSet.normal_distribution_rule()(1000.0, 100.0),
+        "notallelec_forelec_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(2000.0, 200.0),
+        "gas_cooktop_efficient": TranslationRule.RuleSet.normal_distribution_rule()(800.0, 100.0),
+        "gas_cooktop_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(1200.0, 150.0),
+    }
+    kitchen_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(2.0, 0.5, context={"lower":1, "upper":4})
+
     def __init__(self, equipment: Equipment.Equipment, occupancy_translator,):
         self.equipment = equipment
         self.active_time_mask = occupancy_translator.get_occupied_active_mask()
@@ -16,6 +45,8 @@ class EquipmentTranslator:
         self.laundry_schedule = None
         self.fridge_schedule = None
         self.dishwasher_schedule = None
+        #TODO: put weighted prob for start times here
+        
 
     def get_equipment_usage_schedule(self) -> dict[str, list[float]]:
         """ Translates equipment usage schedule into a full week schedule with power."""
@@ -28,27 +59,25 @@ class EquipmentTranslator:
 
     def _get_laundry_power(self) -> tuple[float, float]:
         """ Calculates laundry equipment power density in W."""
-        efficient_washer_power = TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0)
-        inefficient_washer_power = TranslationRule.RuleSet.normal_distribution_rule()(1600.0, 150.0)
-        efficient_dryer_power = TranslationRule.RuleSet.normal_distribution_rule()(2500.0, 200.0)
-        inefficient_dryer_power = TranslationRule.RuleSet.normal_distribution_rule()(4000.0, 300.0)
         washer_power = 0.0
         dryer_power = 0.0
         laundry = self.equipment.laundry
         if laundry.has_washer:
             if laundry.washer_efficient:
-                washer_power = efficient_washer_power.sample()
+                washer_power = EquipmentTranslator.laundry_power_map["efficient_washer"].sample()
             else:
-                washer_power = inefficient_washer_power.sample()
+                washer_power = EquipmentTranslator.laundry_power_map["inefficient_washer"].sample()
         if laundry.has_dryer:
             if laundry.dryer_efficient:
-                dryer_power = efficient_dryer_power.sample()
+                dryer_power = EquipmentTranslator.laundry_power_map["efficient_dryer"].sample()
             else:
-                dryer_power = inefficient_dryer_power.sample()
+                dryer_power = EquipmentTranslator.laundry_power_map["inefficient_dryer"].sample()
         return washer_power, dryer_power
     
     def get_laundry_usage_schedule(self) -> list[float]:
         """ Translates laundry equipment usage schedule into a full week schedule with power."""
+        if self.laundry_schedule is not None:
+            return self.laundry_schedule
         laundry = self.equipment.laundry
         if laundry.has_washer or laundry.has_dryer:
             washer_power, dryer_power = self._get_laundry_power()
@@ -56,9 +85,12 @@ class EquipmentTranslator:
             num_cycles = int(num_cycle_dist.sample())
 
             # Determine cycle duration based on equipment
-            washer_duration = 1 if laundry.has_washer else 0
+            washer_duration = 1.5 if laundry.has_washer else 0
             dryer_duration = 1 if laundry.has_dryer else 0
-            cycle_duration = washer_duration + dryer_duration
+            cycle_duration_mean = washer_duration + dryer_duration
+            EquipmentTranslator.laundry_duration_dist.update_mean(cycle_duration_mean)
+            cycle_duration = int(EquipmentTranslator.laundry_duration_dist.sample())
+
            
             valid_start_times = self._get_laundry_valid_start_times(cycle_duration)
             if valid_start_times is None:
@@ -117,23 +149,26 @@ class EquipmentTranslator:
             return None
         return valid_starts
 
-    def get_fridge_usage_schedule(self) -> list[float]:
-        """ Translates refrigeration equipment usage schedule into a full week schedule with power."""
+    def _get_fridge_power(self) -> float:
+        """ Calculates refrigeration equipment power density in W."""
         refrigeration = self.equipment.refrigeration
         if refrigeration.has_refrigerator:
-            size_power_map = {
-                Equipment.RefrigerationSize.MINI: TranslationRule.RuleSet.normal_distribution_rule()(100.0, 25.0),
-                Equipment.RefrigerationSize.SMALL: TranslationRule.RuleSet.normal_distribution_rule()(300.0, 30.0),
-                Equipment.RefrigerationSize.MEDIUM: TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0),
-                Equipment.RefrigerationSize.LARGE: TranslationRule.RuleSet.normal_distribution_rule()(600.0, 75.0),
-            }
-            base_power_dist = size_power_map[refrigeration.size]
+            base_power_dist = EquipmentTranslator.refrigeration_power_map[refrigeration.size]
             base_power = base_power_dist.sample()
-            
             if not refrigeration.efficient_refrigerator:
-                in_efficient_dist = TranslationRule.RuleSet.bernoulli_distribution_rule()(1.3, 0.1)
-                in_efficient_scaler = in_efficient_dist.sample()
+                in_efficient_scaler = EquipmentTranslator.refrigeration_efficiency_dist.sample()
                 base_power *= in_efficient_scaler
+            return base_power
+        else:
+            return 0.0
+        
+    def get_fridge_usage_schedule(self) -> list[float]:
+        """ Translates refrigeration equipment usage schedule into a full week schedule with power."""
+        if self.fridge_schedule is not None:
+            return self.fridge_schedule
+        refrigeration = self.equipment.refrigeration
+        if refrigeration.has_refrigerator:
+            base_power = self._get_fridge_power()
             fridge_schedule = [base_power] * (24 * 7)
             self.fridge_schedule = fridge_schedule
             return self.fridge_schedule
@@ -143,14 +178,12 @@ class EquipmentTranslator:
         
     def _get_dishwasher_power (self) -> float:
         """ Calculates dishwasher equipment power density in W."""
-        efficient_dishwasher_power = TranslationRule.RuleSet.normal_distribution_rule()(1200.0, 100.0)
-        inefficient_dishwasher_power = TranslationRule.RuleSet.normal_distribution_rule()(1800.0, 150.0)
         dishwasher = self.equipment.dishwasher
         if dishwasher.has_dishwasher:
             if dishwasher.dishwasher_efficient:
-                dishwasher_power = efficient_dishwasher_power.sample()
+                dishwasher_power = EquipmentTranslator.dishwasher_power_map["efficient_dishwasher"].sample()
             else:
-                dishwasher_power = inefficient_dishwasher_power.sample()
+                dishwasher_power = EquipmentTranslator.dishwasher_power_map["inefficient_dishwasher"].sample()
             return dishwasher_power
         else:
             return 0.0
@@ -172,16 +205,18 @@ class EquipmentTranslator:
         if not valid_starts:
             return None
         return valid_starts
-        
+     
     def get_dishwasher_usage_schedule(self) -> list[float]:
         """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
+        if self.dishwasher_schedule is not None:
+            return self.dishwasher_schedule
         dishwasher = self.equipment.dishwasher
         if dishwasher.has_dishwasher:
             dishwasher_power = self._get_dishwasher_power()
             
             num_cycle_dist = TranslationRule.RuleSet.uniform_distribution_rule()(dishwasher.usage_frequency_per_week.min, dishwasher.usage_frequency_per_week.max)
             num_cycles = int(num_cycle_dist.sample())
-            cycle_duration = 2  # assuming fixed 2-hour cycle for dishwasher
+            cycle_duration = EquipmentTranslator.dishwasher_cycle_duration_dist.sample()
             
             valid_start_times = self._get_dishwasher_valid_start_times(cycle_duration)
             if valid_start_times is None:
@@ -245,3 +280,46 @@ class EquipmentTranslator:
         else:
             self.dishwasher_schedule = [0.0] * (24 * 7)
             return self.dishwasher_schedule
+        
+    def _get_kitchen_electricity_dist(self) -> float:
+        kitchen_equipment = self.equipment.kitchen
+        if kitchen_equipment.has_kitchen_equipment:
+            if kitchen_equipment.cooktop_fuel == Equipment.FuelType.ELECTRIC:
+                if kitchen_equipment.efficient:
+                    return EquipmentTranslator.kitchen_power_dist_map["all_elec_efficient"]
+                else:
+                    return EquipmentTranslator.kitchen_power_dist_map["all_elec_inefficient"]
+            else:
+                if kitchen_equipment.efficient:
+                    return EquipmentTranslator.kitchen_power_dist_map["notallelec_forelec_efficient"]
+                else:
+                    return EquipmentTranslator.kitchen_power_dist_map["notallelec_forelec_inefficient"]    
+        else:
+            return None
+        
+    def _get_kitchen_gas_dist(self) -> float:
+        kitchen_equipment = self.equipment.kitchen
+        if kitchen_equipment.has_kitchen_equipment:
+            if kitchen_equipment.cooktop_fuel == Equipment.FuelType.GAS:
+                if kitchen_equipment.efficient:
+                    return EquipmentTranslator.kitchen_power_dist_map["gas_cooktop_efficient"]
+                else:
+                    return EquipmentTranslator.kitchen_power_dist_map["gas_cooktop_inefficient"]
+        return None
+    
+    def get_kitchen_usage_schedule(self) -> tuple[list[float], list[float]]:
+        """ Translates kitchen equipment usage schedule into a full week schedule with power."""
+        kitchen_equipment = self.equipment.kitchen
+        if kitchen_equipment.has_kitchen_equipment:
+            elec_dist = self._get_kitchen_electricity_dist()
+            gas_dist = self._get_kitchen_gas_dist()
+
+            num_usage_dist = TranslationRule.RuleSet.uniform_distribution_rule()(kitchen_equipment.usage_frequency_per_week.min, kitchen_equipment.usage_frequency_per_week.max)
+            num_usages = int(num_usage_dist.sample())
+            duration = int(self.kitchen_duration_dist.sample())
+
+            valid_start_times = self._get_laundry_valid_start_times(duration)
+            if valid_start_times is None:
+                valid_start_times = self._get_laundry_valid_start_times(0)
+
+            #TODO: implement weighted prob for kitchen usage start times

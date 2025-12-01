@@ -63,6 +63,10 @@ class NormalDistribution(Distribution):
             raise ValueError("lower must be <= upper")
         self._rebuild()
 
+    def update_mean(self, mean: float):
+        self._mean = float(mean)
+        self._rebuild()
+
 
     def sample(self):
         x = self._dist.rvs()

@@ -18,6 +18,8 @@ class HouseholdComposition(BaseModel):
     stayathome: int = Field(default=0,ge=0)
     k12: int = Field(default=0,ge=0)
     college_students: int = Field(default=0,ge=0)
+
+    
     
 class TimeRange(BaseModel):
     """
