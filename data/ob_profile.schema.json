@@ -129,7 +129,7 @@
                     "type": "boolean",
                     "description": "Indicates whether the household uses LED lighting."
                 },
-                "usage_patterns": {
+                "usage_pattern": {
                     "type": "string",
                     "description": "Typical lighting usage patterns.",
                     "enum": [
@@ -141,7 +141,7 @@
                 }
             },
             "required": [
-                "usage_patterns"
+                "usage_pattern"
             ]
         },
         "hvac": {

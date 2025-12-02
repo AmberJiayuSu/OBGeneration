@@ -18,18 +18,23 @@ class HVACTranslator:
         if hvac.heating.control.setpoint.setpoint_celsius is not None:
             schedule =  [self.hvac.heating.control.setpoint.setpoint_celsius] * 24 * 7 
         else:
-            schedule = [20.0] * 24 * 7  # default setpoint if not specified
+            schedule = [0.0] * 24 * 7  # basically no heating if not specified
         # adjust for setback
         if hvac.heating.control.setpoint.setback_sleep_celsius is not None:
             setback = hvac.heating.control.setpoint.setback_sleep_celsius
             schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, setback)  
-        
+        else:
+            schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, 0.0)
         # adjust for absence
         if hvac.heating.control.setpoint.setback_absent_celsius is not None:
             setback = hvac.heating.control.setpoint.setback_absent_celsius
             for hour in range(24 * 7):
                 if occupancy_weekly[hour] == 0.0:
                     schedule[hour] = setback
+        else:
+            for hour in range(24 * 7):
+                if occupancy_weekly[hour] == 0.0:
+                    schedule[hour] = 0.0
 
         return schedule
     
@@ -39,18 +44,23 @@ class HVACTranslator:
         if hvac.cooling.control.setpoint.setpoint_celsius is not None:
             schedule =  [self.hvac.cooling.control.setpoint.setpoint_celsius] * 24 * 7
         else:
-            schedule = [24.0] * 24 * 7  # default setpoint if not specified
+            schedule = [35.0] * 24 * 7 # basically no cooling if not specified
         # adjust for setback
         if hvac.cooling.control.setpoint.setback_sleep_celsius is not None:
             setback = hvac.cooling.control.setpoint.setback_sleep_celsius
             schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, setback)  
-        
+        else:
+            schedule = OccupancyTranslator.revise_by_sleep(sleep_weekly, schedule, 35.0)
         # adjust for absence
         if hvac.cooling.control.setpoint.setback_absent_celsius is not None:
             setback = hvac.cooling.control.setpoint.setback_absent_celsius
             for hour in range(24 * 7):
                 if occupancy_weekly[hour] == 0.0:
                     schedule[hour] = setback
+        else:
+            for hour in range(24 * 7):
+                if occupancy_weekly[hour] == 0.0:
+                    schedule[hour] = 35.0
 
         return schedule
     

@@ -27,7 +27,7 @@
   },
   "lighting": {
     "LED": true,
-    "usage_patterns": "necessary_on"
+    "usage_pattern": "necessary_on"
   },
   "hvac": {
     "heating": {

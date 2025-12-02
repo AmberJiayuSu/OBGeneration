@@ -9,6 +9,7 @@ from stochastic.translator_utils import Utils
 
 
 class EquipmentTranslator:
+    system_base_load = 1000.0  # W, base load for equipment not modeled explicitly
     laundry_power_map = {
         "efficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0),
         "inefficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(1600.0, 150.0),
@@ -29,14 +30,28 @@ class EquipmentTranslator:
     }
     dishwasher_cycle_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(1.5, 0.3, context={"lower":1, "upper":3}, int = True)
     kitchen_power_dist_map ={
-        "all_elec_efficient": TranslationRule.RuleSet.normal_distribution_rule()(2000.0, 200.0),
-        "all_elec_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(4000.0, 400.0),
+        "all_elec_efficient": TranslationRule.RuleSet.normal_distribution_rule()(1000.0, 200.0),
+        "all_elec_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(3000.0, 400.0),
         "notallelec_forelec_efficient": TranslationRule.RuleSet.normal_distribution_rule()(1000.0, 100.0),
         "notallelec_forelec_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(2000.0, 200.0),
         "gas_cooktop_efficient": TranslationRule.RuleSet.normal_distribution_rule()(800.0, 100.0),
         "gas_cooktop_inefficient": TranslationRule.RuleSet.normal_distribution_rule()(1200.0, 150.0),
     }
     kitchen_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(2.0, 0.5, context={"lower":1, "upper":4})
+    kitchen_original_weights = {
+        3.0: [s for s in range(24 * 7) if (17 <= Utils.hour_of_day(s)[1] < 21) and Utils.hour_of_day(s)[0] in [5,6]],  # weekend dinner 
+        2.0: [s for s in range(24 * 7) if (17 <= Utils.hour_of_day(s)[1] < 21) and Utils.hour_of_day(s)[0] not in [5,6]] # weekday dinner
+        + [s for s in range(24 * 7) if (11 <= Utils.hour_of_day(s)[1] < 14) and Utils.hour_of_day(s)[0] in [5,6]],  # weekend lunch
+        1.5: [s for s in range(24 * 7) if (11 <= Utils.hour_of_day(s)[1] < 14) and Utils.hour_of_day(s)[0] not in [5,6]],  # weekday lunch
+        1.0: [s for s in range(24 * 7) if (7 <= Utils.hour_of_day(s)[1] < 10) ],  # breakfast
+        0.2: [s for s in range(24 * 7) if s not in (
+            [s for s in range(24 * 7) if (17 <= Utils.hour_of_day(s)[1] < 21)],  #dinner times
+            [s for s in range(24 * 7) if (11 <= Utils.hour_of_day(s)[1] < 14)],  # lunch times
+            [s for s in range(24 * 7) if (7 <= Utils.hour_of_day(s)[1] < 10)],  # breakfast times
+        )]  # other times
+    }
+
+    #TODO: put other weighted prob for start times here
 
     def __init__(self, equipment: Equipment.Equipment, occupancy_translator,):
         self.equipment = equipment
@@ -45,7 +60,8 @@ class EquipmentTranslator:
         self.laundry_schedule = None
         self.fridge_schedule = None
         self.dishwasher_schedule = None
-        #TODO: put weighted prob for start times here
+        self.kitchen_electric_schedule = None
+        self.kitchen_gas_schedule = None
         
 
     def get_equipment_usage_schedule(self) -> dict[str, list[float]]:
@@ -53,7 +69,9 @@ class EquipmentTranslator:
         laundry_schedule = self.get_laundry_usage_schedule() if self.laundry_schedule is None else self.laundry_schedule
         fridge_schedule = self.get_fridge_usage_schedule() if self.fridge_schedule is None else self.fridge_schedule
         dishwasher_schedule = self.get_dishwasher_usage_schedule() if self.dishwasher_schedule is None else self.dishwasher_schedule
-        sum = np.array(laundry_schedule) + np.array(fridge_schedule) + np.array(dishwasher_schedule)
+        electric_kitchen,gas_kitchen = self.get_kitchen_usage_schedule() if self.kitchen_electric_schedule is None or self.kitchen_gas_schedule is None else (self.kitchen_electric_schedule, self.kitchen_gas_schedule)
+        base_load = [ EquipmentTranslator.system_base_load] * (24 * 7)
+        sum = np.array(laundry_schedule) + np.array(fridge_schedule) + np.array(dishwasher_schedule) + np.array(electric_kitchen) + np.array(base_load)
         equipment_schedule = sum.tolist()
         return equipment_schedule
 
@@ -309,6 +327,8 @@ class EquipmentTranslator:
     
     def get_kitchen_usage_schedule(self) -> tuple[list[float], list[float]]:
         """ Translates kitchen equipment usage schedule into a full week schedule with power."""
+        if self.kitchen_electric_schedule is not None and self.kitchen_gas_schedule is not None:
+            return self.kitchen_electric_schedule, self.kitchen_gas_schedule
         kitchen_equipment = self.equipment.kitchen
         if kitchen_equipment.has_kitchen_equipment:
             elec_dist = self._get_kitchen_electricity_dist()
@@ -322,4 +342,37 @@ class EquipmentTranslator:
             if valid_start_times is None:
                 valid_start_times = self._get_laundry_valid_start_times(0)
 
-            #TODO: implement weighted prob for kitchen usage start times
+            kitchen_filtered_weights = {}
+            for weight, time_slots in EquipmentTranslator.kitchen_original_weights.items():
+                # Keep only times that are in valid_start_times
+                filtered_slots = list(set(time_slots) & set(valid_start_times))
+                if filtered_slots:  # Only add if there are valid times
+                    kitchen_filtered_weights[weight] = filtered_slots
+            start_time_dist = TranslationRule.RuleSet.weighted_value_distribution_rule()(kitchen_filtered_weights)
+            elec_schedule = [0.0] * (24 * 7)
+            gas_schedule = [0.0] * (24 * 7)
+            for _ in range(num_usages):
+                start_time = start_time_dist.sample()
+                if start_time is None:
+                    return self.kitchen_electric_schedule, self.kitchen_gas_schedule
+                for h in range(duration):
+                    hour_idx = (start_time + h) % (24 * 7)
+                    if elec_dist is not None:
+                        elec_schedule[hour_idx] += elec_dist.sample()
+                    if gas_dist is not None:
+                        gas_schedule[hour_idx] += gas_dist.sample()
+                # update weighted prob to avoid overlapping cycles
+                update_weighted_prob = { 
+                    0.0: [s for s in valid_start_times if start_time <= s < start_time + duration],
+                    0.2: [s for s in valid_start_times if not (start_time <= s < start_time + duration) and (abs(s - start_time) < 2 or abs(s - start_time - duration) <2) ],
+                }
+                start_time_dist.update_weights_by_factor(update_weighted_prob)
+            self.kitchen_electric_schedule = elec_schedule
+            self.kitchen_gas_schedule = gas_schedule
+            return self.kitchen_electric_schedule, self.kitchen_gas_schedule
+        else:
+            elec_schedule = [0.0] * (24 * 7)
+            gas_schedule = [0.0] * (24 * 7)
+            self.kitchen_electric_schedule = elec_schedule
+            self.kitchen_gas_schedule = gas_schedule
+            return self.kitchen_electric_schedule, self.kitchen_gas_schedule

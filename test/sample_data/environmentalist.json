@@ -1,0 +1,68 @@
+{
+  "occupancy": {
+    "num_occupants": 3,
+    "household_composition": {
+      "fulltime_workers": 1,
+      "hybrid_workers": 1,
+      "stayathome": 1,
+      "k12": 0,
+      "college_students": 0
+    },
+    "weekday_no_one_home": { "start_hour": 10, "end_hour": 15 },
+    "weekend_no_one_home": { "start_hour": 12, "end_hour": 14 },
+    "weekday_sleep_time": { "start_hour": 23, "end_hour": 7 },
+    "weekend_sleep_time": { "start_hour": 0, "end_hour": 8 }
+  },
+  "lighting": {
+    "LED": true,
+    "usage_patterns": "necessary_on"
+  },
+  "hvac": {
+    "heating": {
+      "onoff_control": true,
+      "control": {
+        "type": "thermostat_setpoint",
+        "setpoint": {
+          "setpoint_celsius": 21,
+          "setback_sleep_celsius": 18,
+          "setback_absent_celsius": 14
+        }
+      }
+    },
+    "cooling": {
+      "onoff_control": true,
+      "control": {
+        "type": "thermostat_setpoint",
+        "setpoint": {
+          "setpoint_celsius": 24,
+          "setback_sleep_celsius": 27
+        }
+      }
+    }
+  },
+  "equipment": {
+    "laundry": {
+      "has_washer": true,
+      "washer_efficient": true,
+      "has_dryer": true,
+      "dryer_efficient": true,
+      "usage_frequency_per_week": { "min":1, "max": 3 }
+    },
+    "refrigerator": {
+      "has_refrigerator": true,
+      "efficient_refrigerator": true,
+      "size": "medium"
+    },
+    "dishwasher": {
+      "has_dishwasher": true,
+      "efficient_dishwasher": true,
+      "usage_frequency_per_week": { "min": 3, "max": 5 }
+    },
+    "kitchen": {
+      "has_kitchen_equipment": true,
+      "cooktop_fuel": "electric",
+      "efficient": true,
+      "usage_frequency_per_week": { "min": 5, "max": 10 }
+    }
+  }
+}
