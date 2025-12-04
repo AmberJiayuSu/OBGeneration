@@ -53,10 +53,9 @@ class EquipmentTranslator:
 
     #TODO: put other weighted prob for start times here
 
-    def __init__(self, equipment: Equipment.Equipment, occupancy_translator,):
+    def __init__(self, equipment: Equipment.Equipment, active_mask : list[bool]):
         self.equipment = equipment
-        self.active_time_mask = occupancy_translator.get_occupied_active_mask()
-        self.occupied_time_mask = occupancy_translator.get_occupied_mask()
+        self.active_time_mask = active_mask
         self.laundry_schedule = None
         self.fridge_schedule = None
         self.dishwasher_schedule = None
@@ -74,6 +73,23 @@ class EquipmentTranslator:
         sum = np.array(laundry_schedule) + np.array(fridge_schedule) + np.array(dishwasher_schedule) + np.array(electric_kitchen) + np.array(base_load)
         equipment_schedule = sum.tolist()
         return equipment_schedule
+    
+    def _get_valid_start_times(self, duration: int) -> list[int]:
+        valid_starts = []
+        for start_hour in range(24 * 7):
+            # Check if all hours from start to start+duration are active
+            all_active = True
+            for h in range(duration):
+                hour_idx = (start_hour + h) % (24 * 7)
+                if not self.active_time_mask[hour_idx]:
+                    all_active = False
+                    break
+            if all_active:
+                valid_starts.append(start_hour)
+
+        if not valid_starts:
+            return None
+        return valid_starts
 
     def _get_laundry_power(self) -> tuple[float, float]:
         """ Calculates laundry equipment power density in W."""
@@ -108,11 +124,10 @@ class EquipmentTranslator:
             cycle_duration_mean = washer_duration + dryer_duration
             EquipmentTranslator.laundry_duration_dist.update_mean(cycle_duration_mean)
             cycle_duration = int(EquipmentTranslator.laundry_duration_dist.sample())
-
-           
-            valid_start_times = self._get_laundry_valid_start_times(cycle_duration)
+  
+            valid_start_times = self._get_valid_start_times(cycle_duration)
             if valid_start_times is None:
-                valid_start_times = self._get_laundry_valid_start_times(0)
+                valid_start_times = self._get_valid_start_times(0)
             
             if len(valid_start_times) == 0:
                 # No valid start times found
@@ -148,24 +163,6 @@ class EquipmentTranslator:
         else:
             self.laundry_schedule = [0.0] * (24 * 7)
             return self.laundry_schedule
-
-    def _get_laundry_valid_start_times(self, duration: int) -> list[int]:
-        # Find all valid start times where the entire duration fits in active time
-        valid_starts = []
-        for start_hour in range(24 * 7):
-            # Check if all hours from start to start+duration are active
-            all_active = True
-            for h in range(duration):
-                hour_idx = (start_hour + h) % (24 * 7)
-                if not self.active_time_mask[hour_idx]:
-                    all_active = False
-                    break
-            if all_active:
-                valid_starts.append(start_hour)
-
-        if not valid_starts:
-            return None
-        return valid_starts
 
     def _get_fridge_power(self) -> float:
         """ Calculates refrigeration equipment power density in W."""
@@ -205,25 +202,7 @@ class EquipmentTranslator:
             return dishwasher_power
         else:
             return 0.0
-        
-    def _get_dishwasher_valid_start_times(self, duration: int) -> list[int]:
-        # Find all valid start times where the entire duration fits in occupied time
-        valid_starts = []
-        for start_hour in range(24 * 7):
-            # Check if all hours from start to start+duration are occupied
-            all_occupied = True
-            for h in range(duration):
-                hour_idx = (start_hour + h) % (24 * 7)
-                if not self.occupied_time_mask[hour_idx]:
-                    all_occupied = False
-                    break
-            if all_occupied:
-                valid_starts.append(start_hour)
 
-        if not valid_starts:
-            return None
-        return valid_starts
-     
     def get_dishwasher_usage_schedule(self) -> list[float]:
         """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
         if self.dishwasher_schedule is not None:
@@ -236,9 +215,9 @@ class EquipmentTranslator:
             num_cycles = int(num_cycle_dist.sample())
             cycle_duration = EquipmentTranslator.dishwasher_cycle_duration_dist.sample()
             
-            valid_start_times = self._get_dishwasher_valid_start_times(cycle_duration)
+            valid_start_times = self._get_valid_start_times(cycle_duration)
             if valid_start_times is None:
-                valid_start_times = self._get_dishwasher_valid_start_times(0)
+                valid_start_times = self._get_valid_start_times(0)
 
             dishwasher_schedule = [0.0] * (24 * 7)
             
@@ -338,9 +317,9 @@ class EquipmentTranslator:
             num_usages = int(num_usage_dist.sample())
             duration = int(self.kitchen_duration_dist.sample())
 
-            valid_start_times = self._get_laundry_valid_start_times(duration)
+            valid_start_times = self._get_valid_start_times(duration)
             if valid_start_times is None:
-                valid_start_times = self._get_laundry_valid_start_times(0)
+                valid_start_times = self._get_valid_start_times(0)
 
             kitchen_filtered_weights = {}
             for weight, time_slots in EquipmentTranslator.kitchen_original_weights.items():

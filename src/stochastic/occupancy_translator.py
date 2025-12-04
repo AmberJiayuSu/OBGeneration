@@ -153,19 +153,20 @@ class OccupancyTranslator:
         "college_days_on_campus": TranslationRule.RuleSet.uniform_distribution_rule()(3,5)
     }
     days_no_one_home_dist = TranslationRule.RuleSet.uniform_distribution_rule()(3,5)
+    role_hour_presumption_map = {
+        "onsite_worker_start": TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5),
+        "onsite_worker_end": TranslationRule.RuleSet.normal_distribution_rule()(18.0, 0.5),
+        "k12_start": TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5),
+        "k12_end": TranslationRule.RuleSet.normal_distribution_rule()(15.0, 0.5),
+        "college_start": TranslationRule.RuleSet.normal_distribution_rule()(10.0,3.0),
+        "college_end": TranslationRule.RuleSet.normal_distribution_rule()(16.0,3.0),
+        "stayathome_start": TranslationRule.RuleSet.normal_distribution_rule()(10.0, 3.0),
+        "stayathome_end": TranslationRule.RuleSet.normal_distribution_rule()(14.0, 3.0),
+    }
 
     def __init__(self, occupancy: Occupancy.Occupancy):
         self.occupancy = occupancy
-        self.role_hour_presumption_map = {
-            "onsite_worker_start": TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5),
-            "onsite_worker_end": TranslationRule.RuleSet.normal_distribution_rule()(18.0, 0.5),
-            "k12_start": TranslationRule.RuleSet.normal_distribution_rule()(8.0, 0.5),
-            "k12_end": TranslationRule.RuleSet.normal_distribution_rule()(15.0, 0.5),
-            "college_start": TranslationRule.RuleSet.normal_distribution_rule()(10.0,3.0),
-            "college_end": TranslationRule.RuleSet.normal_distribution_rule()(16.0,3.0),
-            "stayathome_start": TranslationRule.RuleSet.normal_distribution_rule()(10.0, 3.0),
-            "stayathome_end": TranslationRule.RuleSet.normal_distribution_rule()(14.0, 3.0),
-        }
+        self.role_map = OccupancyTranslator.role_hour_presumption_map.copy()
         self.weekly_schedule: list[float] = []
         self.sleep_schedule: list[tuple[int,int] | None] = None
         self._weekday_occupants_tracker = self._get_occupants_tracker()
@@ -193,7 +194,6 @@ class OccupancyTranslator:
         for _ in range(comp.college_students):
             trackers.append(SingleOccupantTracker(OccupantRole.COLLEGE_STUDENT))
         return trackers
-    
 
     def translate_occupancy_presumption_weekday(self) -> list[float]:
         """ Translates the occupancy profile into a detailed weekday occupancy schedule
@@ -507,39 +507,47 @@ class OccupancyTranslator:
                     return False
         return True
     
-
-    
     @staticmethod
-    def revise_by_sleep(sleep_weekly:list[tuple[int,int]] , existing_schedule:list[float], value:float) -> list[float]:
+    def revise_by_sleep(sleep_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
         """ Revisions to an existing schedule based on sleep times."""
         revised_schedule = existing_schedule.copy()
-        for day in range(7):
-            sleep_info = sleep_weekly[day]
-            if sleep_info is not None:
-                sleep_hour, wake_hour = sleep_info
-                if sleep_hour < wake_hour:
-                    for h in range(sleep_hour, wake_hour):
-                        revised_schedule[day * 24 + h] =value
-                else:
-                    for h in range(sleep_hour, 24):
-                        revised_schedule[day * 24 + h] = value
-                    for h in range(0, wake_hour):
-                        revised_schedule[day * 24 + h] = value                 
+        for h in range(24 * 7):
+            if sleep_weekly_mask[h]:
+                revised_schedule[h] = value
+            else:
+                revised_schedule[h] = existing_schedule[h]     
+        return revised_schedule
+    
+    @staticmethod
+    def revise_by_absence(occupied_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Revisions to an existing schedule based on unoccupied times."""
+        revised_schedule = existing_schedule.copy()
+        for h in range(24 * 7):
+            if not occupied_weekly_mask[h]:
+                revised_schedule[h] = value
+            else:
+                revised_schedule[h] = existing_schedule[h]     
         return revised_schedule
 
-    def get_occupied_active_mask(self) -> list[bool]:
-        """ Generates a mask indicating occupied and active hours (True) vs unoccupied or sleep hours (False)."""
-        mask = []
+    def get_occupied_sleep_mask(self) -> list[bool]:
+        """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
+        mask = [False] * (24 * 7)
         if self.sleep_schedule is None:
             self.translate_occupancy_sleep_time()
         if self.weekly_schedule == []:
             self.translate_occupancy_presumption()
-        for h in range(24 * 7):
-            if self.weekly_schedule[h] > 0.0:
-                mask.append(True)
-            else:
-                mask.append(False)
-        mask = OccupancyTranslator.revise_by_sleep(self.sleep_schedule, mask, False)
+        for d in range(7):
+            sleep_info = self.sleep_schedule[d]
+            if sleep_info is not None:
+                sleep_hour, wake_hour = sleep_info
+                if sleep_hour < wake_hour:
+                    for h in range(sleep_hour, wake_hour):
+                        mask[d * 24 + h] = True
+                else:
+                    for h in range(sleep_hour, 24):
+                        mask[d * 24 + h] = True
+                    for h in range(0, wake_hour):
+                        mask[d * 24 + h] = True
         return mask
     
     def get_occupied_mask(self) -> list[bool]:
@@ -554,7 +562,22 @@ class OccupancyTranslator:
                 mask.append(False)
         return mask
     
-   
+    def get_occupied_active_mask(self) -> list[bool]:
+        """ Generates a mask indicating occupied and active hours (True) vs unoccupied or sleep hours (False)."""
+        mask = []
+        if self.weekly_schedule == []:
+            self.translate_occupancy_presumption()
+        if self.sleep_schedule is None:
+            self.translate_occupancy_sleep_time()
+        sleep_mask = self.get_occupied_sleep_mask()
+        occupied_mask = self.get_occupied_mask()
+        for h in range(24 * 7):
+            if occupied_mask[h] and not sleep_mask[h]:
+                mask.append(True)
+            else:
+                mask.append(False)
+        return mask
+    
     def translate_occupancy_variance_weekday(self) -> list[float]:
         """ Generates a weekday schedule based on occupancy variance using no one home time as mean without further assumptions."""
         occupancy = self.occupancy
