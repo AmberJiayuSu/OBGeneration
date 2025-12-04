@@ -25,7 +25,7 @@ class TimeRange(BaseModel):
     """
     Represents a time range with start and end hours.
     Attributes:
-        start_hour (int): The hour of the day (0-23) when the time range starts, inclusive.
+        start_hour (int): The hour of the day (0-23) when the time range starts, exclusive.
         end_hour (int): The hour of the day (0-23) when the time range ends, exclusive.
         wraps_midnight (bool): True if the range crosses midnight (end_hour < start_hour logically means next day)
     """
@@ -42,9 +42,9 @@ class TimeRange(BaseModel):
     def contains_hour(self, hour: int) -> bool:
         """Check if a given hour falls within this time range."""
         if not self.wraps_midnight:
-            return self.start_hour <= hour < self.end_hour
+            return self.start_hour < hour < self.end_hour
         else:
-            return hour >= self.start_hour or hour < self.end_hour
+            return hour > self.start_hour or hour < self.end_hour
     
 
 class Occupancy(BaseModel):
