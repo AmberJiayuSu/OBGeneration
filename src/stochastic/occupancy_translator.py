@@ -50,20 +50,26 @@ class SingleOccupantTracker:
     def _sample_single_occupant( start_dist, end_dist, wraps_midnight: bool = False) -> tuple[int, int]:
         """
         Samples a single occupant's leave and return times ensuring logical consistency.
-        
+
         Args:
             start_dist: Distribution for leave time
             end_dist: Distribution for return time
             wraps_midnight: If True, allows return time < leave time (crosses midnight)
-        
+
         Returns:
             Tuple of (start_time, end_time)
         """
+        MAX_ATTEMPTS = 1000
         start_time = start_dist.sample()
-        while True:
+
+        for _ in range(MAX_ATTEMPTS):
             end_time = end_dist.sample()
             if wraps_midnight or end_time > start_time:
-                return start_time, end_time    
+                return start_time, end_time
+
+        # Fallback: if bounds make it impossible to satisfy end > start,
+        # allow end >= start to avoid infinite loop
+        return start_time, end_time    
 
     # Helper function to sample occupant schedules with updated bounds
     @staticmethod
@@ -76,10 +82,16 @@ class SingleOccupantTracker:
             start_presumption.set_bounds(lower = 0, upper=daily_range.start_hour)
             end_presumption.set_bounds(lower=daily_range.end_hour, upper=23)
         
-        start, end = SingleOccupantTracker._sample_single_occupant(
-            start_presumption,
-            end_presumption,
-            wraps_midnight=daily_range.wraps_midnight)
+        try:
+            start, end = SingleOccupantTracker._sample_single_occupant(
+                start_presumption,
+                end_presumption,
+                wraps_midnight=daily_range.wraps_midnight)
+        except Exception as e:
+            print ("Error in sampling occupant schedule with bounds:", e)
+            print ("Start presumption:", start_presumption)
+            print ("End presumption:", end_presumption)
+            raise e
         
         return start, end
     

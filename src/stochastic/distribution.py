@@ -69,6 +69,8 @@ class NormalDistribution(Distribution):
 
 
     def sample(self):
+        if self._lower == self._upper:
+            return int(self._lower) if self._int else self._lower
         x = self._dist.rvs()
 
         xi = int(round(x)) if self._int else x
