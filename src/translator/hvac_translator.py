@@ -3,7 +3,7 @@ import numpy as np
 from stochastic.distribution import Distribution
 import model.occupancy as Occupancy
 import model.hvac as HVAC
-from stochastic.occupancy_translator import OccupancyTranslator
+from translator.occupancy_translator import OccupancyTranslator
 import stochastic.translation_rule as TranslationRule
 
 

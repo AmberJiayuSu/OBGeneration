@@ -8,7 +8,7 @@ import model.hvac as HVAC
 from stochastic.equipment_translator import EquipmentTranslator
 from stochastic.hvac_translator import HVACTranslator
 from stochastic.lighting_translator import LightingTranslator
-from stochastic.occupancy_translator import OccupancyTranslator
+from translator.occupancy_translator import OccupancyTranslator
 import stochastic.translation_rule as TranslationRule
 from pathlib import Path
 import json

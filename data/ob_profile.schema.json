@@ -14,488 +14,526 @@
                 },
                 "household_composition": {
                     "type": "object",
-                    "description": "The composition of the household.",
+                    "description": "The composition of the household based on daily mobility patterns.",
                     "properties": {
-                        "fulltime_workers": {
+                        "daily_commuters": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Number of full-time workers in the household."
+                            "description": "Number of adults who COMMUTE to a workplace 5 days a week (excludes remote workers)."
                         },
                         "hybrid_workers": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Number of hybrid workers in the household."
+                            "description": "Number of adults who commute to a workplace 1-4 days a week."
                         },
                         "stayathome": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Number of mostly at home individuals (remote worker, kids, retired, stayathome parent) in the household."
+                            "description": "Number of people home most of the day (e.g., full-time remote workers, retirees, stay-at-home parents, infants not in daycare)."
                         },
-                        "k12": {
+                        "k12_or_daycare": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Number of K-12 students in the household."
+                            "description": "Number of children attending school or daycare daily (regular away-from-home schedule)."
                         },
                         "college_students": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Number of college students in the household."
+                            "description": "Number of college students (typically irregular/variable schedules)."
                         }
                     }
                 },
-                "weekday_no_one_home": {
+                "weekday_occupancy_pattern": {
                     "type": "object",
-                    "description": "Indicate the time range when no one is home on weekdays.",
+                    "description": "Occupancy and sleep patterns for weekdays. Helps calibrate if the house is ever empty.",
                     "properties": {
-                        "start_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when no one is home"
+                        "is_always_occupied": {
+                            "type": "boolean",
+                            "description": "Indicates if the household is typically occupied by at least one person throughout the day (e.g. remote work, retiree)."
                         },
-                        "end_hour": {
+                        "vacancy_frequency": {
                             "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when someone returns home"
+                            "minimum": 1,
+                            "maximum": 5,
+                            "description": "If NOT always occupied: How many weekdays per week is the house typically empty?"
+                        },
+                        "no_one_home_interval": {
+                            "type": "object",
+                            "description": "If NOT always occupied: The time range when no one is home on those empty days.",
+                            "properties": {
+                                "start_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when no one is home"
+                                },
+                                "end_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when someone returns home"
+                                }
+                            }
+                        },
+                        "sleep_time": {
+                            "type": "object",
+                            "description": "Indicate the typical sleep time range on weekdays.",
+                            "properties": {
+                                "start_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekdays"
+                                },
+                                "end_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekdays"
+                                }
+                            }
                         }
-                    }
+                    },
+                    "required": [
+                        "is_always_occupied",
+                        "sleep_time"
+                    ]
                 },
-                "weekend_no_one_home": {
+                "weekend_occupancy_pattern": {
                     "type": "object",
-                    "description": "Indicate the time range when no one is home on weekdays.",
+                    "description": "Occupancy and sleep patterns for weekends.",
                     "properties": {
-                        "start_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when no one is home"
+                        "is_always_occupied": {
+                            "type": "boolean",
+                            "description": "Indicates if the household is typically occupied throughout the weekend."
                         },
-                        "end_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when someone returns home"
-                        }
-                    }
-                },
-                "weekday_sleep_time": {
-                    "type": "object",
-                    "description": "Indicate the typical sleep time range on weekdays.",
-                    "properties": {
-                        "start_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekdays"
+                        "no_one_home_interval": {
+                            "type": "object",
+                            "description": "If NOT always occupied: The time range when no one is home.",
+                            "properties": {
+                                "start_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when no one is home"
+                                },
+                                "end_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when someone returns home"
+                                }
+                            }
                         },
-                        "end_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekdays"
+                        "sleep_time": {
+                            "type": "object",
+                            "description": "Indicate the typical sleep time range on weekends.",
+                            "properties": {
+                                "start_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekends"
+                                },
+                                "end_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekends"
+                                }
+                            }
                         }
-                    }
-                },
-                "weekend_sleep_time": {
-                    "type": "object",
-                    "description": "Indicate the typical sleep time range on weekends.",
-                    "properties": {
-                        "start_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the latest occupant typically go to sleep during weekends"
-                        },
-                        "end_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the earliest occupant typically wake up during weekends"
-                        }
-                    }
+                    },
+                    "required": [
+                        "is_always_occupied",
+                        "sleep_time"
+                    ]
                 }
             },
             "required": [
                 "num_occupants",
-                "household_composition"
+                "household_composition",
+                "weekday_occupancy_pattern",
+                "weekend_occupancy_pattern"
             ]
-        },
-        "lighting": {
-            "type": "object",
-            "description": "The lighting usage profile of the household.",
-            "properties": {
-                "LED": {
-                    "type": "boolean",
-                    "description": "Indicates whether the household uses LED lighting."
-                },
-                "usage_pattern": {
-                    "type": "string",
-                    "description": "Typical lighting usage patterns.",
-                    "enum": [
-                        "always_on",
-                        "mostly_on",
-                        "necessary_on",
-                        "sensor"
-                    ]
-                }
+        }
+    },
+    "lighting": {
+        "type": "object",
+        "description": "The lighting usage profile of the household.",
+        "properties": {
+            "LED": {
+                "type": "boolean",
+                "description": "Indicates whether the household uses LED lighting."
             },
-            "required": [
-                "usage_pattern"
-            ]
-        },
-        "hvac": {
-            "type": "object",
-            "description": "The HVAC usage profile of the household.",
-            "properties": {
-                "heating": {
-                    "type": "object",
-                    "description": "Heating system control profile.",
-                    "properties": {
-                        "onoff_control": {
-                            "type": "boolean",
-                            "description": "Indicates whether the occupant can use on/off control."
-                        },
-                        "control": {
-                            "oneOf": [
-                                {
-                                    "type": "object",
-                                    "description": "Thermostat setpoint control configuration.",
-                                    "properties": {
-                                        "type": {
-                                            "const": "thermostat_setpoint",
-                                            "description": "Setpoint-based temperature control."
-                                        },
-                                        "setpoint": {
-                                            "type": "object",
-                                            "description": "Preferred heating setpoint temperature (in celsius).",
-                                            "properties": {
-                                                "setpoint_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred heating setpoint temperature in celsius."
-                                                },
-                                                "setback_sleep_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred heating setback temperature during sleep time in celsius."
-                                                },
-                                                "setback_absent_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred heating setback temperature during absence in celsius."
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "type",
-                                        "setpoint"
-                                    ]
-                                },
-                                {
-                                    "type": "object",
-                                    "description": "Valve percentage control configuration.",
-                                    "properties": {
-                                        "type": {
-                                            "const": "valve",
-                                            "description": "Valve-based temperature control."
-                                        },
-                                        "valve": {
-                                            "type": "object",
-                                            "description": "Preferred heating valve control settings.",
-                                            "properties": {
-                                                "heating_valve_active_percentage": {
-                                                    "type": "number",
-                                                    "minimum": 0,
-                                                    "maximum": 100,
-                                                    "description": "Preferred heating valve opening percentage (0-100%)."
-                                                },
-                                                "heating_valve_sleep_percentage": {
-                                                    "type": "number",
-                                                    "minimum": 0,
-                                                    "maximum": 100,
-                                                    "description": "Preferred heating valve opening percentage during sleep time (0-100%)."
-                                                },
-                                                "heating_valve_absent_percentage": {
-                                                    "type": "number",
-                                                    "minimum": 0,
-                                                    "maximum": 100,
-                                                    "description": "Preferred heating valve opening percentage during absence (0-100%)."
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "type",
-                                        "valve"
-                                    ]
-                                },
-                                {
-                                    "type": "object",
-                                    "description": "No temperature control (explicit none).",
-                                    "properties": {
-                                        "type": {
-                                            "const": "none",
-                                            "description": "No active temperature control for heating."
-                                        },
-                                        "onoff": {
-                                            "type": "object",
-                                            "description": "On or off when active",
-                                            "properties": {
-                                                "active": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the heating is active when occupant is home."
-                                                },
-                                                "sleep": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the heating is active during sleep time."
-                                                },
-                                                "absent": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the heating is active during absence."
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "type"
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "required": [
-                        "onoff_control",
-                        "control"
-                    ]
-                },
-                "cooling": {
-                    "type": "object",
-                    "description": "Cooling system control profile.",
-                    "properties": {
-                        "onoff_control": {
-                            "type": "boolean",
-                            "description": "Indicates whether the occupant can use on/off control."
-                        },
-                        "control": {
-                            "oneOf": [
-                                {
-                                    "type": "object",
-                                    "description": "Thermostat setpoint control configuration.",
-                                    "properties": {
-                                        "type": {
-                                            "const": "thermostat_setpoint",
-                                            "description": "Setpoint-based temperature control."
-                                        },
-                                        "setpoint": {
-                                            "type": "object",
-                                            "description": "Preferred cooling setpoint temperature (in celsius).",
-                                            "properties": {
-                                                "setpoint_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred cooling setpoint temperature in celsius."
-                                                },
-                                                "setback_sleep_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred cooling setback temperature during sleep time in celsius."
-                                                },
-                                                "setback_absent_celsius": {
-                                                    "type": "number",
-                                                    "description": "Preferred cooling setback temperature during absence in celsius."
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "type",
-                                        "setpoint"
-                                    ]
-                                },
-                                {
-                                    "type": "object",
-                                    "description": "No temperature control (explicit none).",
-                                    "properties": {
-                                        "type": {
-                                            "const": "none",
-                                            "description": "No active temperature control for cooling."
-                                        },
-                                        "onoff": {
-                                            "type": "object",
-                                            "description": "On or off when active",
-                                            "properties": {
-                                                "active": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the cooling is active when occupant is home."
-                                                },
-                                                "sleep": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the cooling is active during sleep time."
-                                                },
-                                                "absent": {
-                                                    "type": "boolean",
-                                                    "description": "Indicates whether the cooling is active during absence."
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "required": [
-                                        "type"
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "required": [
-                        "onoffcontrol",
-                        "control"
-                    ]
-                }
+            "usage_pattern": {
+                "type": "string",
+                "description": "Typical lighting usage patterns.",
+                "enum": [
+                    "always_on",
+                    "mostly_on",
+                    "necessary_on",
+                    "sensor"
+                ]
             }
         },
-        "equipment":{
-            "type": "object",
-            "description": "The equipment usage profile of the household.",
-            "properties": {
-                "laundry": {
-                    "type": "object",
-                    "description": "Laundry usage profile.",
-                    "properties": {
-                        "has_washer": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has a washer."
-                        },
-                        "washer_efficient":{
-                            "type": "boolean",
-                            "description": "Indicates whether the household has an efficient washer."
-                        },
-                        "has_dryer": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has a dryer."
-                        },
-                        "dryer_efficient":{
-                            "type": "boolean",
-                            "description": "Indicates whether the household has an efficient dryer."
-                        },
-                        "usage_frequency_per_week": {
-                            "type": "object",
-                            "description": "Frequency of laundry usage per week.",
-                            "properties": {
-                                "min":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Lower bound of laundry usage frequency per week."
+        "required": [
+            "usage_pattern"
+        ]
+    },
+    "hvac": {
+        "type": "object",
+        "description": "The HVAC usage profile of the household.",
+        "properties": {
+            "heating": {
+                "type": "object",
+                "description": "Heating system control profile.",
+                "properties": {
+                    "onoff_control": {
+                        "type": "boolean",
+                        "description": "Indicates whether the occupant can use on/off control."
+                    },
+                    "control": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "description": "Thermostat setpoint control configuration.",
+                                "properties": {
+                                    "type": {
+                                        "const": "thermostat_setpoint",
+                                        "description": "Setpoint-based temperature control."
+                                    },
+                                    "setpoint": {
+                                        "type": "object",
+                                        "description": "Preferred heating setpoint temperature (in celsius).",
+                                        "properties": {
+                                            "setpoint_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred heating setpoint temperature in celsius."
+                                            },
+                                            "setback_sleep_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred heating setback temperature during sleep time in celsius."
+                                            },
+                                            "setback_absent_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred heating setback temperature during absence in celsius."
+                                            }
+                                        }
+                                    }
                                 },
-                                "max":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Upper bound of laundry usage frequency per week."
-                                }
+                                "required": [
+                                    "type",
+                                    "setpoint"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "description": "Valve percentage control configuration.",
+                                "properties": {
+                                    "type": {
+                                        "const": "valve",
+                                        "description": "Valve-based temperature control."
+                                    },
+                                    "valve": {
+                                        "type": "object",
+                                        "description": "Preferred heating valve control settings.",
+                                        "properties": {
+                                            "heating_valve_active_percentage": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 100,
+                                                "description": "Preferred heating valve opening percentage (0-100%)."
+                                            },
+                                            "heating_valve_sleep_percentage": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 100,
+                                                "description": "Preferred heating valve opening percentage during sleep time (0-100%)."
+                                            },
+                                            "heating_valve_absent_percentage": {
+                                                "type": "number",
+                                                "minimum": 0,
+                                                "maximum": 100,
+                                                "description": "Preferred heating valve opening percentage during absence (0-100%)."
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "valve"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "description": "No temperature control (explicit none).",
+                                "properties": {
+                                    "type": {
+                                        "const": "none",
+                                        "description": "No active temperature control for heating."
+                                    },
+                                    "onoff": {
+                                        "type": "object",
+                                        "description": "On or off when active",
+                                        "properties": {
+                                            "active": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the heating is active when occupant is home."
+                                            },
+                                            "sleep": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the heating is active during sleep time."
+                                            },
+                                            "absent": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the heating is active during absence."
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "onoff_control",
+                    "control"
+                ]
+            },
+            "cooling": {
+                "type": "object",
+                "description": "Cooling system control profile.",
+                "properties": {
+                    "onoff_control": {
+                        "type": "boolean",
+                        "description": "Indicates whether the occupant can use on/off control."
+                    },
+                    "control": {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "description": "Thermostat setpoint control configuration.",
+                                "properties": {
+                                    "type": {
+                                        "const": "thermostat_setpoint",
+                                        "description": "Setpoint-based temperature control."
+                                    },
+                                    "setpoint": {
+                                        "type": "object",
+                                        "description": "Preferred cooling setpoint temperature (in celsius).",
+                                        "properties": {
+                                            "setpoint_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred cooling setpoint temperature in celsius."
+                                            },
+                                            "setback_sleep_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred cooling setback temperature during sleep time in celsius."
+                                            },
+                                            "setback_absent_celsius": {
+                                                "type": "number",
+                                                "description": "Preferred cooling setback temperature during absence in celsius."
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type",
+                                    "setpoint"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "description": "No temperature control (explicit none).",
+                                "properties": {
+                                    "type": {
+                                        "const": "none",
+                                        "description": "No active temperature control for cooling."
+                                    },
+                                    "onoff": {
+                                        "type": "object",
+                                        "description": "On or off when active",
+                                        "properties": {
+                                            "active": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the cooling is active when occupant is home."
+                                            },
+                                            "sleep": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the cooling is active during sleep time."
+                                            },
+                                            "absent": {
+                                                "type": "boolean",
+                                                "description": "Indicates whether the cooling is active during absence."
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": [
+                                    "type"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "onoffcontrol",
+                    "control"
+                ]
+            }
+        }
+    },
+    "equipment": {
+        "type": "object",
+        "description": "The equipment usage profile of the household.",
+        "properties": {
+            "laundry": {
+                "type": "object",
+                "description": "Laundry usage profile.",
+                "properties": {
+                    "has_washer": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has a washer."
+                    },
+                    "washer_efficient": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has an efficient washer."
+                    },
+                    "has_dryer": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has a dryer."
+                    },
+                    "dryer_efficient": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has an efficient dryer."
+                    },
+                    "usage_frequency_per_week": {
+                        "type": "object",
+                        "description": "Frequency of laundry usage per week.",
+                        "properties": {
+                            "min": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Lower bound of laundry usage frequency per week."
+                            },
+                            "max": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Upper bound of laundry usage frequency per week."
                             }
                         }
-                    },
-                    "required": [
-                        "has_washer",
-                        "has_dryer"
-                    ]
+                    }
                 },
-                "refrigerator":{
-                    "type": "object",
-                    "description": "Refrigerator usage profile.",
-                    "properties": {
-                        "has_refrigerator": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has a refrigerator."
-                        },
-                        "efficient_refrigerator": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has an efficient refrigerator."
-                        },
-                        "size":{
-                            "type": "string",
-                            "description": "Size of the refrigerator.",
-                            "enum": [
-                                "mini",
-                                "small",
-                                "medium",
-                                "large"
-                            ]
-                        }
+                "required": [
+                    "has_washer",
+                    "has_dryer"
+                ]
+            },
+            "refrigerator": {
+                "type": "object",
+                "description": "Refrigerator usage profile.",
+                "properties": {
+                    "has_refrigerator": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has a refrigerator."
                     },
-                    "required": ["has_refrigerator"]
+                    "efficient_refrigerator": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has an efficient refrigerator."
+                    },
+                    "size": {
+                        "type": "string",
+                        "description": "Size of the refrigerator.",
+                        "enum": [
+                            "mini",
+                            "small",
+                            "medium",
+                            "large"
+                        ]
+                    }
                 },
-                "dishwasher": {
-                    "type": "object",
-                    "description": "Dishwasher usage profile.",
-                    "properties": {
-                        "has_dishwasher": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has a dishwasher."
-                        },
-                        "efficient_dishwasher":{
-                            "type": "boolean",
-                            "description": "Indicates whether the household has an efficient dishwasher."
-                        },
-                        "usage_frequency_per_week": {
-                            "type": "object",
-                            "description": "Frequency of dishwasher usage per week.",
-                            "properties": {
-                                "min":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Lower bound of dishwasher usage frequency per week."
-                                },
-                                "max":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Upper bound of dishwasher usage frequency per week."
-                                }
+                "required": [
+                    "has_refrigerator"
+                ]
+            },
+            "dishwasher": {
+                "type": "object",
+                "description": "Dishwasher usage profile.",
+                "properties": {
+                    "has_dishwasher": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has a dishwasher."
+                    },
+                    "efficient_dishwasher": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has an efficient dishwasher."
+                    },
+                    "usage_frequency_per_week": {
+                        "type": "object",
+                        "description": "Frequency of dishwasher usage per week.",
+                        "properties": {
+                            "min": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Lower bound of dishwasher usage frequency per week."
+                            },
+                            "max": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Upper bound of dishwasher usage frequency per week."
                             }
                         }
-                    },
-                    "required": [
-                        "has_dishwasher"
-                    ]
+                    }
                 },
-                "kitchen":{
-                    "type": "object",
-                    "description": "Kitchen equipment usage profile.",
-                    "properties": {
-                        "has_kitchen_equipment": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has kitchen equipment."
-                        },
-                        "cooktop_fuel": {
-                            "type": "string",
-                            "description": "Fuel type of the cooktop.",
-                            "enum": [
-                                "electric",
-                                "gas",
-                                "other"
-                            ]
-                        },
-                        "efficient": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has efficient kitchen equipment."
-                        },
-                        "usage_frequency_per_week": {
-                            "type": "object",
-                            "description": "Frequency of kitchen equipment usage per week.",
-                            "properties": {
-                                "min":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Lower bound of kitchen equipment usage frequency per week."
-                                },
-                                "max":{
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Upper bound of kitchen equipment usage frequency per week."
-                                }
+                "required": [
+                    "has_dishwasher"
+                ]
+            },
+            "kitchen": {
+                "type": "object",
+                "description": "Kitchen equipment usage profile.",
+                "properties": {
+                    "has_kitchen_equipment": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has kitchen equipment."
+                    },
+                    "cooktop_fuel": {
+                        "type": "string",
+                        "description": "Fuel type of the cooktop.",
+                        "enum": [
+                            "electric",
+                            "gas",
+                            "other"
+                        ]
+                    },
+                    "efficient": {
+                        "type": "boolean",
+                        "description": "Indicates whether the household has efficient kitchen equipment."
+                    },
+                    "usage_frequency_per_week": {
+                        "type": "object",
+                        "description": "Frequency of kitchen equipment usage per week.",
+                        "properties": {
+                            "min": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Lower bound of kitchen equipment usage frequency per week."
+                            },
+                            "max": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "description": "Upper bound of kitchen equipment usage frequency per week."
                             }
                         }
-                    },
-                    "required": [
-                        "has_kitchen_equipment"
-                    ]
-                }
+                    }
+                },
+                "required": [
+                    "has_kitchen_equipment"
+                ]
             }
         }
     }

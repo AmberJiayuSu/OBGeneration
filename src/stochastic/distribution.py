@@ -16,7 +16,7 @@ class Distribution(ABC):
     def __call__(self) -> float:
         return self.sample()
     
-class DefiniteValue(Distribution):
+class Constant(Distribution):
     def __init__(self, value: float):
         self._value = value
 
@@ -27,7 +27,7 @@ class DefiniteValue(Distribution):
         return self._value
     
     def __repr__(self) -> str:
-        return f"DefiniteValue({self._value})"
+        return f"Constant({self._value})"
     
 
 class NormalDistribution(Distribution):

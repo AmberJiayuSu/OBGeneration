@@ -55,7 +55,7 @@ class RuleSet:
             )
         return rule
     
-    def definite_value_rule() -> FieldRule:
+    def constant_rule() -> FieldRule:
         def rule(
             *values: Any,
             context: dict[str, Any] | None = None
