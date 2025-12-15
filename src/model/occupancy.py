@@ -6,17 +6,17 @@ class HouseholdComposition(BaseModel):
     """
     Represents the composition of a household based on daily mobility patterns.
     Attributes:
-        daily_commuters (int): Number of adults who COMMUTE to a workplace 5 days a week.
-        hybrid_workers (int): Number of hybrid workers (1-4 days commute).
+        daily_commuter (int): Number of adults who COMMUTE to a workplace 5 days a week.
+        hybrid_worker (int): Number of hybrid workers (1-4 days commute).
         stayathome (int): Number of people home most of the day (remote, retired, etc.).
         daily_school_or_daycare (int): Number of children attending school/daycare daily.
-        college_students (int): Number of college students.
+        college_student (int): Number of college students.
     """
-    daily_commuters: int = Field(default=0, ge=0)
-    hybrid_workers: int = Field(default=0, ge=0)
+    daily_commuter: int = Field(default=0, ge=0)
+    hybrid_worker: int = Field(default=0, ge=0)
     stayathome: int = Field(default=0, ge=0)
-    daily_school_or_daycare: int = Field(default=0, ge=0)
-    college_students: int = Field(default=0, ge=0)
+    k12_or_daycare: int = Field(default=0, ge=0)
+    college_student: int = Field(default=0, ge=0)
 
 class TimeRange(BaseModel):
     """

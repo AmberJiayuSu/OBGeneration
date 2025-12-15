@@ -1,69 +1,91 @@
-from itertools import count
-import numpy as np
 from stochastic.distribution import Distribution
 import model.occupancy as Occupancy
-import stochastic.translation_rule as TranslationRule
-import stochastic.distribution_config as DistributionConfig
+from stochastic.distribution_config import DistributionConfig
 from enum import Enum
 import random
-from pydantic import BaseModel, Field
-from typing import Optional, Literal
+from pydantic import BaseModel, Field, ConfigDict
+import json
+from pathlib import Path
+
+
 
 class OccupantRole(Enum):
-    FULLTIME_WORKER = "fulltime_worker"
+    DAILY_COMMUTER = "daily_commuter"
     HYBRID_WORKER = "hybrid_worker"
     STAYATHOME = "stayathome"
-    K12 = "k12"
+    K12_OR_DAYCARE = "k12_or_daycare"
     COLLEGE_STUDENT = "college_student"
 
 class RoleAssumption(BaseModel):
     """Defines the behavior for a specific occupant role."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     role: OccupantRole = Field(..., description="The occupant role.")
-    days_away_freq: DistributionConfig = Field(..., description="How many days/week this role leaves home.")
-    leave_time: DistributionConfig = Field(..., description="Time of departure.")
-    return_time: DistributionConfig = Field(..., description="Time of return.")
+    days_away_freq: Distribution = Field(..., description="How many days/week this role leaves home.")
+    leave_time: Distribution = Field(..., description="Time of departure.")
+    return_time: Distribution = Field(..., description="Time of return.")
 
 class OccupancyAssumptions(BaseModel):
     """Master configuration for household behavioral assumptions."""
-    fulltime_worker: RoleAssumption
+    daily_commuter: RoleAssumption
     hybrid_worker: RoleAssumption
     stayathome: RoleAssumption
-    k12: RoleAssumption
+    k12_or_daycare: RoleAssumption
     college_student: RoleAssumption
+
+    @staticmethod
+    def _build_role(d: dict) -> RoleAssumption:
+        return RoleAssumption(
+            role=OccupantRole(d["role"]),
+            days_away_freq=DistributionConfig(**d["days_away_freq"]).build(),
+            leave_time=DistributionConfig(**d["leave_time"]).build(),
+            return_time=DistributionConfig(**d["return_time"]).build(),
+        )
+
+    @classmethod
+    def from_json_file(cls, path: str | Path) -> "OccupancyAssumptions":
+        data = json.loads(Path(path).read_text())
+
+        return cls(
+            daily_commuter=cls._build_role(data["daily_commuter"]),
+            hybrid_worker=cls._build_role(data["hybrid_worker"]),
+            stayathome=cls._build_role(data["stayathome"]),
+            k12_or_daycare=cls._build_role(data["k12_or_daycare"]),
+            college_student=cls._build_role(data["college_student"]),
+        )
 
     @classmethod
     def default(cls) -> "OccupancyAssumptions":
         """Returns the standard/default assumptions."""
         return cls(
-            fulltime_worker=RoleAssumption(
-                role = OccupantRole.FULLTIME_WORKER,
-                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 0.5, "int": True})
+            daily_commuter=RoleAssumption(
+                role = OccupantRole.DAILY_COMMUTER,
+                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 0.5, "int": True}).build()
             ),
             hybrid_worker=RoleAssumption(
                 role = OccupantRole.HYBRID_WORKER,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 4}),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 0.5, "int": True})
+                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 4}).build(),
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 0.5, "int": True}).build()
             ),
             stayathome=RoleAssumption(
                 role = OccupantRole.STAYATHOME,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 0, "max": 2}),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 11.0, "std": 2.0, "int": True}),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 13.0, "std": 2.0, "int": True})
+                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 0, "max": 2}).build(),
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 11.0, "std": 2.0, "int": True}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 13.0, "std": 2.0, "int": True}).build()
             ),
-            k12=RoleAssumption(
-                role = OccupantRole.K12,
-                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}), 
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.5, "std": 0.5, "int": True})
+            k12_or_daycare=RoleAssumption(
+                role = OccupantRole.K12_OR_DAYCARE,
+                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 0.5, "int": True}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.5, "std": 0.5, "int": True}).build()
             ),
             college_student=RoleAssumption(
                 role = OccupantRole.COLLEGE_STUDENT,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 3, "max": 5}),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 10.0, "std": 3.0, "int": True}),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 3.0, "int": True})
+                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 3, "max": 5}).build(),
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 10.0, "std": 3.0, "int": True}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 3.0, "int": True}).build()
             )
         )
     
@@ -76,7 +98,7 @@ class WeeklyOccupantAgent:
         self.roleAssumption = roleAssumption
     
     def _get_num_days_away(self) -> int:
-        return int(self.roleAssumption.days_away_freq.get_sampler().sample())
+        return int(self.roleAssumption.days_away_freq.sample())
         
     def _get_day_away(self):
         all_possible = [0,1,2,3,4]
@@ -85,8 +107,8 @@ class WeeklyOccupantAgent:
     
     def sample_weekay(self,no_home_time_ranges: list[Occupancy.TimeRange] ) -> list[Occupancy.TimeRange]:
         schedule = []
-        start_dist = self.roleAssumption.leave_time.get_sampler()
-        end_dist = self.roleAssumption.return_time.get_sampler()
+        start_dist = self.roleAssumption.leave_time
+        end_dist = self.roleAssumption.return_time
         # sample days away based on role assumption, each week indepedent, each person independent
         day_away = self._get_day_away()
         for day in range(5):
@@ -124,21 +146,21 @@ class OccupancyTranslator:
     
     def _get_defined_occupants_cnt(self) -> int:
         comp = self.occupancy.household_composition
-        return (comp.fulltime_workers + comp.hybrid_workers + comp.stayathome +
-                comp.k12 + comp.college_students)
+        return (comp.daily_commuter + comp.hybrid_worker + comp.stayathome +
+                comp.k12_or_daycare + comp.college_student)
     
     def _get_occupants_tracker(self):
         comp = self.occupancy.household_composition
         trackers = []
-        for _ in range(comp.fulltime_workers):
-            trackers.append(WeeklyOccupantAgent(self.assumptions.fulltime_worker))
-        for _ in range(comp.hybrid_workers):
+        for _ in range(comp.daily_commuter):
+            trackers.append(WeeklyOccupantAgent(self.assumptions.daily_commuter))
+        for _ in range(comp.hybrid_worker):
             trackers.append(WeeklyOccupantAgent(self.assumptions.hybrid_worker))
         for _ in range(comp.stayathome):
             trackers.append(WeeklyOccupantAgent(self.assumptions.stayathome))
-        for _ in range(comp.k12):
-            trackers.append(WeeklyOccupantAgent(self.assumptions.k12))
-        for _ in range(comp.college_students):
+        for _ in range(comp.k12_or_daycare):
+            trackers.append(WeeklyOccupantAgent(self.assumptions.k12_or_daycare))
+        for _ in range(comp.college_student):
             trackers.append(WeeklyOccupantAgent(self.assumptions.college_student))
         return trackers
     
@@ -179,17 +201,12 @@ class OccupancyTranslator:
             no_one_home_range = Occupancy.TimeRange(start_hour=23, end_hour=0)  # Zero duration
             no_one_home_ranges = [no_one_home_range] * 5
         else:
-            weekday_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                no_one_home_range.start_hour,
-                1.0,
-                context={"lower": 0, "upper": no_one_home_range.end_hour})
-            weekday_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                no_one_home_range.end_hour,
-                1.0,
-                context={"lower": no_one_home_range.start_hour, "upper": 23})
+            no_one_home_range = occupancy.weekday_occupancy_pattern.no_one_home_interval
+            weekday_start_dist = DistributionConfig(dist_type="normal", params={"mean": no_one_home_range.start_hour, "std": 1.0, "int": True,"lower": 0, "upper": no_one_home_range.end_hour}).build()
+            weekday_end_dist = DistributionConfig(dist_type="normal", params={"mean": no_one_home_range.end_hour, "std": 1.0, "int": True,"lower": no_one_home_range.start_hour, "upper": 23}).build()
             no_one_home_ranges = []
             for _ in range(5):
-                start_time,end_time = OccupancyTranslator._sample_single_range(weekday_start_dist, weekday_end_dist, wraps_midnight=no_one_home_range.wraps_midnight)
+                start_time,end_time = OccupancyTranslatorUtils._sample_single_range(weekday_start_dist, weekday_end_dist, wraps_midnight=no_one_home_range.wraps_midnight)
                 daily_range = Occupancy.TimeRange(start_hour=start_time, end_hour=end_time)
                 no_one_home_ranges.append(daily_range)
 
@@ -226,21 +243,14 @@ class OccupancyTranslator:
             no_one_home_range = occupancy.weekend_occupancy_pattern.no_one_home_interval
             
             # Create distributions for sampling the no-one-home period
-            weekend_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                no_one_home_range.start_hour,
-                2.0,
-                context={"lower": 0, "upper": no_one_home_range.end_hour})
-            
-            weekend_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                no_one_home_range.end_hour,
-                2.0,
-                context={"lower": no_one_home_range.start_hour, "upper": 23})
+            weekend_start_dist = DistributionConfig(dist_type="normal", params={"mean": no_one_home_range.start_hour, "std": 2.0, "int": True,"lower": 0, "upper": no_one_home_range.end_hour}).build()
+            weekend_end_dist = DistributionConfig(dist_type="normal", params={"mean": no_one_home_range.end_hour, "std": 2.0, "int": True,"lower": no_one_home_range.start_hour, "upper": 23}).build()
             
             weekend_leaves = []
             for _ in range(2):
                 day_leaves = []
                 for _ in range(occupancy.num_occupants):
-                    start, end = OccupancyTranslator._sample_single_range(
+                    start, end = OccupancyTranslatorUtils._sample_single_range(
                         weekend_start_dist,
                         weekend_end_dist)
                     daily_range = Occupancy.TimeRange(start_hour=start, end_hour=end)
@@ -282,14 +292,8 @@ class OccupancyTranslator:
         if occupancy.weekday_occupancy_pattern.sleep_time is None:
             weekday_sleep = [None] * 5
         else:
-            sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                occupancy.weekday_occupancy_pattern.sleep_time.start_hour,
-                0.5,
-                context={"lower": 0, "upper": 23})
-            sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                occupancy.weekday_occupancy_pattern.sleep_time.end_hour,
-                0.5,
-                context={"lower": 0, "upper": 23})
+            sleep_start_dist = DistributionConfig(dist_type="normal", params={"mean": occupancy.weekday_occupancy_pattern.sleep_time.start_hour, "std": 0.5, "int": True,"lower": 0, "upper": 23}).build()
+            sleep_end_dist = DistributionConfig(dist_type="normal", params={"mean": occupancy.weekday_occupancy_pattern.sleep_time.end_hour, "std": 0.5, "int": True,"lower": 0, "upper": 23}).build()  
 
             wraps_midnight = occupancy.weekday_occupancy_pattern.sleep_time.wraps_midnight
 
@@ -297,7 +301,7 @@ class OccupancyTranslator:
                 # Sample sleep times ensuring the entire period is within occupied hours
                 valid_sleep_found = False
                 for _ in range(MAX_ATTEMPTS):
-                    sleep_hour, wake_hour = OccupancyTranslator._sample_single_range(
+                    sleep_hour, wake_hour = OccupancyTranslatorUtils._sample_single_range(
                         sleep_start_dist,
                         sleep_end_dist,
                         wraps_midnight=wraps_midnight)
@@ -314,19 +318,12 @@ class OccupancyTranslator:
                     # Fallback: use the mean values if no valid sample found
                     weekday_sleep.append(occupancy.weekday_occupancy_pattern.sleep_time)
 
-        if occupancy.weekend_sleep_time is None:
+        if occupancy.weekend_occupancy_pattern.sleep_time is None:
             weekend_sleep = [None] * 2
         else:
-            sleep_start_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                occupancy.weekend_sleep_time.start_hour,
-                0.5,
-                context={"lower": 0, "upper": 23})
-            sleep_end_dist = TranslationRule.RuleSet.normal_distribution_rule()(
-                occupancy.weekend_sleep_time.end_hour,
-                0.5,
-                context={"lower": 0, "upper": 23})
-
-            wraps_midnight = occupancy.weekend_sleep_time.wraps_midnight
+            sleep_start_dist = DistributionConfig(dist_type="normal", params={"mean": occupancy.weekend_occupancy_pattern.sleep_time.start_hour, "std": 0.5, "int": True,"lower": 0, "upper": 23}).build()
+            sleep_end_dist = DistributionConfig(dist_type="normal", params={"mean": occupancy.weekend_occupancy_pattern.sleep_time.end_hour, "std": 0.5, "int": True,"lower": 0, "upper": 23}).build()
+            wraps_midnight = occupancy.weekend_occupancy_pattern.sleep_time.wraps_midnight
 
             for day in range(2):
                 weekend_day_offset = 5 + day  # Weekend starts after 5 weekdays
@@ -334,7 +331,7 @@ class OccupancyTranslator:
                 # Sample sleep times ensuring the entire period is within occupied hours
                 valid_sleep_found = False
                 for _ in range(MAX_ATTEMPTS):
-                    sleep_hour, wake_hour = OccupancyTranslator._sample_single_range(
+                    sleep_hour, wake_hour = OccupancyTranslatorUtils._sample_single_range(
                         sleep_start_dist,
                         sleep_end_dist,
                         wraps_midnight=wraps_midnight)
@@ -460,7 +457,7 @@ class OccupancyTranslatorUtils:
             end_presumption.set_bounds(lower=daily_noone_range.end_hour, upper=23)
         
         try:
-            start, end = WeeklyOccupantAgent._sample_single_range(
+            start, end = OccupancyTranslatorUtils._sample_single_range(
                 start_presumption,
                 end_presumption,
                 wraps_midnight=daily_noone_range.wraps_midnight)
@@ -516,7 +513,7 @@ class OccupancyTranslatorUtils:
         return mask
     
     @staticmethod
-    def get_sleep_mask(sleep_schedule: list[Occupancy.TimeRange | None]) -> list[bool]:
+    def _get_sleep_mask(sleep_schedule: list[Occupancy.TimeRange | None]) -> list[bool]:
         """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
         mask = [False] * (24 * 7)
         for d in range(7):

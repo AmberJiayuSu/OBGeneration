@@ -16,12 +16,12 @@
                     "type": "object",
                     "description": "The composition of the household based on daily mobility patterns.",
                     "properties": {
-                        "daily_commuters": {
+                        "daily_commuter": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "Number of adults who COMMUTE to a workplace 5 days a week (excludes remote workers)."
                         },
-                        "hybrid_workers": {
+                        "hybrid_worker": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "Number of adults who commute to a workplace 1-4 days a week."
@@ -36,7 +36,7 @@
                             "minimum": 0,
                             "description": "Number of children attending school or daycare daily (regular away-from-home schedule)."
                         },
-                        "college_students": {
+                        "college_student": {
                             "type": "integer",
                             "minimum": 0,
                             "description": "Number of college students (typically irregular/variable schedules)."

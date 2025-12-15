@@ -1,78 +1,81 @@
+from __future__ import annotations
+
+from typing import Any, Dict, Literal, Optional
 from pydantic import BaseModel, Field
-from typing import Literal, Dict, Any
-import stochastic.translation_rule as TranslationRule
+
+from stochastic.distribution import Constant, NormalDistribution, UniformDistribution, WeightedValueDistribution
+
+
+DistType = Literal["normal", "uniform", "constant", "weighted"]
+
 
 class DistributionConfig(BaseModel):
     """
-    Defines a probability distribution for a behavioral parameter.
-    Designed to be universal by accepting a dictionary of parameters.
+    JSON-friendly config that builds your Distribution objects directly.
+
+    Supported:
+    - normal:  params = { "mean": ..., "std": ..., "int": true/false?, "lower": ..., "upper": ... }
+    - uniform: params = { "min": ..., "max": ..., "int": true/false? }
+             + context can override bounds via {"lower": ..., "upper": ...}
+    - constant: params = { "value": ... }
+    - weighted: params = { "0.7": [8,9], "0.3": [10] }  (keys are weights)
     """
-    dist_type: str = Field(..., description="The type of distribution (e.g., 'normal', 'uniform', 'constant').")
-    params: Dict[str, Any] = Field(default_factory=dict, description="Key-value pairs of parameters (e.g., {'mean': 0, 'std': 1}).")
+    dist_type: DistType
+    params: Dict[str, Any] = Field(default_factory=dict)
 
-    def get_sampler(self):
-        """Returns a sampler object compatible with the stochastic library."""
-        # Map common config types to the specific RuleSet method names provided
-        method_map = {
-            "normal": "normal_distribution_rule",
-            "uniform": "uniform_distribution_rule",
-            "constant": "constant_rule",
-            "weighted": "weighted_value_distribution_rule"
-        }
-        
-        # Determine the method name to look up in RuleSet
-        method_name = method_map.get(self.dist_type, f"{self.dist_type}_distribution_rule")
+    def build(self, context: Optional[dict[str, Any]] = None):
+        context = context or {}
+        p = self.params
 
-        try:
-            rule_factory = getattr(TranslationRule.RuleSet, method_name)
-            dist_constructor = rule_factory() # Creates the distribution class/closure
+        if self.dist_type == "constant":
+            if "value" not in p:
+                raise ValueError("constant requires params={'value': ...}")
+            return Constant(float(p["value"]))
 
-            if not hasattr(TranslationRule.RuleSet, method_name):
-                raise ValueError(f"RuleSet has no method: {method_name}")
-            
-            # Prepare arguments based on the specific requirements of the provided RuleSet
-            args = []
-            kwargs = {}
+        if self.dist_type == "uniform":
+            # base bounds come from params; context can override
+            lo = float(p.get("min", 0.0))
+            hi = float(p.get("max", 1.0))
+            lo = float(context.get("lower", lo))
+            hi = float(context.get("upper", hi))
+            as_int = bool(p.get("int", True))
+            return UniformDistribution(lower=lo, upper=hi, int=as_int)
 
-            if self.dist_type in ["normal", "uniform"]:
-                if "int" in self.params:
-                    kwargs["int"] = self.params["int"]
+        if self.dist_type == "normal":
+            mu = float(p.get("mean", 0.0))
+            sigma = float(p.get("std", 1.0))
 
-            if self.dist_type == "normal":
-                # normal_distribution_rule requires: mu (values[0]), sigma (values[1])
-                args = [self.params.get("mean", 0.0), self.params.get("std", 1.0)]
+            # bounds can come from params or context; context wins
+            lb = float(p.get("lower", float("-inf")))
+            ub = float(p.get("upper", float("inf")))
+            lb = float(context.get("lower", lb))
+            ub = float(context.get("upper", ub))
 
-            elif self.dist_type == "uniform":
-                # uniform_distribution_rule requires: lower (values[0]), upper (values[1])
-                args = [self.params.get("min", 0.0), self.params.get("max", 1.0)]
+            as_int = bool(p.get("int", True))
+            return NormalDistribution(mean=mu, stddev=sigma, lower=lb, upper=ub, int=as_int)
 
-            elif self.dist_type == "constant":
-                # definite_value_rule requires: value (values[0])
-                val = self.params.get("value")
-                if val is None:
-                    val = next(iter(self.params.values()), 0.0)
-                args = [val]
+        if self.dist_type == "weighted":
+            # params = {"0.7": [8, 9], "0.3": [10]}  OR  {"0.7": 8, "0.3": 9}
+            values_with_weights: dict[float, list[float]] = {}
 
-            elif self.dist_type == "weighted":
-                 # weighted_value_distribution_rule requires: values_with_weights dict (values[0])
-                 # Since params keys are strings in JSON/Pydantic, we try to convert them to floats for weights
-                 converted_params = {}
-                 for k, v in self.params.items():
-                     try:
-                         # Attempt to convert string key to float weight
-                         weight = float(k)
-                         # Ensure value is a list as expected by WeightedValueDistribution
-                         val_list = v if isinstance(v, list) else [v]
-                         converted_params[weight] = val_list
-                     except ValueError:
-                         continue
-                 args = [converted_params]
+            if not p:
+                raise ValueError("weighted distribution requires non-empty params")
 
-            else:
-                # Fallback: pass values in order
-                args = list(self.params.values())
+            for k, vals in p.items():
+                try:
+                    weight = float(k)
+                except ValueError as e:
+                    raise ValueError(
+                        "weighted distribution expects numeric-string keys as weights "
+                        "(e.g., {'0.7': [8,9], '0.3': [10]})"
+                    ) from e
 
-            return dist_constructor(*args, **kwargs)
+                if not isinstance(vals, list):
+                    vals = [vals]
 
-        except Exception as e:
-            raise ValueError(f"Failed to create sampler for {self.dist_type}: {str(e)}")
+                values_with_weights[weight] = [float(v) for v in vals]
+
+            return WeightedValueDistribution(values_with_weights)
+
+        # should be unreachable due to Literal typing
+        raise ValueError(f"Unsupported dist_type: {self.dist_type}")
