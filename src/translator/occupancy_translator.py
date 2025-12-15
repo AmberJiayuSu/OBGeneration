@@ -164,16 +164,10 @@ class OccupancyTranslator:
             trackers.append(WeeklyOccupantAgent(self.assumptions.college_student))
         return trackers
     
-    def get_weekly_schedule(self) -> tuple[list[float], list[bool]]:
-        """ Returns the generated weekly occupancy schedule and sleep schedule."""
-        occupancy_schedule = self.translate_occupancy_presumption()
-        occupancy_mask = OccupancyTranslatorUtils._get_occupancy_mask(occupancy_schedule)
-        sleep_schedule = self.translate_occupancy_sleep_time(occupancy_mask)
-        sleep_mask = OccupancyTranslatorUtils._get_sleep_mask(sleep_schedule)
-        return occupancy_schedule, sleep_mask
-    
-    def get_annual_schedule(self) -> tuple[list[float], list[bool]]:
-        """ Returns the generated annual occupancy schedule and sleep schedule."""
+    def get_annual_schedule(self) -> tuple[list[list[float]], list[list[bool]]]:
+        """ Returns the generated annual occupancy schedule and sleep schedule.
+            Each is a list of 53 weeks, each week is a list of 168 hours (or 24 hours for the last week if truncated).
+        """
         annual_occupancy_schedule = []
         annual_sleep_schedule = []
         for w in range(53):
@@ -184,6 +178,17 @@ class OccupancyTranslator:
             annual_occupancy_schedule.append(weekly_occupancy)
             annual_sleep_schedule.append(weekly_sleep)
         return annual_occupancy_schedule, annual_sleep_schedule
+    
+    
+    def get_weekly_schedule(self) -> tuple[list[float], list[bool]]:
+        """ Returns the generated weekly occupancy schedule and sleep schedule."""
+        occupancy_schedule = self.translate_occupancy_presumption()
+        occupancy_mask = OccupancyTranslatorUtils._get_occupancy_mask(occupancy_schedule)
+        sleep_schedule = self.translate_occupancy_sleep_time(occupancy_mask)
+        sleep_mask = OccupancyTranslatorUtils._get_sleep_mask(sleep_schedule)
+        return occupancy_schedule, sleep_mask
+    
+   
 
 
    
@@ -542,18 +547,16 @@ class OccupancyTranslatorUtils:
                 mask.append(False)
         return mask
     
-
     
     @staticmethod
     def revise_by_sleep(sleep_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
-        """ Revisions to an existing schedule based on sleep times."""
-        revised_schedule = existing_schedule.copy()
-        for h in range(24 * 7):
-            if sleep_weekly_mask[h]:
-                revised_schedule[h] = value
-            else:
-                revised_schedule[h] = existing_schedule[h]     
-        return revised_schedule
+        """ Revisions to an existing schedule based on sleep times. 
+            Assume both inputs (sleep_weekly_mask and existing_schedule) should be in the same length."""
+        assert len(sleep_weekly_mask) == len(existing_schedule), "sleep mask and schedule must have the same length"
+        return [
+            value if asleep else v
+            for v, asleep in zip(existing_schedule, sleep_weekly_mask)
+        ]
     
     @staticmethod
     def revise_by_absence(occupied_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
