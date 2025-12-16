@@ -3,19 +3,32 @@ import numpy as np
 from stochastic.distribution import Distribution
 import model.occupancy as Occupancy
 import model.equipment as Equipment
-from translator.occupancy_translator import OccupancyTranslator
-import stochastic.translation_rule as TranslationRule
+from translator.occupancy_translator_old import OccupancyTranslator
+from pydantic import BaseModel, Field, ConfigDict
+from stochastic.distribution_config import DistributionConfig
 from stochastic.translator_utils import Utils
+
+class EquipmentAssumptions(BaseModel):
+    """ Equipment assumptions for equipment translation."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    baseload: float 
+    laundry_power: dict[str, Distribution]
+
+    @classmethod
+    def default(cls) -> "EquipmentAssumptions":
+        return cls(
+            baseload=1000.0,
+            # energy star from their data table, ResStock for multiplication factor for standard equipment
+            laundry_power={
+                "efficient_washer": DistributionConfig(dist_type="normal", params={"mean": 400.0, "stddev": 135.0}).build(),
+                "inefficient_washer": DistributionConfig(dist_type="normal", params={"mean": 1900.0, "stddev": 300.0}).build(),
+                "efficient_dryer": DistributionConfig(dist_type="normal", params={"mean": 1900.0, "stddev": 487.0}).build(),
+                "inefficient_dryer": DistributionConfig(dist_type="normal", params={"mean": 2500.0, "stddev": 650.0}).build(),
+            }
+        )
 
 
 class EquipmentTranslator:
-    system_base_load = 1000.0  # W, base load for equipment not modeled explicitly
-    laundry_power_map = {
-        "efficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(400.0, 50.0),
-        "inefficient_washer": TranslationRule.RuleSet.normal_distribution_rule()(1600.0, 150.0),
-        "efficient_dryer": TranslationRule.RuleSet.normal_distribution_rule()(2500.0, 200.0),
-        "inefficient_dryer": TranslationRule.RuleSet.normal_distribution_rule()(4000.0, 300.0),
-    }
     laundry_duration_dist = TranslationRule.RuleSet.normal_distribution_rule()(2.5, 0.5, context={"lower":1, "upper":4})
     refrigeration_power_map = {
         Equipment.RefrigerationSize.MINI: TranslationRule.RuleSet.normal_distribution_rule()(100.0, 25.0),

@@ -561,15 +561,13 @@ class OccupancyTranslatorUtils:
     @staticmethod
     def revise_by_absence(occupied_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
         """ Revisions to an existing schedule based on unoccupied times."""
-        revised_schedule = existing_schedule.copy()
-        for h in range(24 * 7):
-            if not occupied_weekly_mask[h]:
-                revised_schedule[h] = value
-            else:
-                revised_schedule[h] = existing_schedule[h]     
-        return revised_schedule
+        assert len(occupied_weekly_mask) == len(existing_schedule), "occupied mask and schedule must have the same length"
+        return [
+            value if not present else v
+            for v, present in zip(existing_schedule, occupied_weekly_mask)
+        ]
+    
 
-   
    
 
         

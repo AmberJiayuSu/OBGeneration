@@ -1,16 +1,15 @@
 from typing import Optional
 from pydantic import BaseModel, Field, computed_field
 
-
 class HouseholdComposition(BaseModel):
     """
     Represents the composition of a household based on daily mobility patterns.
     Attributes:
         daily_commuter (int): Number of adults who COMMUTE to a workplace 5 days a week.
         hybrid_worker (int): Number of hybrid workers (1-4 days commute).
-        stayathome (int): Number of people home most of the day (remote, retired, etc.).
+        stayathome (int): Number of people home most of the day (remote, retired, stay home parent etc.).
         daily_school_or_daycare (int): Number of children attending school/daycare daily.
-        college_student (int): Number of college students.
+        college_student (int): Number of college students with rather high variance in daily schedules.
     """
     daily_commuter: int = Field(default=0, ge=0)
     hybrid_worker: int = Field(default=0, ge=0)
@@ -31,7 +30,7 @@ class TimeRange(BaseModel):
     @computed_field
     @property
     def wraps_midnight(self) -> bool:
-        """Automatically computed: True if range crosses midnight."""
+        """True if range crosses midnight."""
         return self.end_hour < self.start_hour
 
     def contains_hour(self, hour: int) -> bool:
@@ -41,31 +40,29 @@ class TimeRange(BaseModel):
         else:
             return hour > self.start_hour or hour < self.end_hour
 
-class OccupancyPattern(BaseModel):
-    """
-    Base pattern for occupancy (used for Weekends directly).
-    Attributes:
-        is_always_occupied (bool): If True, assume someone is always home.
-        no_one_home_interval (Optional[TimeRange]): Time range when house is empty (if not always occupied).
-        sleep_time (Optional[TimeRange]): Typical sleep hours.
-    """
-    is_always_occupied: bool = Field(default=False)
-    no_one_home_interval: Optional[TimeRange] = None
-    sleep_time: Optional[TimeRange] = None
+class WeekdayAwayInterval(BaseModel):
+    """Details for a specific weekday away interval."""
+    num_of_days: int = Field(..., ge=1, le=5)
+    away_interval: TimeRange = Field(...)
 
-class WeekdayOccupancyPattern(OccupancyPattern):
-    """
-    Weekday specific pattern including frequency of vacancy.
-    Attributes:
-        vacancy_frequency (Optional[int]): How many weekdays per week the house is empty.
-    """
-    vacancy_frequency: Optional[int] = Field(default=None, ge=1, le=5)
+class WeekdayPattern(BaseModel):
+    """Defines the unoccupied patterns for weekdays."""
+    is_always_occupied: bool = Field(...)
+    primary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
+    secondary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
+
+
+class WeekendPattern(BaseModel):
+    """Defines the unoccupied patterns for weekends."""
+    is_always_occupied: bool = Field(...)
+    away_interval: Optional[TimeRange] = Field(None)
+
 
 class Occupancy(BaseModel):
-    """
-    Represents the occupancy profile of a household.
-    """
-    num_occupants: int = Field(ge=1)
+    """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
+    num_occupants: int = Field(..., ge=1)
     household_composition: HouseholdComposition
-    weekday_occupancy_pattern: WeekdayOccupancyPattern
-    weekend_occupancy_pattern: OccupancyPattern
+    weekday_pattern: WeekdayPattern
+    weekend_pattern: WeekendPattern
+    sleep_time: TimeRange
+

@@ -2,27 +2,34 @@
   "occupancy": {
     "num_occupants": 4,
     "household_composition": {
-      "fulltime_workers": 1,
-      "hybrid_workers": 1,
+      "daily_commuter": 1,
+      "hybrid_worker": 1,
       "stayathome": 1,
-      "k12": 1,
-      "college_students": 0
+      "k12_or_daycare": 1,
+      "college_student": 0
     },
-    "weekday_no_one_home": {
-      "start_hour": 13,
-      "end_hour": 16
+    "weekday_occupancy_pattern": {
+      "is_always_occupied": false,
+      "vacancy_frequency": 5,
+      "no_one_home_interval": {
+        "start_hour": 13,
+        "end_hour": 16
+      },
+      "sleep_time": {
+        "start_hour": 0,
+        "end_hour": 7
+      }
     },
-    "weekend_no_one_home": {
-      "start_hour": 13,
-      "end_hour": 17
-    },
-    "weekday_sleep_time": {
-      "start_hour": 0,
-      "end_hour": 7
-    },
-    "weekend_sleep_time": {
-      "start_hour": 1,
-      "end_hour": 9
+    "weekend_occupancy_pattern": {
+      "is_always_occupied": false,
+      "no_one_home_interval": {
+        "start_hour": 13,
+        "end_hour": 17
+      },
+      "sleep_time": {
+        "start_hour": 1,
+        "end_hour": 9
+      }
     }
   },
   "lighting": {

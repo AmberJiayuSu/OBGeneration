@@ -2,11 +2,12 @@ from typing import Optional
 from pydantic import BaseModel, Field, computed_field
 from enum import Enum
 
-class LightingBehavior(Enum):
-    ALWAYS_ON = "always_on"
-    MOSTLY_ON = "mostly_on"
-    NECESSARY_ON = "necessary_on"
-    SENSOR = "sensor"
+
+
+class TurnOffHabits(BaseModel):
+    when_house_empty: bool = Field(default=True)
+    when_room_empty: bool = Field(default=True)
+    when_daylight_bright: bool = Field(default=False)
 
 class Lighting(BaseModel):
     """
@@ -14,6 +15,5 @@ class Lighting(BaseModel):
     Attributes:
        
     """
-    LED: bool = Field(default=True)
-    usage_pattern: LightingBehavior = Field(default=LightingBehavior.NECESSARY_ON)
+    turn_off_habits: TurnOffHabits = Field(default_factory=TurnOffHabits)
 
