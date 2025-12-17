@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field, computed_field, model_validator
 
 class HouseholdComposition(BaseModel):
     """
@@ -50,6 +50,14 @@ class WeekdayPattern(BaseModel):
     is_always_occupied: bool = Field(...)
     primary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
     secondary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
+
+    @model_validator(mode='after')
+    def validate_total_days(self):
+        if self.primary_away_interval and self.secondary_away_interval:
+            total_days = self.primary_away_interval.num_of_days + self.secondary_away_interval.num_of_days
+            if total_days > 5:
+                self.secondary_away_interval.num_of_days = 5 - self.primary_away_interval.num_of_days
+        return self
 
 
 class WeekendPattern(BaseModel):
