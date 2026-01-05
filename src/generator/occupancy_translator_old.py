@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 
+
 class OccupantRole(Enum):
     DAILY_COMMUTER = "daily_commuter"
     HYBRID_WORKER = "hybrid_worker"

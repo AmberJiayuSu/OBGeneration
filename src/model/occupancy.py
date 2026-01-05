@@ -40,37 +40,44 @@ class TimeRange(BaseModel):
         else:
             return hour > self.start_hour or hour < self.end_hour
 
-class WeekdayAwayInterval(BaseModel):
+class AwayPattern(BaseModel):
     """Details for a specific weekday away interval."""
     num_of_days: int = Field(..., ge=1, le=5)
     away_interval: TimeRange = Field(...)
 
-class WeekdayPattern(BaseModel):
-    """Defines the unoccupied patterns for weekdays."""
+class OcccupancyPattern(BaseModel):
+    """Defines the unoccupied patterns."""
     is_always_occupied: bool = Field(...)
-    primary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
-    secondary_away_interval: Optional[WeekdayAwayInterval] = Field(None)
-
-    @model_validator(mode='after')
-    def validate_total_days(self):
-        if self.primary_away_interval and self.secondary_away_interval:
-            total_days = self.primary_away_interval.num_of_days + self.secondary_away_interval.num_of_days
-            if total_days > 5:
-                self.secondary_away_interval.num_of_days = 5 - self.primary_away_interval.num_of_days
-        return self
-
-
-class WeekendPattern(BaseModel):
-    """Defines the unoccupied patterns for weekends."""
-    is_always_occupied: bool = Field(...)
-    away_interval: Optional[TimeRange] = Field(None)
+    away_pattern: Optional[AwayPattern] = Field(None)
 
 
 class Occupancy(BaseModel):
     """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
     num_occupants: int = Field(..., ge=1)
     household_composition: HouseholdComposition
-    weekday_pattern: WeekdayPattern
-    weekend_pattern: WeekendPattern
+    weekday_pattern: OcccupancyPattern
+    weekend_pattern: OcccupancyPattern
     sleep_time: TimeRange
+
+    @model_validator(mode='after')
+    def validate_household_composition(self):
+        """Validate that the sum of all roles equals num_occupants."""
+        composition = self.household_composition
+        total = (
+            composition.daily_commuter +
+            composition.hybrid_worker +
+            composition.stayathome +
+            composition.k12_or_daycare +
+            composition.college_student
+        )
+        if total != self.num_occupants:
+            raise ValueError(
+                f"Sum of household composition ({total}) does not match num_occupants ({self.num_occupants}). "
+                f"Breakdown: daily_commuter={composition.daily_commuter}, "
+                f"hybrid_worker={composition.hybrid_worker}, "
+                f"stayathome={composition.stayathome}, "
+                f"k12_or_daycare={composition.k12_or_daycare}, "
+                f"college_student={composition.college_student}"
+            )
+        return self
 

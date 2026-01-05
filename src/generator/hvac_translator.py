@@ -1,9 +1,7 @@
-from itertools import count
-import numpy as np
+
 from stochastic.distribution import Distribution
 import model.occupancy as Occupancy
 import model.hvac as HVAC
-from translator.occupancy_translator_old import OccupancyTranslator,OccupancyTranslatorUtils
 import stochastic.translation_rule as TranslationRule
 
 

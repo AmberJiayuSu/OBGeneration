@@ -51,7 +51,7 @@
                             "type": "boolean",
                             "description": "Indicates if the household is typically occupied by at least one person throughout ALL weekdays (e.g. retirees)."
                         },
-                        "primary_away_interval": {
+                        "away_interval": {
                             "type": "object",
                             "description": "The most frequent time range when the house is empty (e.g., normal commute days).",
                             "properties": {
@@ -60,35 +60,6 @@
                                     "minimum": 1,
                                     "maximum": 5,
                                     "description": "Number of weekdays (1-5) this primary away interval applies to."
-                                },
-                                "start_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the last person leaves."
-                                },
-                                "end_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the first person returns."
-                                }
-                            },
-                            "required": [
-                                "num_of_days",
-                                "start_hour",
-                                "end_hour"
-                            ]
-                        },
-                        "secondary_away_interval": {
-                            "type": "object",
-                            "description": "An alternative time range when the house is empty for other weekdays (e.g. half-days). Days not covered by Primary or Secondary are assumed occupied.",
-                            "properties": {
-                                "num_of_days": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 4,
-                                    "description": "Number of weekdays this secondary away interval applies to. (Primary + Secondary must be <= 5)."
                                 },
                                 "start_hour": {
                                     "type": "integer",
@@ -184,27 +155,18 @@
             "type": "object",
             "description": "The lighting usage profile of the household.",
             "properties": {
-                "turn_off_habits": {
-                    "type": "object",
-                    "description": "Defines if the lights are turned OFF in specific situations (whether manually or automatically).",
-                    "properties": {
-                        "when_house_empty": {
-                            "type": "boolean",
-                            "description": "TRUE if lights are turned off when the entire household leaves."
-                        },
-                        "when_room_empty": {
-                            "type": "boolean",
-                            "description": "TRUE if lights are turned off when leaving a specific room (while still home)."
-                        },
-                        "when_daylight_bright": {
-                            "type": "boolean",
-                            "description": "TRUE if lights are turned off when natural daylight is sufficient."
-                        }
-                    }
-                }
+                "when_house_empty": {
+                    "type": "boolean",
+                    "description": "TRUE if lights are turned off when the entire household leaves."
+                },
+                "when_daylight_bright": {
+                    "type": "boolean",
+                    "description": "TRUE if lights are turned off when natural daylight is sufficient."
+                }   
             },
             "required": [
-                "turn_off_habits"
+                "when_house_empty",
+                "when_daylight_bright"
             ]
         },
         "hvac": {
@@ -257,33 +219,33 @@
                             ]
                         },
                         {
-                            "description": "Type 3: Valve Control. Occupant sets intensity (0-100%).",
+                            "description": "Type 3: Valve Control. Occupant sets intensity level.",
                             "type": "object",
                             "properties": {
                                 "type": {
                                     "const": "valve"
                                 },
-                                "active_percentage": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 100
+                                "active_level": {
+                                    "type": "string",
+                                    "enum": ["off", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level when occupants are active: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
-                                "sleep_percentage": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 100
+                                "sleep_level": {
+                                    "type": "string",
+                                    "enum": ["off", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level during sleep: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
-                                "absent_percentage": {
-                                    "type": "number",
-                                    "minimum": 0,
-                                    "maximum": 100
+                                "absent_level": {
+                                    "type": "string",
+                                    "enum": ["off", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level when absent: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 }
                             },
                             "required": [
                                 "type",
-                                "active_percentage",
-                                "sleep_percentage",
-                                "absent_percentage"
+                                "active_level",
+                                "sleep_level",
+                                "absent_level"
                             ]
                         },
                         {
