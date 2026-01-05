@@ -384,6 +384,16 @@ class OccupancyGenerator:
         mask = [occ > 0.0 for occ in occupancy_schedule]
         return mask
     
+    @staticmethod
+    def revise_by_absence(occupancy_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Revisions to an existing schedule based on occupancy times. 
+            Assume both inputs (occupancy_weekly_mask and existing_schedule) should be in the same length."""
+        assert len(occupancy_weekly_mask) == len(existing_schedule), "occupancy mask and schedule must have the same length"
+        return [
+            value if not occupied else v
+            for v, occupied in zip(existing_schedule, occupancy_weekly_mask)
+        ]
+    
 
     def household_annual_schedule(self) -> tuple[list[list[float]], list[list[bool]]]:
         """Generates the household's annual schedule by repeating the weekly schedule 52 weeks + 1 day."""

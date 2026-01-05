@@ -192,30 +192,30 @@
                             ]
                         },
                         {
-                            "description": "Type 2: Binary Control. Occupant can only switch heating On or Off.",
+                            "description": "Type 2: Binary Control. Occupant turns system ON or OFF.",
                             "type": "object",
                             "properties": {
                                 "type": {
                                     "const": "binary"
                                 },
-                                "active": {
+                                "active_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON when active?"
+                                    "description": "System ON/OFF when occupants are active."
                                 },
-                                "sleep": {
+                                "sleep_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON during sleep?"
+                                    "description": "System ON/OFF during sleep."
                                 },
-                                "absent": {
+                                "absent_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON during absence?"
+                                    "description": "System ON/OFF when absent."
                                 }
                             },
                             "required": [
                                 "type",
-                                "active",
-                                "sleep",
-                                "absent"
+                                "active_state",
+                                "sleep_state",
+                                "absent_state"
                             ]
                         },
                         {
@@ -227,18 +227,18 @@
                                 },
                                 "active_level": {
                                     "type": "string",
-                                    "enum": ["off", "low", "medium", "high", "fullon"],
-                                    "description": "Intensity level when occupants are active: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
+                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level when occupants are active: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
                                 "sleep_level": {
                                     "type": "string",
-                                    "enum": ["off", "low", "medium", "high", "fullon"],
-                                    "description": "Intensity level during sleep: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
+                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level during sleep: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
                                 "absent_level": {
                                     "type": "string",
-                                    "enum": ["off", "low", "medium", "high", "fullon"],
-                                    "description": "Intensity level when absent: off (0%), low (~25%), medium (~50%), high (~75%), fullon (100%)"
+                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "description": "Intensity level when absent: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 }
                             },
                             "required": [
@@ -317,30 +317,30 @@
                             ]
                         },
                         {
-                            "description": "Type 2: Binary Control. Occupant can only switch AC On or Off.",
+                            "description": "Type 2: Binary Control. Occupant turns system ON or OFF.",
                             "type": "object",
                             "properties": {
                                 "type": {
                                     "const": "binary"
                                 },
-                                "active": {
+                                "active_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON when active?"
+                                    "description": "System ON/OFF when occupants are active."
                                 },
-                                "sleep": {
+                                "sleep_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON during sleep?"
+                                    "description": "System ON/OFF during sleep."
                                 },
-                                "absent": {
+                                "absent_state": {
                                     "type": "boolean",
-                                    "description": "Is system ON during absence?"
+                                    "description": "System ON/OFF when absent."
                                 }
                             },
                             "required": [
                                 "type",
-                                "active",
-                                "sleep",
-                                "absent"
+                                "active_state",
+                                "sleep_state",
+                                "absent_state"
                             ]
                         },
                         {

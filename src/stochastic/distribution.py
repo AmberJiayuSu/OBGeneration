@@ -63,6 +63,20 @@ class NormalDistribution(Distribution):
             raise ValueError("lower must be <= upper")
         self._rebuild()
 
+    def with_bounds(self, lower=None, upper=None):
+        """
+        Returns a new NormalDistribution with updated bounds without mutating the original.
+        """
+        new_lower = float(lower) if lower is not None else self._lower
+        new_upper = float(upper) if upper is not None else self._upper
+        return NormalDistribution(
+            mean=self._mean,
+            stddev=self._stddev,
+            lower=new_lower,
+            upper=new_upper,
+            int=self._int
+        )
+
     def update_mean(self, mean: float):
         self._mean = float(mean)
         self._rebuild()
