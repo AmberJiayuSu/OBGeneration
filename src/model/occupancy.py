@@ -21,11 +21,11 @@ class TimeRange(BaseModel):
     """
     Represents a time range with start and end hours.
     Attributes:
-        start_hour (int): The hour of the day (0-23) when the time range starts.
-        end_hour (int): The hour of the day (0-23) when the time range ends.
+        start_hour (float): The hour of the day [0-24) when the time range starts.
+        end_hour (float): The hour of the day [0-24) when the time range ends.
     """
-    start_hour: int = Field(default=0, ge=0, le=23) 
-    end_hour: int = Field(default=0, ge=0, le=23)
+    start_hour: float = Field(default=0, ge=0, lt=24) 
+    end_hour: float = Field(default=0, ge=0, lt=24)
 
     @computed_field
     @property
@@ -33,19 +33,19 @@ class TimeRange(BaseModel):
         """True if range crosses midnight."""
         return self.end_hour < self.start_hour
 
-    def contains_hour(self, hour: int) -> bool:
-        """Check if a given hour falls within this time range (exclusive of boundaries)."""
+    def contains_hour(self, hour: float) -> bool:
+        """Check if a given hour falls within this time range [start_hour, end_hour)."""
         if not self.wraps_midnight:
-            return self.start_hour < hour < self.end_hour
+            return self.start_hour <= hour < self.end_hour
         else:
-            return hour > self.start_hour or hour < self.end_hour
+            return hour >= self.start_hour or hour < self.end_hour
 
 class AwayPattern(BaseModel):
     """Details for a specific weekday away interval."""
     num_of_days: int = Field(..., ge=1, le=5)
     away_interval: TimeRange = Field(...)
 
-class OcccupancyPattern(BaseModel):
+class OccupancyPattern(BaseModel):
     """Defines the unoccupied patterns."""
     is_always_occupied: bool = Field(...)
     away_pattern: Optional[AwayPattern] = Field(None)
@@ -55,8 +55,8 @@ class Occupancy(BaseModel):
     """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
     num_occupants: int = Field(..., ge=1)
     household_composition: HouseholdComposition
-    weekday_pattern: OcccupancyPattern
-    weekend_pattern: OcccupancyPattern
+    weekday_pattern: OccupancyPattern
+    weekend_pattern: OccupancyPattern
     sleep_time: TimeRange
 
     @model_validator(mode='after')

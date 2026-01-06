@@ -60,14 +60,14 @@ class OccupancyAssumptions(BaseModel):
             daily_commuter=RoleAssumption(
                 role = OccupantRole.DAILY_COMMUTER,
                 days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": True}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": True}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": False}).build()
             ),
             hybrid_worker=RoleAssumption(
                 role = OccupantRole.HYBRID_WORKER,
                 days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 4}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": True}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": True}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": False}).build()
             ),
             stayathome=RoleAssumption(
                 role = OccupantRole.STAYATHOME,
@@ -78,14 +78,14 @@ class OccupancyAssumptions(BaseModel):
             k12_or_daycare=RoleAssumption(
                 role = OccupantRole.K12_OR_DAYCARE,
                 days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 1.0, "int": True}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.0, "std": 1.0, "int": True}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 1.0, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.0, "std": 1.0, "int": False}).build()
             ),
             college_student=RoleAssumption(
                 role = OccupantRole.COLLEGE_STUDENT,
                 days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 3, "max": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.0, "std": 1.5, "int": True}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 3.0, "int": True}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.0, "std": 1.5, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 3.0, "int": False}).build()
             )
         )
     
@@ -94,24 +94,35 @@ class OccupancyAssumptions(BaseModel):
 
 class TimeRangeDistribution:
     """Distribution for time ranges within a day."""
-    def __init__(self, time_range: TimeRange, start_variance:float, end_variance:float):
+    def __init__(self, time_range: TimeRange, start_variance:float, end_variance:float, resolution_mins: int = 15):
+        self.resolution_mins = resolution_mins
+        self.resolution_hours = resolution_mins / 60
+        upper_bound = 24.0 - self.resolution_hours
         self.start_dist = NormalDistribution(
             mean= time_range.start_hour ,
             stddev=start_variance,
-            lower=0,
-            upper=23,
-            int=True
+            lower=0.0,
+            upper=upper_bound,
+            int=False
         )
         self.end_dist = NormalDistribution(
             mean= time_range.end_hour ,
             stddev=end_variance,
-            lower=0,
-            upper=23,
-            int=True
+            lower=0.0,
+            upper=upper_bound,
+            int=False
         )
         self.wraps_midnight = time_range.wraps_midnight
 
     
+
+    @staticmethod
+    def _snap_to_resolution( time: float, resolution_hours:float) -> float:
+        """Snap a time value to the nearest resolution point."""
+        snapped = round(time / resolution_hours) * resolution_hours
+        return min(snapped, 24.0 - resolution_hours)
+
+
     def sample(self) -> TimeRange:
         """
         Samples a single occupant's leave and return times ensuring logical consistency.
@@ -125,19 +136,23 @@ class TimeRangeDistribution:
             Tuple of (start_time, end_time)
         """
         MAX_ATTEMPTS = 1000
-        start_time = self.start_dist.sample()
+        INNER_ATTEMPTS = 20
 
-        for _ in range(MAX_ATTEMPTS):
-            end_time = self.end_dist.sample()
-            if self.wraps_midnight or end_time > start_time:
-                return TimeRange(start_hour=start_time, end_hour=end_time)
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(self.start_dist.sample(), self.resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(self.end_dist.sample(), self.resolution_hours)
+                if self.wraps_midnight or end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
 
         # Fallback: if bounds make it impossible to satisfy end > start,
         # allow end >= start to avoid infinite loop
         return TimeRange(start_hour=start_time, end_hour=end_time)
 
     @staticmethod
-    def sample_with_bounds(start_dist: Distribution, end_dist: Distribution, away_time: Optional[TimeRange]) -> Optional[TimeRange]:
+    def sample_with_bounds(start_dist: NormalDistribution, end_dist: NormalDistribution, away_time: Optional[TimeRange], resolution_hours: float) -> Optional[TimeRange]:
         """
         Samples a single occupant's leave and return times ensuring logical consistency.
         Leave and return times must be outside the away_time period (when no one is home).
@@ -157,15 +172,19 @@ class TimeRangeDistribution:
             updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
         else:
             updated_start_dist = start_dist.with_bounds(lower=0, upper=away_time.start_hour)
-            updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=23)
+            updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=24 - resolution_hours)
 
         MAX_ATTEMPTS = 1000
-        start_time = updated_start_dist.sample()
+        INNER_ATTEMPTS = 20
 
-        for _ in range(MAX_ATTEMPTS):
-            end_time = updated_end_dist.sample()
-            if away_time is None or away_time.wraps_midnight or end_time > start_time:
-                return TimeRange(start_hour=start_time, end_hour=end_time)
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(updated_start_dist.sample(), resolution_hours=resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=resolution_hours)
+                if away_time is None or away_time.wraps_midnight or end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
 
         # Fallback: if bounds make it impossible to satisfy end > start,
         if away_time is None:
@@ -176,9 +195,10 @@ class TimeRangeDistribution:
 
 
 class SingleOccupantTracker:
-    def __init__(self, role: OccupantRole, assumption: RoleAssumption):
+    def __init__(self, role: OccupantRole, assumption: RoleAssumption, resolution_mins):
         self.role = role
         self.assumption = assumption
+        self.resolution_hours = resolution_mins / 60
 
     def sample_weekdays(self, household_away_intervals: list[TimeRange | None], away_days: list[int]) -> list[TimeRange | None]:
         """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
@@ -188,7 +208,8 @@ class SingleOccupantTracker:
                 time_range = TimeRangeDistribution.sample_with_bounds(
                     self.assumption.leave_time,
                     self.assumption.return_time,
-                    household_away_intervals[d]
+                    household_away_intervals[d],
+                    self.resolution_hours
                 )
                 intervals.append(time_range)
         elif self.role == OccupantRole.HYBRID_WORKER or self.role == OccupantRole.COLLEGE_STUDENT:
@@ -203,7 +224,8 @@ class SingleOccupantTracker:
                     time_range = TimeRangeDistribution.sample_with_bounds(
                         self.assumption.leave_time,
                         self.assumption.return_time,
-                        household_away_intervals[d]
+                        household_away_intervals[d],
+                        self.resolution_hours
                     )
                     intervals.append(time_range)
                 else:
@@ -216,7 +238,12 @@ class SingleOccupantTracker:
 
 class OccupancyGenerator:
 
-    def __init__(self, occupancy: Occupancy, assumptions: OccupancyAssumptions):
+    def __init__(self, occupancy: Occupancy, assumptions: OccupancyAssumptions, resolution_mins: int = 15):
+        if 60 % resolution_mins != 0:
+            raise ValueError(
+                f"resolution_mins must evenly divide 60. Got {resolution_mins}. "
+                f"Valid values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60"
+            )
         self.occupancy = occupancy
         self.assumptions = assumptions
         self.occupants_cnt = occupancy.num_occupants
@@ -226,17 +253,22 @@ class OccupancyGenerator:
             self.weekday_away = TimeRangeDistribution(
                 occupancy.weekday_pattern.away_pattern.away_interval,
                 start_variance=1.0,
-                end_variance=1.0) if occupancy.weekday_pattern.away_pattern else None
+                end_variance=1.0,
+                resolution_mins=resolution_mins) if occupancy.weekday_pattern.away_pattern else None
         if self.occupancy.weekend_pattern.is_always_occupied:
             self.weekend_away = None
         else:
             self.weekend_away = TimeRangeDistribution(
                 occupancy.weekend_pattern.away_pattern.away_interval,
                 start_variance=2.0,
-                end_variance=2.0) if occupancy.weekend_pattern.away_pattern else None 
-        self.trackers = self._get_single_occupant_tracker()
+                end_variance=2.0,
+                resolution_mins=resolution_mins) if occupancy.weekend_pattern.away_pattern else None
+        self.trackers = self._get_single_occupant_tracker(resolution_mins)
+        self.num_per_hour = 60 // resolution_mins
+        self.resolution_mins = resolution_mins
+        
             
-    def _get_single_occupant_tracker(self) -> list[SingleOccupantTracker]:
+    def _get_single_occupant_tracker(self, resolution_mins: int) -> list[SingleOccupantTracker]:
         """Generates a list of SingleOccupantTracker instances based on the household composition."""
         trackers = []
         comp = self.occupancy.household_composition
@@ -250,7 +282,7 @@ class OccupancyGenerator:
         for role, count in role_counts.items():
             assumption = getattr(self.assumptions, role.value)
             for _ in range(count):
-                trackers.append(SingleOccupantTracker(role, assumption))
+                trackers.append(SingleOccupantTracker(role, assumption, resolution_mins))
         return trackers
         
     def weekday_away_interval(self) -> tuple[list[TimeRange | None], list[int]]:
@@ -282,10 +314,11 @@ class OccupancyGenerator:
 
         for d in range(5):
             away_interval = weekday_away_intervals[d]
-            for h in range(24):
+            for h in range(24 * self.num_per_hour):
+                hour = h / self.num_per_hour
                 # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
                 if away_interval is not None:
-                    if away_interval.contains_hour(h):
+                    if away_interval.contains_hour(hour):
                         schedule.append(0.0)
                         continue 
 
@@ -293,7 +326,7 @@ class OccupancyGenerator:
                 people_present = 0
                 for i in range(self.occupants_cnt):
                     occupant_away_interval = all_occupant_intervals[i][d]
-                    if occupant_away_interval is None or not occupant_away_interval.contains_hour(h):
+                    if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
                        people_present += 1
 
                 # -- REGION 3: LAST MAN STANDING (The Fix) ---
@@ -312,7 +345,7 @@ class OccupancyGenerator:
         """Generates the household's overall weekend away schedule based on individual occupant patterns."""
         occupancy = self.occupancy
         if occupancy.weekend_pattern.is_always_occupied:
-            return [1.0] * 48  # Everyone is home all weekend
+            return [1.0] * (2 * 24 * self.num_per_hour)
         else:
             schedule = []
             for _ in range(2):
@@ -321,11 +354,12 @@ class OccupancyGenerator:
                     interval = self.weekend_away.sample()
                     all_occupant_intervals.append(interval)
                 day_schedule = []
-                for h in range(24):
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
                     people_present = 0
                     for i in range(self.occupants_cnt):
                         occupant_away_interval = all_occupant_intervals[i]
-                        if not occupant_away_interval.contains_hour(h):
+                        if not occupant_away_interval.contains_hour(hour):
                             people_present += 1
                     frac = round(people_present / self.occupants_cnt, 4)
                     day_schedule.append(frac)
@@ -348,7 +382,8 @@ class OccupancyGenerator:
             sleep_range_dist = TimeRangeDistribution(
                 sleep_time,
                 start_variance=1.0,
-                end_variance=1.0
+                end_variance=1.0,
+                resolution_mins= self.resolution_mins
             )
             sleep_schedule = []
             for _ in range(7):
@@ -356,15 +391,16 @@ class OccupancyGenerator:
             return sleep_schedule
     
     @staticmethod
-    def get_sleep_mask(sleep_schedule: list[Occupancy.TimeRange | None]) -> list[bool]:
+    def get_sleep_mask(sleep_schedule: list[Occupancy.TimeRange | None], num_per_hour: int) -> list[bool]:
         """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
-        mask = [False] * (24 * 7)
+        mask = [False] * (24 * 7 * num_per_hour)
         for d in range(7):
             sleep_info = sleep_schedule[d]
             if sleep_info is not None:
-                for h in range(24):
-                    hour_index = d * 24 + h
-                    if sleep_info.contains_hour(h):
+                for h in range(24 * num_per_hour):
+                    hour = h / num_per_hour
+                    hour_index = d * 24 * num_per_hour + h
+                    if sleep_info.contains_hour(hour):
                         mask[hour_index] = True
         return mask
     
@@ -402,14 +438,14 @@ class OccupancyGenerator:
         for w in range(53):
             weekly_schedule = self.household_fullweek_schedule()
             sleep_schedule = self.household_sleep_schedule()
-            sleep_mask = OccupancyGenerator.get_sleep_mask(sleep_schedule)
+            sleep_mask = OccupancyGenerator.get_sleep_mask(sleep_schedule, self.num_per_hour)
             if w < 52:
                 annual_schedule.append(weekly_schedule)
                 annual_sleep_schedule.append(sleep_mask)
             else:
                 # For the 53rd week, only add the first day (to make 365 days)
-                annual_schedule.append(weekly_schedule[:24])
-                annual_sleep_schedule.append(sleep_mask[:24])
+                annual_schedule.append(weekly_schedule[:24 * self.num_per_hour])
+                annual_sleep_schedule.append(sleep_mask[:24 * self.num_per_hour])
         return annual_schedule, annual_sleep_schedule
     
         
