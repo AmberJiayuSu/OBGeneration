@@ -14,7 +14,6 @@ class LaundryEquipment(BaseModel):
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
 class RefrigerationSize(Enum):
-    MINI = "mini"
     SMALL = "small"
     MEDIUM = "medium"
     LARGE = "large"
@@ -34,10 +33,9 @@ class DishwasherEquipment(BaseModel):
     dishwasher_efficient: bool = Field(default=True)
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
-class KitchenEquipment(BaseModel):
-    has_kitchen_equipment: bool = Field(default=True)
-    cooktop_fuel: FuelType = Field(default=FuelType.ELECTRIC)
-    efficient: bool = Field(default=True)
+class CookingEquipment(BaseModel):
+    has_cooking_products: bool = Field(default=True)
+    cooking_products_fuel: FuelType = Field(default=FuelType.ELECTRIC)
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
 
@@ -53,5 +51,5 @@ class Equipment(BaseModel):
     laundry: LaundryEquipment = Field(default_factory=LaundryEquipment)
     refrigeration: RefrigerationEquipment = Field(default_factory=RefrigerationEquipment)
     dishwasher: DishwasherEquipment = Field(default_factory=DishwasherEquipment)
-    kitchen: KitchenEquipment = Field(default_factory=KitchenEquipment)
+    cooking_products: CookingEquipment = Field(default_factory=CookingEquipment)
     
