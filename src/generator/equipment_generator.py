@@ -1,13 +1,12 @@
 from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
 from generator.OB_generator import ScheduleUtils
-import model.occupancy as Occupancy
 import model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
 from stochastic.distribution_config import DistributionConfig
 import json
 from pathlib import Path
 import csv
-import random
+
 
 class EventAssumptions(BaseModel):
     """Event timing assumptions for different activities of a typical week (from monday to sunday)."""
@@ -165,7 +164,6 @@ class EquipmentAssumptions(BaseModel):
         """Returns the standard/default assumptions for equipment power."""
         resolution_mins = 15
         return cls(
-            # TODO: update the baseload to match
             baseload=120.0,
             watts_per_person_active=80.0,
             watts_per_person_sleep=20.0,
@@ -232,29 +230,34 @@ class EquipmentGenerator:
                 int=True
             )
 
-    def equipment_annual_schedule(self) -> list[list[float]]:
+    def equipment_annual_schedule(self) -> tuple[list[list[float]], list[int], list[int]]:
         """ Translates equipment usage pattern into a full annual schedule based on occupancy and sleep times."""
         annual_schedule = []
+        laundry_cycles = []
+        dishwasher_cycles = []
         for week_index in range(len(self.active_time_mask)):
             weekly_active_mask = self.active_time_mask[week_index]
             weekly_sleep_mask = self.sleep_time_mask[week_index]
             weekly_occupancy = self.occupancy[week_index]
-            weekly_equipment_schedule = self.equipment_weekly_schedule(weekly_active_mask, weekly_sleep_mask, weekly_occupancy)
+            weekly_equipment_schedule, laundry_num_cycles, dishwasher_num_cycles = self.equipment_weekly_schedule(weekly_active_mask, weekly_sleep_mask, weekly_occupancy)
             annual_schedule.append(weekly_equipment_schedule)
-        return annual_schedule
+            laundry_cycles.append(laundry_num_cycles)
+            dishwasher_cycles.append(dishwasher_num_cycles)
+        return annual_schedule, laundry_cycles, dishwasher_cycles
 
-    def equipment_weekly_schedule(self, weekly_active_mask: list[bool], weekly_sleep_mask: list[bool], weekly_occupancy: list[float]) -> list[float]:
+    def equipment_weekly_schedule(self, weekly_active_mask: list[bool], weekly_sleep_mask: list[bool], weekly_occupancy: list[float]) -> tuple[list[float], int, int]:
         """ Translates equipment usage pattern into a full week schedule based on occupancy and sleep times."""
         baseload_schedule = self.weekly_baseload_schedule(weekly_active_mask, weekly_sleep_mask, weekly_occupancy)
-        laundry_schedule = self.weekly_laundry_usage_schedule(weekly_active_mask)
+        laundry_schedule, laundry_num_cycles = self.weekly_laundry_usage_schedule(weekly_active_mask)
         fridge_power = self._get_fridge_power()
-        cooking_schedule, _ = self.weekly_cooking_usage_schedule(weekly_active_mask)
+        cooking_schedule, cooking_ends = self.weekly_cooking_usage_schedule(weekly_active_mask)
+        dishwashing_schedule, dishwasher_num_cycles = self.weekly_dishwasher_usage_schedule(weekly_active_mask,cooking_ends)
 
         total_schedule = []
         for i in range(len(weekly_active_mask)):
-            total_power = baseload_schedule[i] + laundry_schedule[i] + fridge_power + cooking_schedule[i]
+            total_power = baseload_schedule[i] + laundry_schedule[i] + fridge_power + cooking_schedule[i] + dishwashing_schedule[i]
             total_schedule.append(total_power)
-        return total_schedule
+        return total_schedule, laundry_num_cycles, dishwasher_num_cycles 
 
     def weekly_baseload_schedule(self, weekly_active_mask: list[bool], weekly_sleep_mask: list[bool], weekly_occupancy: list[float]) -> list[float]:
         assumptions = self.equipment_assumptions
@@ -285,14 +288,16 @@ class EquipmentGenerator:
                 dryer_power = assumptions.inefficient_dryer.sample()
         return washer_power, dryer_power
     
-    def weekly_laundry_usage_schedule(self, weekly_active_mask: list[bool]) -> list[float]:
+    def weekly_laundry_usage_schedule(self, weekly_active_mask: list[bool]) -> tuple[list[float], list[int]]:
         """ Translates laundry equipment usage schedule into a full week schedule with power."""
         laundry = self.equipment.laundry
         laundry_assumptions = self.equipment_assumptions.laundry
         res_min = self.resolution_mins
         start_time_prob = self.equipment_assumptions.laundry.start_time_event_assumptions.get_masked_probabilities(weekly_active_mask)
         start_time_dist = CategoricalDistribution(start_time_prob)
+        total_num_days = len(weekly_active_mask) // (24 * (60 // res_min))
         if laundry.has_washer or laundry.has_dryer:
+            weekly_num_cycles = [0] * total_num_days
             washer_power, dryer_power = self._get_laundry_power() # W
             num_cycle = self.laundry_frequency_dist.sample()
             laundry_schedule = [0.0] * (len(weekly_active_mask))
@@ -305,15 +310,16 @@ class EquipmentGenerator:
                 laundry_schedule[start_index: washer_end] = [washer_power]
                 laundry_schedule[washer_end: dryer_end] = [dryer_power]
                 day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                weekly_num_cycles[day] += 1
                 downfactor = laundry_assumptions.weekday_same_day_downfactor if day < 5 else laundry_assumptions.weekend_same_day_downfactor
                 prob_factor_update = {
                     0.0: [i for i in range(start_index, dryer_end)],
                     downfactor : ScheduleUtils.get_day_indices(day, res_min)
                 }
                 start_time_dist.update_weights_by_factor(prob_factor_update)
-            return laundry_schedule 
+            return laundry_schedule , weekly_num_cycles
         else:
-            return [0.0] * (len(weekly_active_mask))
+            return [0.0] * (len(weekly_active_mask)), [0] * total_num_days
         
 
 
@@ -426,7 +432,7 @@ class EquipmentGenerator:
         else:
             return 0.0
 
-    def weekly_dishwasher_usage_schedule(self, weekly_active_mask:list[bool], cooking_ending:list[float]) -> list[float]:
+    def weekly_dishwasher_usage_schedule(self, weekly_active_mask:list[bool], cooking_ending:list[float]) -> tuple[list[float], list[int]]:
         """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
         dishwasher = self.equipment.dishwasher
         dishwasher_assumptions = self.equipment_assumptions.dishwasher
@@ -435,13 +441,17 @@ class EquipmentGenerator:
         start_time_dist = CategoricalDistribution(masked_time_prob)
         dishwasher_schedule = [0.0] * (len(weekly_active_mask))
         operation = dishwasher.dishwashing_operational_logic
+        total_num_days = len(weekly_active_mask) // (24 * (60 // res_min))
         if not dishwasher.has_dishwasher:
-            return dishwasher_schedule
+            return dishwasher_schedule, [0] * total_num_days
         else:
+            weekly_num_cycles = [0] * total_num_days
             if operation.pattern_type == Equipment.DishwashingPattern.AFTER_EACH_COOKED_MEAL:
                 # Dishwasher runs after cooking events
                 for end_time in cooking_ending:
                     start_index = end_time + 1
+                    day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                    weekly_num_cycles[day] += 1
                     cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
                     dishwasher_power = self._get_dishwasher_power()
                     dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
@@ -451,6 +461,7 @@ class EquipmentGenerator:
                     day = ScheduleUtils.weekly_index_day(end_time, res_min)
                     days.add(day)
                 for day in days:
+                    weekly_num_cycles[day] += 1
                     day_start = day * 24 * (60 // res_min)
                     day_end = day_start + 24 * (60 // res_min)
                     start_index = start_time_dist.sample_from_range(day_start, day_end)
@@ -463,6 +474,7 @@ class EquipmentGenerator:
                     end_time = cooking_ending[i]
                     start_index = end_time + 1
                     day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                    weekly_num_cycles[day] += 1
                     day_end = (day + 1) * 24 * (60 // res_min)
                     end_ind = min(cooking_ending[i + 3], day_end) if i + 3 < len(cooking_ending) else day_end   
                     start_index = start_time_dist.sample_from_range(start_index, end_ind)
@@ -473,13 +485,15 @@ class EquipmentGenerator:
                 for _ in range(operation.frequency_per_week):
                     start_index = start_time_dist.sample()
                     cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
+                    day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                    weekly_num_cycles[day] += 1
                     dishwasher_power = self._get_dishwasher_power()
                     dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
                     update_prob_factor = {
                         0.0: [i for i in range(start_index, start_index + cycle_duration)]
                     }
                     start_time_dist.update_weights_by_factor(update_prob_factor)
-            return dishwasher_schedule
+            return dishwasher_schedule, weekly_num_cycles
                 
                     
 
