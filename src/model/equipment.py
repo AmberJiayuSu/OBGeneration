@@ -23,6 +23,17 @@ class FuelType(Enum):
     GAS = "gas"
     OTHER = "other"
 
+class DishwashingPattern(Enum):
+    AFTER_EACH_COOKED_MEAL = "after_each_cooked_meal"
+    DAILY_BATCH_IF_COOKED = "daily_batch_if_cooked"
+    WHENEVER_FULL = "whenever_full"
+    INDEPENDENT_FREQUENCY = "independent_frequency"
+
+class DishwashingLogic(BaseModel):
+    pattern_type: DishwashingPattern = Field(default=DishwashingPattern.DAILY_BATCH_IF_COOKED)
+    frequency_per_week: Optional[float] = Field(default=None)
+
+
 class RefrigerationEquipment(BaseModel):
     has_refrigerator: bool = Field(default=True)
     efficient_refrigerator: bool = Field(default=True)
@@ -31,7 +42,7 @@ class RefrigerationEquipment(BaseModel):
 class DishwasherEquipment(BaseModel):
     has_dishwasher: bool = Field(default=False)
     dishwasher_efficient: bool = Field(default=True)
-    usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
+    dishwashing_operational_logic: DishwashingLogic = Field(default_factory=DishwashingLogic)
 
 class CookingEquipment(BaseModel):
     has_cooking_products: bool = Field(default=True)

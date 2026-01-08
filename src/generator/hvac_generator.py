@@ -71,7 +71,7 @@ class HVACAssumptions(BaseModel):
         )
 
 
-class HVACTranslator:
+class HVACGenerator:
     def __init__(self, hvac: HVAC.HVAC, assumptions: HVACAssumptions):
         self.hvac = hvac
         self.assumptions = assumptions
@@ -90,7 +90,7 @@ class HVACTranslator:
             raise ValueError(f"Unknown intensity level: {level}")
         return level_to_temp[level]
 
-    def translate_heating_setpoint_schedule_annually(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def heating_setpoint_annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         if self.hvac.heating is None:
             return None
@@ -101,11 +101,11 @@ class HVACTranslator:
         schedule: list[list[float]] = []
         for weekly_occupancy, weekly_sleep_mask in zip(occupancy_mask_annual, sleep_mask_annual):
             assert len(weekly_occupancy) == len(weekly_sleep_mask), "weekly occupancy/sleep length mismatch"
-            schedule.append(self.translate_heating_setpoint_schedule_weekly(weekly_occupancy, weekly_sleep_mask))
+            schedule.append(self.heating_setpoint_weekly_schedule(weekly_occupancy, weekly_sleep_mask))
         return schedule
         
        
-    def translate_heating_setpoint_schedule_weekly(self, occupancy_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
+    def heating_setpoint_weekly_schedule(self, occupancy_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         heating = self.hvac.heating
         minimum_setpoint = self.assumptions.minimum_heating_setpoint
@@ -166,7 +166,7 @@ class HVACTranslator:
 
 
 
-    def translate_cooling_setpoint_schedule_annually(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def cooling_setpoint__annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         if self.hvac.cooling is None:
             return None
@@ -177,11 +177,11 @@ class HVACTranslator:
         schedule: list[list[float]] = []
         for weekly_occupancy, weekly_sleep_mask in zip(occupancy_mask_annual, sleep_mask_annual):
             assert len(weekly_occupancy) == len(weekly_sleep_mask), "weekly occupancy/sleep length mismatch"
-            schedule.append(self.translate_cooling_setpoint_schedule_weekly(weekly_occupancy, weekly_sleep_mask))
+            schedule.append(self.cooling_setpoint_weekly_schedule(weekly_occupancy, weekly_sleep_mask))
         return schedule
 
 
-    def translate_cooling_setpoint_schedule_weekly(self, occupied_time_mask_weekly: list[bool], sleep_time_mask_weekly: list[bool]) -> list[float]:
+    def cooling_setpoint_weekly_schedule(self, occupied_time_mask_weekly: list[bool], sleep_time_mask_weekly: list[bool]) -> list[float]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         cooling = self.hvac.cooling
         cooling_max_setpoint = self.assumptions.maximum_cooling_setpoint

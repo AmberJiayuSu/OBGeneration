@@ -60,14 +60,14 @@ class OccupancyAssumptions(BaseModel):
             daily_commuter=RoleAssumption(
                 role = OccupantRole.DAILY_COMMUTER,
                 days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": False}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": False}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             hybrid_worker=RoleAssumption(
                 role = OccupantRole.HYBRID_WORKER,
                 days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 4}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "int": False}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "int": False}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 1.3, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 1.3, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             stayathome=RoleAssumption(
                 role = OccupantRole.STAYATHOME,
@@ -78,14 +78,14 @@ class OccupancyAssumptions(BaseModel):
             k12_or_daycare=RoleAssumption(
                 role = OccupantRole.K12_OR_DAYCARE,
                 days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 1.0, "int": False}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.0, "std": 1.0, "int": False}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 1.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 15.0, "std": 1.0, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             college_student=RoleAssumption(
                 role = OccupantRole.COLLEGE_STUDENT,
                 days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 3, "max": 5}).build(),
-                leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.0, "std": 1.5, "int": False}).build(),
-                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 3.0, "int": False}).build()
+                leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.0, "std": 1.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                return_time=DistributionConfig(dist_type="normal", params={"mean": 18.0, "std": 3.0, "lower": 0.0, "upper": 24.0, "int": False}).build()
             )
         )
     

@@ -2,24 +2,24 @@ import model.lighting as Lighting
 from generator.occupancy_generator import OccupancyGenerator
 
 
-class LightingTranslator:
+class LightingGenerator:
 
     def __init__(self, lighting: Lighting.Lighting):
         self.lighting = lighting
 
 
-    def translate_lighting_schedule_annual(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def lighting_annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates lighting usage pattern into a full annual schedule based on occupancy and sleep times."""
         annual_schedule = []
         for week_index in range(len(occupancy_mask_annual)):
             weekly_occupancy_mask = occupancy_mask_annual[week_index]
             weekly_sleep_mask = sleep_mask_annual[week_index]
-            weekly_lighting_schedule = self.translate_lighting_schedule_weekly(weekly_occupancy_mask, weekly_sleep_mask)
+            weekly_lighting_schedule = self.lighting_weekly_schedule(weekly_occupancy_mask, weekly_sleep_mask)
             annual_schedule.append(weekly_lighting_schedule)
         return annual_schedule
        
     
-    def translate_lighting_schedule_weekly(self, occupancy_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
+    def lighting_weekly_schedule(self, occupancy_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
         """ Translates lighting usage pattern into a full week schedule based on occupancy and sleep times."""
         lighting = self.lighting
         schedule = []
@@ -37,6 +37,6 @@ class LightingTranslator:
 
     def get_dimming(self) -> bool:
         """ Determines if dimming is used based on usage pattern. """
-        if self.when_daylight_bright:
+        if self.lighting.when_daylight_bright:
             return True
         return False

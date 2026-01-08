@@ -1,18 +1,36 @@
-from itertools import count
-import numpy as np
+
 from stochastic.distribution import Distribution
 import model.occupancy as Occupancy
 import model.lighting as Lighting
 import model.equipment as Equipment
 import model.hvac as HVAC
-from stochastic.equipment_translator import EquipmentTranslator
-from stochastic.hvac_translator import HVACTranslator
-from stochastic.lighting_translator import LightingTranslator
-from translator.occupancy_translator_old import OccupancyTranslator
 import stochastic.translation_rule as TranslationRule
 from pathlib import Path
 import json
 
+class ScheduleUtils:
+
+    @staticmethod
+    def weekly_index_day(index: int, resolution_mins: int) -> int:
+        """ Returns the day of the week for a given index in a weekly schedule. """
+        intervals_per_day = int(1440 / resolution_mins)
+        return (index // intervals_per_day) % 7
+    
+    @staticmethod
+    def weekly_index_hour(index: int, resolution_mins: int) -> float:
+        """ Returns the hour of the day for a given index in a weekly schedule. """
+        intervals_per_day = int(1440 / resolution_mins)
+        index_in_day = index % intervals_per_day
+        return (index_in_day * resolution_mins) / 60.0  
+    
+    @staticmethod
+    def get_day_indices(day: int, resolution_mins: int) -> list[int]:
+        """ Returns the list of indices for a specific day in a weekly schedule. """
+        intervals_per_day = int(1440 / resolution_mins)
+        start_index = day * intervals_per_day
+        return list(range(start_index, start_index + intervals_per_day))
+    
+  
 
 class ModelScheduleGenerator:
 

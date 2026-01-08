@@ -162,7 +162,7 @@
                 "when_daylight_bright": {
                     "type": "boolean",
                     "description": "TRUE if lights are turned off when natural daylight is sufficient."
-                }   
+                }
             },
             "required": [
                 "when_house_empty",
@@ -227,17 +227,35 @@
                                 },
                                 "active_level": {
                                     "type": "string",
-                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "enum": [
+                                        "minimum",
+                                        "low",
+                                        "medium",
+                                        "high",
+                                        "fullon"
+                                    ],
                                     "description": "Intensity level when occupants are active: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
                                 "sleep_level": {
                                     "type": "string",
-                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "enum": [
+                                        "minimum",
+                                        "low",
+                                        "medium",
+                                        "high",
+                                        "fullon"
+                                    ],
                                     "description": "Intensity level during sleep: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 },
                                 "absent_level": {
                                     "type": "string",
-                                    "enum": ["minimum", "low", "medium", "high", "fullon"],
+                                    "enum": [
+                                        "minimum",
+                                        "low",
+                                        "medium",
+                                        "high",
+                                        "fullon"
+                                    ],
                                     "description": "Intensity level when absent: off (frost prevention*), low (~25%), medium (~50%), high (~75%), fullon (100%)"
                                 }
                             },
@@ -457,7 +475,6 @@
                             "type": "string",
                             "description": "Size of the refrigerator.",
                             "enum": [
-                                "mini",
                                 "small",
                                 "medium",
                                 "large"
@@ -501,46 +518,50 @@
                         "has_dishwasher"
                     ]
                 },
-                "kitchen": {
+                "cooking_products": {
                     "type": "object",
-                    "description": "Kitchen equipment usage profile.",
+                    "description": "cooking products equipment usage profile.",
                     "properties": {
-                        "has_kitchen_equipment": {
+                        "has_cooking_products": {
                             "type": "boolean",
-                            "description": "Indicates whether the household has kitchen equipment."
+                            "description": "Indicates whether the household has cooking products (cooktop + oven)."
                         },
-                        "cooktop_fuel": {
+                        "cooking_products_fuel": {
                             "type": "string",
-                            "description": "Fuel type of the cooktop.",
+                            "description": "Fuel type of the cooking products.",
                             "enum": [
                                 "electric",
                                 "gas",
                                 "other"
                             ]
                         },
-                        "efficient": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has efficient kitchen equipment."
-                        },
-                        "usage_frequency_per_week": {
+                        "dishwashing_operational_logic": {
                             "type": "object",
-                            "description": "Frequency of kitchen equipment usage per week.",
+                            "description": "Captures the behavioral pattern and frequency of dishwashing activity.",
                             "properties": {
-                                "min": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Lower bound of kitchen equipment usage frequency per week."
+                                "pattern_type": {
+                                    "type": "string",
+                                    "description": "The primary behavioral logic governing when dishes are washed.",
+                                    "enum": [
+                                        "after_each_cooked_meal",
+                                        "daily_batch_if_cooked",
+                                        "whenever_full",
+                                        "independent_frequency"
+                                    ]
                                 },
-                                "max": {
+                                "frequency_per_week": {
                                     "type": "integer",
                                     "minimum": 0,
-                                    "description": "Upper bound of kitchen equipment usage frequency per week."
+                                    "description": "Number of times dishes are washed per week (only applicable if pattern_type is 'independent_frequency')."
                                 }
-                            }
+                            },
+                            "required": [
+                                "pattern_type"
+                            ]
                         }
                     },
                     "required": [
-                        "has_kitchen_equipment"
+                        "has_cooking_products"
                     ]
                 }
             }

@@ -1,4 +1,5 @@
-from stochastic.distribution import Distribution
+from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
+from generator.OB_generator import ScheduleUtils
 import model.occupancy as Occupancy
 import model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
@@ -13,7 +14,6 @@ class EventAssumptions(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
     start_time_probabilities: list[float] = Field(..., description="Probability distribution for event start times ")
     
-
     @classmethod
     def from_csv_file(cls, path: str, resolution_mins: int = 15) -> "EventAssumptions":
         """Load laundry event assumptions from a CSV file with columns: minute_of_day, probability, day_of_week, time_label"""
@@ -44,6 +44,33 @@ class EventAssumptions(BaseModel):
             aggregated.append(bin_sum)
 
         self.start_time_probabilities = aggregated
+
+    def get_masked_probabilities(self, active_mask: list[bool]) -> list[float]:
+        """Apply active occupancy mask and return renormalized probabilities.
+        Does not mutate the original probabilities.
+
+        Args:
+            active_mask: Boolean mask indicating active time bins (same length as probabilities)
+        Returns:
+            List of masked and renormalized probabilities
+        """
+        if len(active_mask) != len(self.start_time_probabilities):
+            raise ValueError(f"Active mask length {len(active_mask)} does not match probabilities length {len(self.start_time_probabilities)}")
+        
+        masked_probs = [prob if active_mask[i] else 0.0 for i, prob in enumerate(self.start_time_probabilities)]
+
+        total = sum(masked_probs)
+        if total > 0:
+            return [p / total for p in masked_probs]
+        else:
+            # Masking makes all probabilities zero
+            num_active = sum(active_mask)
+            if num_active > 0:
+                # Assume sometime occupied, then assume uniform distribution over active times
+                return [1.0 / num_active if active_mask[i] else 0.0 for i in range(len(active_mask))]
+            else:
+                # If never occupied, return all zeros
+                return masked_probs  
     
 
 
@@ -57,6 +84,8 @@ class LaundryAssumptions(BaseModel):
     washer_duration: Distribution = Field(..., description="Distribution for washer cycle duration (hours)")
     dryer_duration: Distribution = Field(..., description="Distribution for dryer cycle duration (hours)")
     start_time_event_assumptions: EventAssumptions = Field(..., description="Event timing assumptions for laundry start times")
+    weekday_same_day_downfactor: float = Field(..., description="Downfactor for same day weekday laundry events probabilities")   
+    weekend_same_day_downfactor: float = Field(..., description="Downfactor for same day weekend laundry events probabilities")
 
 
 
@@ -98,6 +127,8 @@ class CookingAssumptions(BaseModel):
 class EquipmentAssumptions(BaseModel):
     """Master configuration for equipment power assumptions."""
     baseload: float = Field(..., description="Base load in Watts")
+    watts_per_person_active : float = Field(..., description="Additional watts per active person in Watts")
+    watts_per_person_sleep: float = Field(..., description="Additional watts per sleeping person in Watts")
     resolution_mins: int = Field(..., description="Time resolution in minutes (multiples of 5) for equipment usage schedules")
     laundry: LaundryAssumptions
     refrigerator: RefrigeratorAssumptions
@@ -135,7 +166,9 @@ class EquipmentAssumptions(BaseModel):
         resolution_mins = 15
         return cls(
             # TODO: update the baseload to match
-            baseload=1000.0,
+            baseload=120.0,
+            watts_per_person_active=80.0,
+            watts_per_person_sleep=20.0,
             resolution_mins=resolution_mins,
             laundry=LaundryAssumptions(
                 efficient_washer=DistributionConfig(dist_type="normal", params={"mean": 410.0, "std": 135.0, "lower": 0.0, "int": False}).build(),
@@ -144,7 +177,9 @@ class EquipmentAssumptions(BaseModel):
                 inefficient_dryer=DistributionConfig(dist_type="normal", params={"mean": 3500.0, "std": 700.0, "lower": 0.0, "int": False}).build(),
                 washer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.25, "std": 0.25, "lower": 0.0, "int": False}).build(),
                 dryer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.0, "std": 0.25, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file("data/equipment/laundry_start_time_5min_bins.csv", resolution_mins)
+                start_time_event_assumptions=EventAssumptions.from_csv_file("data/equipment/laundry_start_time_5min_bins.csv", resolution_mins),
+                weekday_same_day_downfactor=0.22,
+                weekend_same_day_downfactor=0.27
             ),
             refrigerator=RefrigeratorAssumptions(
                 efficient_small=DistributionConfig(dist_type="normal", params={"mean": 32.0, "std": 6.5, "lower": 0.0, "int": False}).build(),
@@ -175,41 +210,62 @@ class EquipmentAssumptions(BaseModel):
 
 class EquipmentGenerator:
 
-    def __init__(self, equipment: Equipment.Equipment, active_mask : list[list[bool]], resolution_mins : int, equipment_assumptions: EquipmentAssumptions = EquipmentAssumptions.default()):
+    def __init__(self, equipment: Equipment.Equipment, active_mask : list[list[bool]], sleep_mask: list[list[bool]], occupancy: list[list[float]],num_occupants: int, resolution_mins : int, equipment_assumptions: EquipmentAssumptions = EquipmentAssumptions.default()):
         self.equipment = equipment
         self.active_time_mask = active_mask
+        self.sleep_time_mask = sleep_mask
+        self.occupancy = occupancy
+        self.num_occupants = num_occupants
         self.resolution_mins = resolution_mins
         self.equipment_assumptions = equipment_assumptions
-       
-        
 
-    # def get_equipment_usage_schedule(self) -> dict[str, list[float]]:
-    #     """ Translates equipment usage schedule into a full week schedule with power."""
-    #     laundry_schedule = self.get_laundry_usage_schedule() if self.laundry_schedule is None else self.laundry_schedule
-    #     fridge_schedule = self.get_fridge_usage_schedule() if self.fridge_schedule is None else self.fridge_schedule
-    #     dishwasher_schedule = self.get_dishwasher_usage_schedule() if self.dishwasher_schedule is None else self.dishwasher_schedule
-    #     electric_kitchen,gas_kitchen = self.get_kitchen_usage_schedule() if self.kitchen_electric_schedule is None or self.kitchen_gas_schedule is None else (self.kitchen_electric_schedule, self.kitchen_gas_schedule)
-    #     base_load = [ EquipmentTranslator.system_base_load] * (24 * 7)
-    #     sum = np.array(laundry_schedule) + np.array(fridge_schedule) + np.array(dishwasher_schedule) + np.array(electric_kitchen) + np.array(base_load)
-    #     equipment_schedule = sum.tolist()
-    #     return equipment_schedule
-    
-    # def _get_valid_start_times(self, duration: int) -> list[int]:
-    #     valid_starts = []
-    #     for start_hour in range(24 * 7):
-    #         # Check if all hours from start to start+duration are active
-    #         all_active = True
-    #         for h in range(duration):
-    #             hour_idx = (start_hour + h) % (24 * 7)
-    #             if not self.active_time_mask[hour_idx]:
-    #                 all_active = False
-    #                 break
-    #         if all_active:
-    #             valid_starts.append(start_hour)
+        if self.equipment.laundry.usage_frequency_per_week is not None:
+            self.laundry_frequency_dist = UniformDistribution(
+                low=self.equipment.laundry.usage_frequency_per_week.min,
+                high=self.equipment.laundry.usage_frequency_per_week.max,
+                int=True
+            )
+        if self.equipment.cooking_products.usage_frequency_per_week is not None:
+            self.cooking_frequency_dist = UniformDistribution(
+                low=self.equipment.cooking_products.usage_frequency_per_week.min,
+                high=self.equipment.cooking_products.usage_frequency_per_week.max,
+                int=True
+            )
 
-    #     if not valid_starts:
-    #         return None
-    #     return valid_starts
+    def equipment_annual_schedule(self) -> list[list[float]]:
+        """ Translates equipment usage pattern into a full annual schedule based on occupancy and sleep times."""
+        annual_schedule = []
+        for week_index in range(len(self.active_time_mask)):
+            weekly_active_mask = self.active_time_mask[week_index]
+            weekly_sleep_mask = self.sleep_time_mask[week_index]
+            weekly_occupancy = self.occupancy[week_index]
+            weekly_equipment_schedule = self.equipment_weekly_schedule(weekly_active_mask, weekly_sleep_mask, weekly_occupancy)
+            annual_schedule.append(weekly_equipment_schedule)
+        return annual_schedule
+
+    def equipment_weekly_schedule(self, weekly_active_mask: list[bool], weekly_sleep_mask: list[bool], weekly_occupancy: list[float]) -> list[float]:
+        """ Translates equipment usage pattern into a full week schedule based on occupancy and sleep times."""
+        baseload_schedule = self.weekly_baseload_schedule(weekly_active_mask, weekly_sleep_mask, weekly_occupancy)
+        laundry_schedule = self.weekly_laundry_usage_schedule(weekly_active_mask)
+        fridge_power = self._get_fridge_power()
+        cooking_schedule, _ = self.weekly_cooking_usage_schedule(weekly_active_mask)
+
+        total_schedule = []
+        for i in range(len(weekly_active_mask)):
+            total_power = baseload_schedule[i] + laundry_schedule[i] + fridge_power + cooking_schedule[i]
+            total_schedule.append(total_power)
+        return total_schedule
+
+    def weekly_baseload_schedule(self, weekly_active_mask: list[bool], weekly_sleep_mask: list[bool], weekly_occupancy: list[float]) -> list[float]:
+        assumptions = self.equipment_assumptions
+        baseload_schedule = [assumptions.baseload] * len(weekly_active_mask)
+        for i in range(len(weekly_active_mask)):
+            baseload_schedule[i] += weekly_occupancy[i] * assumptions.watts_per_person_active * self.num_occupants
+        for i in range(len(weekly_sleep_mask)):
+            baseload_schedule[i] += weekly_occupancy[i] * assumptions.watts_per_person_sleep * self.num_occupants
+        return baseload_schedule
+
+
 
     def _get_laundry_power(self) -> tuple[float, float]:
         """ Calculates laundry equipment power density in W."""
@@ -229,61 +285,36 @@ class EquipmentGenerator:
                 dryer_power = assumptions.inefficient_dryer.sample()
         return washer_power, dryer_power
     
-    def get_laundry_usage_schedule(self) -> list[float]:
+    def weekly_laundry_usage_schedule(self, weekly_active_mask: list[bool]) -> list[float]:
         """ Translates laundry equipment usage schedule into a full week schedule with power."""
-        if self.laundry_schedule is not None:
-            return self.laundry_schedule
         laundry = self.equipment.laundry
+        laundry_assumptions = self.equipment_assumptions.laundry
+        res_min = self.resolution_mins
+        start_time_prob = self.equipment_assumptions.laundry.start_time_event_assumptions.get_masked_probabilities(weekly_active_mask)
+        start_time_dist = CategoricalDistribution(start_time_prob)
         if laundry.has_washer or laundry.has_dryer:
-            washer_power, dryer_power = self._get_laundry_power()
-            num_cycle_dist = TranslationRule.RuleSet.uniform_distribution_rule()(laundry.usage_frequency_per_week.min, laundry.usage_frequency_per_week.max)
-            num_cycles = int(num_cycle_dist.sample())
-
-            # Determine cycle duration based on equipment
-            washer_duration = 1.5 if laundry.has_washer else 0
-            dryer_duration = 1 if laundry.has_dryer else 0
-            cycle_duration_mean = washer_duration + dryer_duration
-            EquipmentTranslator.laundry_duration_dist.update_mean(cycle_duration_mean)
-            cycle_duration = int(EquipmentTranslator.laundry_duration_dist.sample())
-  
-            valid_start_times = self._get_valid_start_times(cycle_duration)
-            if valid_start_times is None:
-                valid_start_times = self._get_valid_start_times(0)
-            
-            if len(valid_start_times) == 0:
-                # No valid start times found
-                self.laundry_schedule = [0.0] * (24 * 7)
-                return self.laundry_schedule
-            else:
-                weighted_prob = {
-                    1.0: [s for s in valid_start_times if Utils.hour_of_day(s)[1] <= 19 and Utils.hour_of_day(s)[0] <= 5], 
-                    1.5: [s for s in valid_start_times if 19 < Utils.hour_of_day(s)[1] <= 22 and Utils.hour_of_day(s)[0] <= 5],
-                    2.0: [s for s in valid_start_times if Utils.hour_of_day(s)[0] > 5]
+            washer_power, dryer_power = self._get_laundry_power() # W
+            num_cycle = self.laundry_frequency_dist.sample()
+            laundry_schedule = [0.0] * (len(weekly_active_mask))
+            for _ in range(num_cycle):
+                start_index = start_time_dist.sample()
+                washer_duration = laundry_assumptions.washer_duration.sample() if laundry.has_washer else 0.0
+                dryer_duration = laundry_assumptions.dryer_duration.sample() if laundry.has_dryer else 0.0
+                washer_end = start_index + int(washer_duration / res_min)
+                dryer_end = washer_end + int(dryer_duration / res_min)
+                laundry_schedule[start_index: washer_end] = [washer_power]
+                laundry_schedule[washer_end: dryer_end] = [dryer_power]
+                day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                downfactor = laundry_assumptions.weekday_same_day_downfactor if day < 5 else laundry_assumptions.weekend_same_day_downfactor
+                prob_factor_update = {
+                    0.0: [i for i in range(start_index, dryer_end)],
+                    downfactor : ScheduleUtils.get_day_indices(day, res_min)
                 }
-                start_time_dist = TranslationRule.RuleSet.weighted_value_distribution_rule()(weighted_prob)
-                laundry_schedule = [0.0] * (24 * 7)
-                for _ in range(num_cycles):
-                    start_time = start_time_dist.sample()
-                    if start_time is None:
-                        self.laundry_schedule = laundry_schedule
-                        return self.laundry_schedule
-                    for h in range(cycle_duration):
-                        hour_idx = (start_time + h) % (24 * 7)
-                        if h < washer_duration:
-                            laundry_schedule[hour_idx] = washer_power
-                        else:
-                            laundry_schedule[hour_idx] = dryer_power
-                    # update weighted prob to avoid overlapping cycles, and also prefer not to not do laundry multiple times in the same day
-                    update_weighted_prob = { 
-                        0.0: [s for s in valid_start_times if start_time <= s < start_time + cycle_duration],
-                        0.2: [s for s in valid_start_times if not (start_time <= s < start_time + cycle_duration) and Utils.hour_of_day(s)[0] == Utils.hour_of_day(start_time)[0]],
-                    }
-                    start_time_dist.update_weights_by_factor(update_weighted_prob)
-                self.laundry_schedule = laundry_schedule
-                return self.laundry_schedule
+                start_time_dist.update_weights_by_factor(prob_factor_update)
+            return laundry_schedule 
         else:
-            self.laundry_schedule = [0.0] * (24 * 7)
-            return self.laundry_schedule
+            return [0.0] * (len(weekly_active_mask))
+        
 
 
     def _get_fridge_power(self) -> float:
@@ -302,7 +333,77 @@ class EquipmentGenerator:
         else:
             return 0.0
         
-    def get_fridge_usage_schedule(self, weekly_active_mask:list[bool]) -> list[float]:
+      
+    def _get_cooking_power(self) -> float:
+        cooking_products = self.equipment.cooking_products
+        assumptions = self.equipment_assumptions.cooking_products
+        if cooking_products.has_cooking_products:
+            if cooking_products.cooktop_fuel == Equipment.FuelType.ELECTRIC:
+                return assumptions.electric_cooking_products.sample()
+            else:
+                raise NotImplementedError("non-electric cooking products to be implemented.")
+        else:
+            return 0.0
+        
+
+    def weekly_cooking_usage_schedule(self, weekly_active_mask:list[bool]) -> tuple[list[float], list[float]]:
+        """ Translates kitchen equipment usage schedule into a full week schedule with power.
+            Returns the cooking power schedule and the corresponding ending times."""
+        cooking_products = self.equipment.cooking_products
+        cooking_assumptions = self.equipment_assumptions.cooking_products
+        masked_start_time_prob = cooking_assumptions.start_time_event_assumptions.get_masked_probabilities(weekly_active_mask)
+        start_time_dist = CategoricalDistribution(masked_start_time_prob)
+        cooking_schedule = [0.0] * (len(weekly_active_mask))
+        num_per_hour = int(60 / self.resolution_mins)
+        if not cooking_products.has_cooking_products:
+            return cooking_schedule, []
+        else:
+            end_times = []
+            num_cooking = self.cooking_frequency_dist.sample()
+            for _ in range(num_cooking):
+                cooking_power = self._get_cooking_power()
+                start_index = start_time_dist.sample()
+                start_hour = ScheduleUtils.weekly_index_hour(start_index, self.resolution_mins)
+                day = ScheduleUtils.weekly_index_day(start_index, self.resolution_mins)
+                # Determine duration based on time of day and day of week
+                if day < 5:  # Weekday
+                    if start_hour < 10:
+                        period_start = 0
+                        perid_end = 10 * num_per_hour - 1
+                        duration = cooking_assumptions.weekday_breakfast_duration.sample()
+                    elif 10 <= start_hour < 15:
+                        period_start = 10 * num_per_hour
+                        perid_end = 15 * num_per_hour - 1
+                        duration = cooking_assumptions.weekday_lunch_duration.sample()
+                    else:
+                        period_start = 15 * num_per_hour
+                        perid_end = 24 * num_per_hour - 1
+                        duration = cooking_assumptions.weekday_dinner_duration.sample()
+                else:  # Weekend
+                    if start_hour < 10:
+                        period_start = 0
+                        perid_end = 10 * num_per_hour - 1
+                        duration = cooking_assumptions.weekend_breakfast_duration.sample()
+                    elif 10 <= start_hour < 15: 
+                        period_start = 10 * num_per_hour
+                        perid_end = 15 * num_per_hour - 1
+                        duration = cooking_assumptions.weekend_lunch_duration.sample()
+                    else:
+                        period_start = 15 * num_per_hour
+                        perid_end = 24 * num_per_hour - 1
+                        duration = cooking_assumptions.weekend_dinner_duration.sample()
+                duration_indices = int(duration / self.resolution_mins)
+                cooking_schedule[start_index: start_index + duration_indices] = [cooking_power] 
+                end_times.append((start_index + duration_indices) % (24 * 7 * num_per_hour))
+                # Update probabilities to avoid overlapping cooking events
+                update_prob_factor = {
+                    0.0: [i for i in range(period_start, perid_end + 1) if start_index <= i < start_index + duration_indices]
+                }
+                start_time_dist.update_weights_by_factor(update_prob_factor)
+            end_times.sort()
+            return cooking_schedule, end_times
+
+    def weekly_fridge_usage_schedule(self, weekly_active_mask:list[bool]) -> list[float]:
         """ Translates refrigeration equipment usage schedule into a full week schedule with power."""
         if self.equipment.refrigeration.has_refrigerator:
             fridge_power = self._get_fridge_power()
@@ -325,142 +426,61 @@ class EquipmentGenerator:
         else:
             return 0.0
 
-    # def get_dishwasher_usage_schedule(self) -> list[float]:
-    #     """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
-    #     if self.dishwasher_schedule is not None:
-    #         return self.dishwasher_schedule
-    #     dishwasher = self.equipment.dishwasher
-    #     if dishwasher.has_dishwasher:
-    #         dishwasher_power = self._get_dishwasher_power()
-            
-    #         num_cycle_dist = TranslationRule.RuleSet.uniform_distribution_rule()(dishwasher.usage_frequency_per_week.min, dishwasher.usage_frequency_per_week.max)
-    #         num_cycles = int(num_cycle_dist.sample())
-    #         cycle_duration = EquipmentTranslator.dishwasher_cycle_duration_dist.sample()
-            
-    #         valid_start_times = self._get_valid_start_times(cycle_duration)
-    #         if valid_start_times is None:
-    #             valid_start_times = self._get_valid_start_times(0)
-
-    #         dishwasher_schedule = [0.0] * (24 * 7)
-            
-    #         if len(valid_start_times) == 0:
-    #             self.dishwasher_schedule = dishwasher_schedule
-    #             return self.dishwasher_schedule
-    #         else:
-    #             # more weights for evening times, moderate for after lunch, less for the rest, valid times only
-    #             # more weights for friday evening and weekends
-    #             weighted_prob = {
-    #                 3.0: [],
-    #                 2.0: [],
-    #                 1.5: [],
-    #                 1.0: []
-    #             }
-    #             for s in valid_start_times:
-    #                 day_of_week, hour_of_day = Utils.hour_of_day(s)
-    #                 if day_of_week in [5, 6]:  # Saturday, Sunday
-    #                     if hour_of_day >= 18:
-    #                         weighted_prob[3.0].append(s)
-    #                     elif 12 <= hour_of_day < 16:
-    #                         weighted_prob[2.0].append(s)
-    #                     else:
-    #                         weighted_prob[1.5].append(s)
-    #                 if day_of_week == 4:  # Friday
-    #                     if hour_of_day >= 18:
-    #                         weighted_prob[3.0].append(s)
-    #                     elif 12 <= hour_of_day < 16:
-    #                         weighted_prob[1.5].append(s)
-    #                     else:
-    #                         weighted_prob[1.0].append(s)
-    #                 else:  # Weekdays
-    #                     if hour_of_day >= 19:
-    #                         weighted_prob[2.0].append(s)
-    #                     elif 12 <= hour_of_day < 14:
-    #                         weighted_prob[1.5].append(s)
-    #                     else:
-    #                         weighted_prob[1.0].append(s)
-    #             start_time_dist = TranslationRule.RuleSet.weighted_value_distribution_rule()(weighted_prob)
-    #             for _ in range(num_cycles):
-    #                 start_time = start_time_dist.sample()
-    #                 if start_time is None:
-    #                     self.dishwasher_schedule = dishwasher_schedule
-    #                     return self.dishwasher_schedule
-    #                 for h in range(cycle_duration):
-    #                     hour_idx = (start_time + h) % (24 * 7)
-    #                     dishwasher_schedule[hour_idx] = dishwasher_power
-    #                 # update weighted prob to avoid overlapping cycles
-    #                 update_weighted_prob = { 
-    #                     0.0: [s for s in valid_start_times if start_time <= s < start_time + cycle_duration],
-    #                     0.2: [s for s in valid_start_times if not (start_time <= s < start_time + cycle_duration) and (abs(s - start_time) < 2 or abs(s - start_time - cycle_duration) <2) ],
-    #                 }
-
-    #                 start_time_dist.update_weights_by_factor(update_weighted_prob)
-    #             self.dishwasher_schedule = dishwasher_schedule
-    #             return self.dishwasher_schedule
-    #     else:
-    #         self.dishwasher_schedule = [0.0] * (24 * 7)
-    #         return self.dishwasher_schedule
-        
-    def _get_cooking_dist(self) -> float:
-        cooking_products = self.equipment.cooking_products
-        assumptions = self.equipment_assumptions.cooking_products
-        if cooking_products.has_cooking_products:
-            if cooking_products.cooktop_fuel == Equipment.FuelType.ELECTRIC:
-                return assumptions.electric_cooking_products.sample()
-            else:
-                raise NotImplementedError("non-electric cooking products to be implemented.")
+    def weekly_dishwasher_usage_schedule(self, weekly_active_mask:list[bool], cooking_ending:list[float]) -> list[float]:
+        """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
+        dishwasher = self.equipment.dishwasher
+        dishwasher_assumptions = self.equipment_assumptions.dishwasher
+        res_min = self.resolution_mins
+        masked_time_prob = dishwasher_assumptions.start_time_event_assumptions.get_masked_probabilities(self.active_time_mask)
+        start_time_dist = CategoricalDistribution(masked_time_prob)
+        dishwasher_schedule = [0.0] * (len(weekly_active_mask))
+        operation = dishwasher.dishwashing_operational_logic
+        if not dishwasher.has_dishwasher:
+            return dishwasher_schedule
         else:
-            return 0.0
-        
+            if operation.pattern_type == Equipment.DishwashingPattern.AFTER_EACH_COOKED_MEAL:
+                # Dishwasher runs after cooking events
+                for end_time in cooking_ending:
+                    start_index = end_time + 1
+                    cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
+                    dishwasher_power = self._get_dishwasher_power()
+                    dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
+            elif operation.pattern_type == Equipment.DishwashingPattern.DAILY_BATCH_IF_COOKED:
+                days = set()
+                for end_time in cooking_ending:
+                    day = ScheduleUtils.weekly_index_day(end_time, res_min)
+                    days.add(day)
+                for day in days:
+                    day_start = day * 24 * (60 // res_min)
+                    day_end = day_start + 24 * (60 // res_min)
+                    start_index = start_time_dist.sample_from_range(day_start, day_end)
+                    cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
+                    dishwasher_power = self._get_dishwasher_power()
+                    dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
+            elif operation.pattern_type == Equipment.DishwashingPattern.WHENEVER_FULL:
+                # assume dishwasher gets full after every 3 cooking events
+                for i in range(0, len(cooking_ending), 3):
+                    end_time = cooking_ending[i]
+                    start_index = end_time + 1
+                    day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                    day_end = (day + 1) * 24 * (60 // res_min)
+                    end_ind = min(cooking_ending[i + 3], day_end) if i + 3 < len(cooking_ending) else day_end   
+                    start_index = start_time_dist.sample_from_range(start_index, end_ind)
+                    cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
+                    dishwasher_power = self._get_dishwasher_power()
+                    dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
+            elif operation.pattern_type == Equipment.DishwashingPattern.INDEPENDENT_FREQUENCY:
+                for _ in range(operation.frequency_per_week):
+                    start_index = start_time_dist.sample()
+                    cycle_duration = int(dishwasher_assumptions.dishwasher_cycle_duration.sample() / res_min)
+                    dishwasher_power = self._get_dishwasher_power()
+                    dishwasher_schedule[start_index: start_index + cycle_duration] = [dishwasher_power]
+                    update_prob_factor = {
+                        0.0: [i for i in range(start_index, start_index + cycle_duration)]
+                    }
+                    start_time_dist.update_weights_by_factor(update_prob_factor)
+            return dishwasher_schedule
+                
+                    
 
-    
-    # def get_kitchen_usage_schedule(self) -> tuple[list[float], list[float]]:
-        """ Translates kitchen equipment usage schedule into a full week schedule with power."""
-        if self.kitchen_electric_schedule is not None and self.kitchen_gas_schedule is not None:
-            return self.kitchen_electric_schedule, self.kitchen_gas_schedule
-        kitchen_equipment = self.equipment.kitchen
-        if kitchen_equipment.has_kitchen_equipment:
-            elec_dist = self._get_kitchen_electricity_dist()
-            gas_dist = self._get_kitchen_gas_dist()
-
-            num_usage_dist = TranslationRule.RuleSet.uniform_distribution_rule()(kitchen_equipment.usage_frequency_per_week.min, kitchen_equipment.usage_frequency_per_week.max)
-            num_usages = int(num_usage_dist.sample())
-            duration = int(self.kitchen_duration_dist.sample())
-
-            valid_start_times = self._get_valid_start_times(duration)
-            if valid_start_times is None:
-                valid_start_times = self._get_valid_start_times(0)
-
-            kitchen_filtered_weights = {}
-            for weight, time_slots in EquipmentTranslator.kitchen_original_weights.items():
-                # Keep only times that are in valid_start_times
-                filtered_slots = list(set(time_slots) & set(valid_start_times))
-                if filtered_slots:  # Only add if there are valid times
-                    kitchen_filtered_weights[weight] = filtered_slots
-            start_time_dist = TranslationRule.RuleSet.weighted_value_distribution_rule()(kitchen_filtered_weights)
-            elec_schedule = [0.0] * (24 * 7)
-            gas_schedule = [0.0] * (24 * 7)
-            for _ in range(num_usages):
-                start_time = start_time_dist.sample()
-                if start_time is None:
-                    return self.kitchen_electric_schedule, self.kitchen_gas_schedule
-                for h in range(duration):
-                    hour_idx = (start_time + h) % (24 * 7)
-                    if elec_dist is not None:
-                        elec_schedule[hour_idx] += elec_dist.sample()
-                    if gas_dist is not None:
-                        gas_schedule[hour_idx] += gas_dist.sample()
-                # update weighted prob to avoid overlapping cycles
-                update_weighted_prob = { 
-                    0.0: [s for s in valid_start_times if start_time <= s < start_time + duration],
-                    0.2: [s for s in valid_start_times if not (start_time <= s < start_time + duration) and (abs(s - start_time) < 2 or abs(s - start_time - duration) <2) ],
-                }
-                start_time_dist.update_weights_by_factor(update_weighted_prob)
-            self.kitchen_electric_schedule = elec_schedule
-            self.kitchen_gas_schedule = gas_schedule
-            return self.kitchen_electric_schedule, self.kitchen_gas_schedule
-        else:
-            elec_schedule = [0.0] * (24 * 7)
-            gas_schedule = [0.0] * (24 * 7)
-            self.kitchen_electric_schedule = elec_schedule
-            self.kitchen_gas_schedule = gas_schedule
-            return self.kitchen_electric_schedule, self.kitchen_gas_schedule
+         
