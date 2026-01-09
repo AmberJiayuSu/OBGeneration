@@ -251,18 +251,18 @@ class OccupancyGenerator:
             self.weekday_away = None
         else:
             self.weekday_away = TimeRangeDistribution(
-                occupancy.weekday_pattern.away_pattern.away_interval,
+                occupancy.weekday_pattern.away_interval,
                 start_variance=1.0,
                 end_variance=1.0,
-                resolution_mins=resolution_mins) if occupancy.weekday_pattern.away_pattern else None
+                resolution_mins=resolution_mins) if occupancy.weekday_pattern.away_interval else None
         if self.occupancy.weekend_pattern.is_always_occupied:
             self.weekend_away = None
         else:
             self.weekend_away = TimeRangeDistribution(
-                occupancy.weekend_pattern.away_pattern.away_interval,
+                occupancy.weekend_pattern.away_interval,
                 start_variance=2.0,
                 end_variance=2.0,
-                resolution_mins=resolution_mins) if occupancy.weekend_pattern.away_pattern else None
+                resolution_mins=resolution_mins) if occupancy.weekend_pattern.away_interval else None
         self.trackers = self._get_single_occupant_tracker(resolution_mins)
         self.num_per_hour = 60 // resolution_mins
         self.resolution_mins = resolution_mins
@@ -292,7 +292,7 @@ class OccupancyGenerator:
             return [None] * 5, []  # No one leaves on weekdays
         else:
             weekdays = [0,1,2,3,4]
-            away_days = random.sample(weekdays, occupancy.weekday_pattern.away_pattern.num_of_days)
+            away_days = random.sample(weekdays, occupancy.weekday_pattern.num_of_days)
             interval = []
             for d in weekdays:
                 if d in away_days:
@@ -391,7 +391,7 @@ class OccupancyGenerator:
             return sleep_schedule
     
     @staticmethod
-    def get_sleep_mask(sleep_schedule: list[Occupancy.TimeRange | None], num_per_hour: int) -> list[bool]:
+    def get_sleep_mask(sleep_schedule: list[TimeRange | None], num_per_hour: int) -> list[bool]:
         """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
         mask = [False] * (24 * 7 * num_per_hour)
         for d in range(7):

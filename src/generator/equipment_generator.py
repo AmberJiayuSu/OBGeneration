@@ -163,6 +163,9 @@ class EquipmentAssumptions(BaseModel):
     def default(cls) -> "EquipmentAssumptions":
         """Returns the standard/default assumptions for equipment power."""
         resolution_mins = 15
+        # Get project root directory (this file is at src/generator/equipment_generator.py)
+        project_root = Path(__file__).parent.parent.parent
+        data_dir = project_root / "data" / "activity_initial_probability"
         return cls(
             baseload=120.0,
             watts_per_person_active=80.0,
@@ -175,7 +178,7 @@ class EquipmentAssumptions(BaseModel):
                 inefficient_dryer=DistributionConfig(dist_type="normal", params={"mean": 3500.0, "std": 700.0, "lower": 0.0, "int": False}).build(),
                 washer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.25, "std": 0.25, "lower": 0.0, "int": False}).build(),
                 dryer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.0, "std": 0.25, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file("data/equipment/laundry_start_time_5min_bins.csv", resolution_mins),
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "laundry_start_time_5min_bins.csv"), resolution_mins),
                 weekday_same_day_downfactor=0.22,
                 weekend_same_day_downfactor=0.27
             ),
@@ -191,7 +194,7 @@ class EquipmentAssumptions(BaseModel):
                 efficient_dishwasher=DistributionConfig(dist_type="normal", params={"mean": 540.0, "std": 50.0, "lower": 0.0, "int": False}).build(),
                 inefficient_dishwasher=DistributionConfig(dist_type="normal", params={"mean": 810.0, "std": 75.0, "lower": 0.0, "int": False}).build(),
                 dishwasher_cycle_duration=DistributionConfig(dist_type="normal", params={"mean": 2.0, "std": 0.75, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file("data/equipment/dishwasher_start_time_5min_bins.csv", resolution_mins)
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "dishwasher_start_time_5min_bins.csv"), resolution_mins)
             ),
             cooking_products=CookingAssumptions(
                 electric_cooking_products=DistributionConfig(dist_type="normal", params={"mean": 900.0, "std": 15.0, "lower": 0.0, "int": False}).build(),
@@ -201,7 +204,7 @@ class EquipmentAssumptions(BaseModel):
                 weekend_breakfast_duration=DistributionConfig(dist_type="normal", params={"mean": 0.4, "std": 0.4, "lower": 0.0, "int": False}).build(),
                 weekend_lunch_duration=DistributionConfig(dist_type="normal", params={"mean": 0.6, "std": 0.5, "lower": 0.0, "int": False}).build(),
                 weekend_dinner_duration=DistributionConfig(dist_type="normal", params={"mean": 0.6, "std": 0.4, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file("data/activity_initial_probability/cooking_start_time_5min_bins.csv", resolution_mins)
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "cooking_start_time_5min_bins.csv"), resolution_mins)
             )
         )
 

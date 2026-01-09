@@ -129,6 +129,9 @@ class CategoricalDistribution(Distribution):
         Args:
             probabilities: List of probabilities (will be normalized if they don't sum to 1)
         """
+        total = sum(probabilities)
+        if math.fabs(total - 1.0) > 1e-6 and total > 0:
+            probabilities = [p / total for p in probabilities]
         self._probabilities = probabilities
         self._total = sum(probabilities)
 
@@ -167,6 +170,7 @@ class CategoricalDistribution(Distribution):
             #fallback to uniform if all probabilities are zero
             n = len(self._probabilities)
             self._probabilities = [1.0 / n for _ in self._probabilities]
+        self._total = sum(self._probabilities)
         # Recompute cumulative sum
         self._cumsum = []
         cumulative = 0.0
@@ -187,6 +191,7 @@ class CategoricalDistribution(Distribution):
             #fallback to uniform if all probabilities are zero
             n = len(self._probabilities)
             self._probabilities = [1.0 / n for _ in self._probabilities]
+        self._total = sum(self._probabilities)
         # Recompute cumulative sum
         self._cumsum = []
         cumulative = 0.0
@@ -232,39 +237,3 @@ class CategoricalDistribution(Distribution):
     def __repr__(self) -> str:
         return f"CategoricalDistribution(n_categories={len(self._probabilities)})"
 
-
-class WeightedValueDistribution(Distribution):
-    def __init__(self, values_with_weights: dict[float, list[float]]):
-        self._values = []
-        self._weights = []
-        for weight, vals in values_with_weights.items():
-            for v in vals:
-                self._values.append(v)
-                self._weights.append(weight)
-    
-    def update_weights(self, weight_to_update: dict[float, list[float]]):
-        for weight, vals in weight_to_update.items():
-            for v in vals:
-                if v in self._values:
-                    idx = self._values.index(v)
-                    self._weights[idx] = weight
-    
-    def update_weights_by_factor(self, weight_to_update: dict[float, list[float]]):
-        for change_factor, vals in weight_to_update.items():
-            for v in vals:
-                if v in self._values:
-                    idx = self._values.index(v)
-                    self._weights[idx] = self._weights[idx] * change_factor
-                    
-    def sample(self) -> float:
-        if sum(self._weights) == 0:
-            return None
-        return random.choices(self._values, weights=self._weights, k=1)[0]
-    
-    def mean(self) -> float:
-        total_weight = sum(self._weights)
-        weighted_sum = sum(v * w for v, w in zip(self._values, self._weights))
-        return weighted_sum / total_weight if total_weight > 0 else 0
-    
-    def __repr__(self) -> str:
-        return f"AssignedValueDistribution(values={self._values}, weights={self._weights})"

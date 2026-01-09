@@ -53,14 +53,8 @@
                         },
                         "away_interval": {
                             "type": "object",
-                            "description": "The most frequent time range when the house is empty (e.g., normal commute days).",
+                            "description": "If NOT always occupied: The time range when the house is empty.",
                             "properties": {
-                                "num_of_days": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 5,
-                                    "description": "Number of weekdays (1-5) this primary away interval applies to."
-                                },
                                 "start_hour": {
                                     "type": "integer",
                                     "minimum": 0,
@@ -75,11 +69,17 @@
                                 }
                             },
                             "required": [
-                                "num_of_days",
                                 "start_hour",
                                 "end_hour"
                             ]
+                        },
+                        "num_of_days": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 5,
+                            "description": "Number of weekdays (1-5) the away interval applies to."
                         }
+                        
                     },
                     "required": [
                         "is_always_occupied"
@@ -497,44 +497,6 @@
                             "type": "boolean",
                             "description": "Indicates whether the household has an efficient dishwasher."
                         },
-                        "usage_frequency_per_week": {
-                            "type": "object",
-                            "description": "Frequency of dishwasher usage per week.",
-                            "properties": {
-                                "min": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Lower bound of dishwasher usage frequency per week."
-                                },
-                                "max": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Upper bound of dishwasher usage frequency per week."
-                                }
-                            }
-                        }
-                    },
-                    "required": [
-                        "has_dishwasher"
-                    ]
-                },
-                "cooking_products": {
-                    "type": "object",
-                    "description": "cooking products equipment usage profile.",
-                    "properties": {
-                        "has_cooking_products": {
-                            "type": "boolean",
-                            "description": "Indicates whether the household has cooking products (cooktop + oven)."
-                        },
-                        "cooking_products_fuel": {
-                            "type": "string",
-                            "description": "Fuel type of the cooking products.",
-                            "enum": [
-                                "electric",
-                                "gas",
-                                "other"
-                            ]
-                        },
                         "dishwashing_operational_logic": {
                             "type": "object",
                             "description": "Captures the behavioral pattern and frequency of dishwashing activity.",
@@ -559,6 +521,29 @@
                                 "pattern_type"
                             ]
                         }
+                    },
+                    "required": [
+                        "has_dishwasher"
+                    ]
+                },
+                "cooking_products": {
+                    "type": "object",
+                    "description": "cooking products equipment usage profile.",
+                    "properties": {
+                        "has_cooking_products": {
+                            "type": "boolean",
+                            "description": "Indicates whether the household has cooking products (cooktop + oven)."
+                        },
+                        "cooking_products_fuel": {
+                            "type": "string",
+                            "description": "Fuel type of the cooking products.",
+                            "enum": [
+                                "electric",
+                                "gas",
+                                "other"
+                            ]
+                        }
+                        
                     },
                     "required": [
                         "has_cooking_products"

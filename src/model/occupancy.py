@@ -40,23 +40,24 @@ class TimeRange(BaseModel):
         else:
             return hour >= self.start_hour or hour < self.end_hour
 
-class AwayPattern(BaseModel):
-    """Details for a specific weekday away interval."""
-    num_of_days: int = Field(..., ge=1, le=5)
-    away_interval: TimeRange = Field(...)
 
-class OccupancyPattern(BaseModel):
-    """Defines the unoccupied patterns."""
+class WeekdayOccupancyPattern(BaseModel):
+    """Defines the weekday unoccupied patterns."""
     is_always_occupied: bool = Field(...)
-    away_pattern: Optional[AwayPattern] = Field(None)
+    away_interval: Optional[TimeRange] = Field(None)
+    num_of_days: Optional[int] = Field(None, ge=1, le=5)
 
+class WeekendOccupancyPattern(BaseModel):
+    """Defines the weekend unoccupied patterns."""
+    is_always_occupied: bool = Field(...)
+    away_interval: Optional[TimeRange] = Field(None)
 
 class Occupancy(BaseModel):
     """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
     num_occupants: int = Field(..., ge=1)
     household_composition: HouseholdComposition
-    weekday_pattern: OccupancyPattern
-    weekend_pattern: OccupancyPattern
+    weekday_pattern: WeekdayOccupancyPattern
+    weekend_pattern: WeekendOccupancyPattern
     sleep_time: TimeRange
 
     @model_validator(mode='after')
