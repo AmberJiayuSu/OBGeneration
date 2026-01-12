@@ -108,11 +108,7 @@ class TestNormalDistribution:
 
         sample_mean = np.mean(samples)
         sample_stddev = np.std(samples)
-
-        # Assert: Sample mean is within 5% of specified mean
         assert abs(sample_mean - mean) / abs(mean) < 0.05
-
-        # Assert: Sample stddev is within 10% of specified stddev
         assert abs(sample_stddev - stddev) / stddev < 0.1
 
 

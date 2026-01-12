@@ -39,7 +39,7 @@ class NormalDistribution(Distribution):
         if stddev <= 0:
             raise ValueError("stddev must be positive")
         if lower > upper:
-            raise ValueError("lower must be <= upper")
+            raise ValueError(fr"lower: {lower} must be <= upper: {upper}")
 
         self._mean = float(mean)
         self._stddev = float(stddev)

@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any, Dict, Literal, Optional
 from pydantic import BaseModel, Field
 
-from stochastic.distribution import Constant, NormalDistribution, UniformDistribution, WeightedValueDistribution
+from stochastic.distribution import Constant, NormalDistribution, UniformDistribution, CategoricalDistribution
 
 
-DistType = Literal["normal", "uniform", "constant", "weighted"]
+DistType = Literal["normal", "uniform", "constant", "categorical"]
 
 
 class DistributionConfig(BaseModel):
@@ -18,7 +18,7 @@ class DistributionConfig(BaseModel):
     - uniform: params = { "min": ..., "max": ..., "int": true/false? }
              + context can override bounds via {"lower": ..., "upper": ...}
     - constant: params = { "value": ... }
-    - weighted: params = { "0.7": [8,9], "0.3": [10] }  (keys are weights)
+    - categorical: params = { "weights" : [value1, value2, ...] }
     """
     dist_type: DistType
     params: Dict[str, Any] = Field(default_factory=dict)
@@ -54,28 +54,12 @@ class DistributionConfig(BaseModel):
             as_int = bool(p.get("int", True))
             return NormalDistribution(mean=mu, stddev=sigma, lower=lb, upper=ub, int=as_int)
 
-        if self.dist_type == "weighted":
-            # params = {"0.7": [8, 9], "0.3": [10]}  OR  {"0.7": 8, "0.3": 9}
-            values_with_weights: dict[float, list[float]] = {}
-
-            if not p:
-                raise ValueError("weighted distribution requires non-empty params")
-
-            for k, vals in p.items():
-                try:
-                    weight = float(k)
-                except ValueError as e:
-                    raise ValueError(
-                        "weighted distribution expects numeric-string keys as weights "
-                        "(e.g., {'0.7': [8,9], '0.3': [10]})"
-                    ) from e
-
-                if not isinstance(vals, list):
-                    vals = [vals]
-
-                values_with_weights[weight] = [float(v) for v in vals]
-
-            return WeightedValueDistribution(values_with_weights)
+        if self.dist_type == "categorical":
+            weights = p.get("weights", [])
+            if not weights:
+                raise ValueError("categorical distribution requires non-empty 'weights' list")
+            return CategoricalDistribution(weights)
 
         # should be unreachable due to Literal typing
-        raise ValueError(f"Unsupported dist_type: {self.dist_type}")
+        raise ValueError(f"Unsupported dist_type: {self.dist_type}")    
+           
