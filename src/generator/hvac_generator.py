@@ -166,7 +166,7 @@ class HVACGenerator:
 
 
 
-    def cooling_setpoint__annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def cooling_setpoint_annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         if self.hvac.cooling is None:
             return None

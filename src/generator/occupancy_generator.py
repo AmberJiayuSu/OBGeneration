@@ -643,6 +643,15 @@ class OccupancyGenerator:
             for v, occupied in zip(existing_schedule, occupancy_weekly_mask)
         ]
     
+    @staticmethod
+    def get_active_mask(occupancy_schedule: list[float], sleep_schedule: list[bool]) -> list[bool]:
+        """ Generates a mask indicating active hours (True) vs sleep or unoccupied hours (False)."""
+        mask = [
+            (occ > 0.0) and (not asleep)
+            for occ, asleep in zip(occupancy_schedule, sleep_schedule)
+        ]
+        return mask
+    
 
     def household_annual_schedule(self) -> tuple[list[list[float]], list[list[bool]]]:
         """ Generates the household's annual schedule by repeating the weekly schedule 52 weeks + 1 day.
@@ -664,6 +673,19 @@ class OccupancyGenerator:
                 annual_schedule.append(weekly_schedule[:24 * self.num_per_hour])
                 annual_sleep_schedule.append(sleep_mask[:24 * self.num_per_hour])
         return annual_schedule, annual_sleep_schedule
+    
+    def get_annual_mask(self, annual_schedule: list[list[float]], annual_sleep_schedule: list[list[bool]]) -> tuple[list[list[bool]], list[list[bool]], list[list[bool]]]:
+        """ Generates the annual occupancy, sleep, and active masks based on the annual schedule."""
+        annual_occupancy_mask = []
+        annual_active_mask = []
+        for w in range(len(annual_schedule)):
+            weekly_schedule = annual_schedule[w]
+            sleep_schedule = annual_sleep_schedule[w]
+            weekly_mask = OccupancyGenerator.get_occupancy_mask(weekly_schedule)
+            annual_occupancy_mask.append(weekly_mask)
+            active_mask = OccupancyGenerator.get_active_mask(weekly_schedule, sleep_schedule)
+            annual_active_mask.append(active_mask)
+        return annual_occupancy_mask, annual_sleep_schedule, annual_active_mask
     
         
             
