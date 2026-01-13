@@ -13,7 +13,7 @@ class LaundryEquipment(BaseModel):
     dryer_efficient: bool = Field(default=True)
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
-class RefrigerationSize(Enum):
+class RefrigeratorSize(Enum):
     SMALL = "small"
     MEDIUM = "medium"
     LARGE = "large"
@@ -31,13 +31,13 @@ class DishwashingPattern(Enum):
 
 class DishwashingLogic(BaseModel):
     pattern_type: DishwashingPattern = Field(default=DishwashingPattern.DAILY_BATCH_IF_COOKED)
-    frequency_per_week: Optional[float] = Field(default=None)
+    usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
 
 class RefrigerationEquipment(BaseModel):
     has_refrigerator: bool = Field(default=True)
     efficient_refrigerator: bool = Field(default=True)
-    size: RefrigerationSize = Field(default=RefrigerationSize.MEDIUM)
+    size: RefrigeratorSize = Field(default=RefrigeratorSize.MEDIUM)
 
 class DishwasherEquipment(BaseModel):
     has_dishwasher: bool = Field(default=False)
@@ -60,7 +60,7 @@ class Equipment(BaseModel):
 
     """
     laundry: LaundryEquipment = Field(default_factory=LaundryEquipment)
-    refrigeration: RefrigerationEquipment = Field(default_factory=RefrigerationEquipment)
+    refrigerator: RefrigerationEquipment = Field(default_factory=RefrigerationEquipment)
     dishwasher: DishwasherEquipment = Field(default_factory=DishwasherEquipment)
     cooking_products: CookingEquipment = Field(default_factory=CookingEquipment)
     

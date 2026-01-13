@@ -79,7 +79,6 @@
                             "maximum": 5,
                             "description": "Number of weekdays (1-5) the away interval applies to."
                         }
-                        
                     },
                     "required": [
                         "is_always_occupied"
@@ -511,10 +510,21 @@
                                         "independent_frequency"
                                     ]
                                 },
-                                "frequency_per_week": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "description": "Number of times dishes are washed per week (only applicable if pattern_type is 'independent_frequency')."
+                                "usage_frequency_per_week": {
+                                    "type": "object",
+                                    "description": "frequency of dishwasher usage per week (required if pattern_type is 'independent_frequency').",
+                                    "properties": {
+                                        "min": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "description": "Lower bound of dishwasher usage frequency per week."
+                                        },
+                                        "max": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "description": "Upper bound of dishwasher usage frequency per week."
+                                        }
+                                    }
                                 }
                             },
                             "required": [
@@ -543,7 +553,6 @@
                                 "other"
                             ]
                         }
-                        
                     },
                     "required": [
                         "has_cooking_products"
