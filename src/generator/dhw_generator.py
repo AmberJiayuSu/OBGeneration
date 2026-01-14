@@ -45,7 +45,8 @@ class DHWGenerator:
         self.resolution_mins = resolution_mins
 
     def dhw_annual_schedule(self) -> tuple[float, list[list[float]]]:
-        """Generates an annual DHW usage schedule in cubic meters per second."""
+        """Generates an annual DHW usage schedule in cubic meters per second.
+           Returns: Tuple of (max_flow_rate_m3_per_s, annual_dhw_schedule)"""
         annual_schedule = []
         annual_daily = []
         for week_index in range(len(self.laundry_cycles_per_day)):

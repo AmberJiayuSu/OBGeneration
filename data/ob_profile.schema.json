@@ -470,14 +470,10 @@
                             "type": "boolean",
                             "description": "Indicates whether the household has an efficient refrigerator."
                         },
-                        "size": {
-                            "type": "string",
-                            "description": "Size of the refrigerator.",
-                            "enum": [
-                                "small",
-                                "medium",
-                                "large"
-                            ]
+                        "number_of_refrigerators": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "description": "Number of refrigerators in the household."
                         }
                     },
                     "required": [

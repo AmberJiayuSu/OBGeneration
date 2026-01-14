@@ -94,12 +94,16 @@ class LaundryAssumptions(BaseModel):
 class RefrigeratorAssumptions(BaseModel):
     """Power assumptions for refrigeration equipment in Watts."""
     model_config = ConfigDict(arbitrary_types_allowed=True)
+    efficient_compact: Distribution = Field(..., description="Distribution for efficient compact refrigerator power (W)")
+    inefficient_compact: Distribution = Field(..., description="Distribution for inefficient compact refrigerator power (W)")
     efficient_small: Distribution = Field(..., description="Distribution for efficient small refrigerator power (W)")
     inefficient_small: Distribution = Field(..., description="Distribution for inefficient small refrigerator power (W)")  
     efficient_medium: Distribution = Field(..., description="Distribution for efficient medium refrigerator power (W)")
     inefficient_medium: Distribution = Field(..., description="Distribution for inefficient medium refrigerator power (W)")  
     efficient_large: Distribution = Field(..., description="Distribution for efficient large refrigerator power (W)")
     inefficient_large: Distribution = Field(..., description="Distribution for inefficient large refrigerator power (W)")
+    primary_refrigerator_size: CategoricalDistribution = Field(..., description="Categorical distribution for primary refrigerator size")
+    secondary_refrigerator_size: CategoricalDistribution = Field(..., description="Categorical distribution for secondary refrigerator size")
 
 class DishwasherAssumptions(BaseModel):
     """Power assumptions for dishwasher equipment in Watts."""
@@ -185,12 +189,17 @@ class EquipmentAssumptions(BaseModel):
                 weekend_same_day_downfactor=0.27
             ),
             refrigerator=RefrigeratorAssumptions(
-                efficient_small=DistributionConfig(dist_type="normal", params={"mean": 32.0, "std": 6.5, "lower": 0.0, "int": False}).build(),
-                inefficient_small=DistributionConfig(dist_type="normal", params={"mean": 51.0, "std": 7.5, "lower": 0.0, "int": False}).build(),
-                efficient_medium=DistributionConfig(dist_type="normal", params={"mean": 48.0, "std": 11.0, "lower": 0.0, "int": False}).build(),
-                inefficient_medium=DistributionConfig(dist_type="normal", params={"mean": 77.0, "std": 13.0, "lower": 0.0, "int": False}).build(),
+                efficient_compact=DistributionConfig(dist_type="normal", params={"mean": 31.0, "std": 6.0, "lower": 0.0, "int": False}).build(),
+                inefficient_compact=DistributionConfig(dist_type="normal", params={"mean": 48.0, "std": 11.0, "lower": 0.0, "int": False}).build(),
+                efficient_small=DistributionConfig(dist_type="normal", params={"mean": 48.0, "std": 11.0, "lower": 0.0, "int": False}).build(),
+                inefficient_small=DistributionConfig(dist_type="normal", params={"mean": 72.0, "std": 13.0, "lower": 0.0, "int": False}).build(),
+                efficient_medium=DistributionConfig(dist_type="normal", params={"mean": 61.0, "std": 12.0, "lower": 0.0, "int": False}).build(),
+                inefficient_medium=DistributionConfig(dist_type="normal", params={"mean": 91.5, "std": 18.0, "lower": 0.0, "int": False}).build(),
                 efficient_large=DistributionConfig(dist_type="normal", params={"mean": 69.0, "std": 13.0, "lower": 0.0, "int": False}).build(),
-                inefficient_large=DistributionConfig(dist_type="normal", params={"mean": 110.0, "std": 17.5, "lower": 0.0, "int": False}).build(),
+                inefficient_large=DistributionConfig(dist_type="normal", params={"mean": 103.5, "std": 21.0, "lower": 0.0, "int": False}).build(),
+                primary_refrigerator_size=CategoricalDistribution(probabilities=[0.0072, 0.0506, 0.5013, 0.4409]), # compact, small, medium, large
+                secondary_refrigerator_size=CategoricalDistribution(probabilities=[0.2570, 0.1790, 0.4079, 0.1561])
+
             ),
             dishwasher=DishwasherAssumptions(
                 efficient_dishwasher=DistributionConfig(dist_type="normal", params={"mean": 540.0, "std": 50.0, "lower": 0.0, "int": False}).build(),
@@ -242,7 +251,8 @@ class EquipmentGenerator:
             )
 
     def equipment_annual_schedule(self) -> tuple[list[list[float]], list[list[int]], list[list[int]]]:
-        """ Translates equipment usage pattern into a full annual schedule based on occupancy and sleep times."""
+        """ Translates equipment usage pattern into a full annual schedule based on occupancy and sleep times.
+            Returns: Tuple of (annual_equipment_schedule, laundry_cycles, dishwasher_cycles)"""
         annual_schedule = []
         laundry_cycles = []
         dishwasher_cycles = []
@@ -281,6 +291,44 @@ class EquipmentGenerator:
             elif weekly_sleep_mask[i]:
                 baseload_schedule[i] += weekly_occupancy[i] * assumptions.watts_per_person_sleep * self.num_occupants
         return baseload_schedule
+    
+
+    def laundry_annual_schedule(self) ->list[list[float]]:
+        """ Translates laundry equipment usage pattern into a full annual schedule based on occupancy."""
+        annual_schedule = []
+        laundry_cycles = []
+        for week_index in range(len(self.active_time_mask)):
+            weekly_active_mask = self.active_time_mask[week_index]
+            last_week = (week_index == len(self.active_time_mask) -1)
+            weekly_laundry_schedule, weekly_num_cycles = self.weekly_laundry_usage_schedule(weekly_active_mask, last_week)
+            annual_schedule.append(weekly_laundry_schedule)
+            laundry_cycles.append(weekly_num_cycles)
+        return annual_schedule
+    
+    def cooking_annual_schedule(self) -> tuple[list[list[float]], list[list[float]]]:
+        """ Translates cooking equipment usage pattern into a full annual schedule based on occupancy."""
+        annual_schedule = []
+        annual_cooking_ends = []
+        for week_index in range(len(self.active_time_mask)):
+            weekly_active_mask = self.active_time_mask[week_index]
+            last_week = (week_index == len(self.active_time_mask) -1)
+            weekly_cooking_schedule, cooking_ends = self.weekly_cooking_usage_schedule(weekly_active_mask, last_week)
+            annual_schedule.append(weekly_cooking_schedule)
+            annual_cooking_ends.append(cooking_ends)
+        return annual_schedule, annual_cooking_ends
+    
+    def dishwasher_annual_schedule(self, annual_cooking_ends) ->list[list[float]]:
+        """ Translates dishwasher equipment usage pattern into a full annual schedule based on occupancy."""
+        annual_schedule = []
+        dishwasher_cycles = []
+        for week_index in range(len(self.active_time_mask)):
+            weekly_active_mask = self.active_time_mask[week_index]
+            last_week = (week_index == len(self.active_time_mask) -1)
+            cooking_ends = annual_cooking_ends[week_index]
+            weekly_dishwashing_schedule, weekly_num_cycles = self.weekly_dishwasher_usage_schedule(weekly_active_mask,cooking_ends, last_week)
+            annual_schedule.append(weekly_dishwashing_schedule)
+            dishwasher_cycles.append(weekly_num_cycles)
+        return annual_schedule
 
 
 
@@ -348,15 +396,24 @@ class EquipmentGenerator:
         """ Calculates refrigeration equipment power density in W."""
         refrigerator = self.equipment.refrigerator
         refrigerator_assumptions = self.equipment_assumptions.refrigerator
+        total_power = 0.0
         if refrigerator.has_refrigerator:
-            if refrigerator.size == Equipment.RefrigeratorSize.SMALL:
-                base_power_dist = refrigerator_assumptions.efficient_small if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_small
-            elif refrigerator.size == Equipment.RefrigeratorSize.MEDIUM:
-                base_power_dist = refrigerator_assumptions.efficient_medium if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_medium
-            elif refrigerator.size == Equipment.RefrigeratorSize.LARGE:
-                base_power_dist = refrigerator_assumptions.efficient_large if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_large
-            base_power = base_power_dist.sample()
-            return base_power
+            for i in range(refrigerator.number_of_refrigerators):
+                if i == 0:
+                    size = refrigerator_assumptions.primary_refrigerator_size.sample()
+                else:
+                    size = refrigerator_assumptions.secondary_refrigerator_size.sample()
+                if size == 0:
+                    power_dist = refrigerator_assumptions.efficient_compact if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_compact
+                elif size == 1:
+                    power_dist = refrigerator_assumptions.efficient_small if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_small
+                elif size == 2:
+                    power_dist = refrigerator_assumptions.efficient_medium if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_medium
+                else:
+                    power_dist = refrigerator_assumptions.efficient_large if refrigerator.efficient_refrigerator else refrigerator_assumptions.inefficient_large
+                power = power_dist.sample()
+                total_power += power
+            return total_power
         else:
             return 0.0
         

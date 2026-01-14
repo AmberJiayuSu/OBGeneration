@@ -675,7 +675,10 @@ class OccupancyGenerator:
         return annual_schedule, annual_sleep_schedule
     
     def get_annual_mask(self, annual_schedule: list[list[float]], annual_sleep_schedule: list[list[bool]]) -> tuple[list[list[bool]], list[list[bool]], list[list[bool]]]:
-        """ Generates the annual occupancy, sleep, and active masks based on the annual schedule."""
+        """ Generates the annual occupancy, sleep, and active masks based on the annual schedule.
+            Returns:
+            Tuple of (annual_occupancy_mask, annual_sleep_schedule, annual_active_mask)
+        """
         annual_occupancy_mask = []
         annual_active_mask = []
         for w in range(len(annual_schedule)):
