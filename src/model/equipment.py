@@ -13,10 +13,7 @@ class LaundryEquipment(BaseModel):
     dryer_efficient: bool = Field(default=True)
     usage_frequency_per_week: Optional[NumberRange] = Field(default=None)
 
-class RefrigeratorSize(Enum):
-    SMALL = "small"
-    MEDIUM = "medium"
-    LARGE = "large"
+
 
 class FuelType(Enum):
     ELECTRIC = "electric"
@@ -37,7 +34,7 @@ class DishwashingLogic(BaseModel):
 class RefrigerationEquipment(BaseModel):
     has_refrigerator: bool = Field(default=True)
     efficient_refrigerator: bool = Field(default=True)
-    size: RefrigeratorSize = Field(default=RefrigeratorSize.MEDIUM)
+    number_of_refrigerators: int = Field(default=1, ge=0)
 
 class DishwasherEquipment(BaseModel):
     has_dishwasher: bool = Field(default=False)

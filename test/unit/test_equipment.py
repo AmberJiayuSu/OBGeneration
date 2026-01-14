@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 
 from generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
-from model.equipment import Equipment, RefrigeratorSize
+from model.equipment import Equipment
 from generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
 
 class TestEventAssumptions:
@@ -222,7 +222,7 @@ class TestEquipmentGenerator:
             "refrigerator": {
                 "has_refrigerator": true,
                 "efficient_refrigerator": true,
-                "size": "small"
+                "number_of_refrigerators": 1
             }
         }
         """
@@ -243,14 +243,20 @@ class TestEquipmentGenerator:
             resolution_mins=15,
             equipment_assumptions=assumptions
         )
+
+        refrigerator_assumptions = assumptions.refrigerator
         
         all_powers = []
-        for _ in range(20):
+        for _ in range(100):
             power = equipment_gen._get_fridge_power()
             all_powers.append(power)
 
+        expected_power = refrigerator_assumptions.efficient_compact.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[0] + \
+                         refrigerator_assumptions.efficient_small.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[1] + \
+                         refrigerator_assumptions.efficient_medium.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[2] + \
+                         refrigerator_assumptions.efficient_large.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[3]
         
-        expected_power = assumptions.refrigerator.efficient_small.mean()
+        
         assert pytest.approx(expected_power, rel=0.1) == np.mean(all_powers)
 
 
@@ -259,7 +265,7 @@ class TestEquipmentGenerator:
             "refrigerator": {
                 "has_refrigerator": true,
                 "efficient_refrigerator": false,
-                "size": "medium"
+                "number_of_refrigerators": 2
             }
         }
         """
@@ -276,11 +282,20 @@ class TestEquipmentGenerator:
             equipment_assumptions=assumptions
         )
         all_powers = []
-        for _ in range(10):
+        for _ in range(100):
             power = equipment_gen._get_fridge_power()
             all_powers.append(power)
+
+        expected_power_1 = refrigerator_assumptions.inefficient_compact.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[0] + \
+                         refrigerator_assumptions.inefficient_small.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[1] + \
+                         refrigerator_assumptions.inefficient_medium.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[2] + \
+                         refrigerator_assumptions.inefficient_large.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[3]
+        expected_power_2 = refrigerator_assumptions.inefficient_compact.mean() * refrigerator_assumptions.secondary_refrigerator_size._probabilities[0] + \
+                            refrigerator_assumptions.inefficient_small.mean() * refrigerator_assumptions.secondary_refrigerator_size._probabilities[1] + \
+                            refrigerator_assumptions.inefficient_medium.mean() * refrigerator_assumptions.secondary_refrigerator_size._probabilities[2] + \
+                            refrigerator_assumptions.inefficient_large.mean() * refrigerator_assumptions.secondary_refrigerator_size._probabilities[3]
         
-        expected_power = assumptions.refrigerator.inefficient_medium.mean()
+        expected_power = expected_power_1 + expected_power_2
         assert pytest.approx(np.mean(all_powers), rel=0.1) == expected_power
 
 
@@ -605,3 +620,270 @@ class TestEquipmentGenerator:
 
         assert all(sum(week) > 0 for week in laundry_cycles)
         assert all(sum(week) > 0 for week in dishwasher_cycles)
+
+
+
+class TestAnnualConsumption:
+
+    @pytest.mark.parametrize("occ_1", ["occ_1"], indirect=True)
+    def test_laundry(self,occ_1):
+        """Test annual laundry consumption calculation."""
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": true,
+                "washer_efficient": true,
+                "has_dryer": true,
+                "dryer_efficient": true,
+                "usage_frequency_per_week": {"min": 1, "max": 4}
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment_json_2 = """
+        {
+            "laundry": {
+                "has_washer": true,
+                "washer_efficient": false,
+                "has_dryer": true,
+                "dryer_efficient": false,
+                "usage_frequency_per_week": {"min": 1, "max": 4}
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+
+        equipment_1 = Equipment.model_validate_json(equipment_json)
+        equipment_2 = Equipment.model_validate_json(equipment_json_2)
+
+        assumptions = EquipmentAssumptions.default()
+
+        occ_gen = OccupancyGenerator(occ_1, OccupancyAssumptions.default())
+        occupancy, sleep = occ_gen.household_annual_schedule()
+        _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)  
+
+        equipment_gen_1 = EquipmentGenerator(
+            equipment=equipment_1,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+
+        equipment_gen_2 = EquipmentGenerator(
+            equipment=equipment_2,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+
+        laundry_annual_1 = equipment_gen_1.laundry_annual_schedule()
+        laundry_annual_2 = equipment_gen_2.laundry_annual_schedule()
+
+        total_consumption_1 = sum(sum(week) for week in laundry_annual_1) / 4000  # kWh
+        total_consumption_2 = sum(sum(week) for week in laundry_annual_2) / 4000  # kWh
+    
+        assert total_consumption_2 > total_consumption_1
+        assert total_consumption_1 > 300
+        assert total_consumption_2 < 800
+
+
+    @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
+    def test_refrigerator(self, occ):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": true,
+                "efficient_refrigerator": true,
+                "number_of_refrigerators": 1
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment_json_2 = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": true,
+                "efficient_refrigerator": false,
+                "number_of_refrigerators": 2
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+
+        equipment_1 = Equipment.model_validate_json(equipment_json)
+        equipment_2 = Equipment.model_validate_json(equipment_json_2)
+
+        assumptions = EquipmentAssumptions.default()
+
+        occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
+        occupancy, sleep = occ_gen.household_annual_schedule()
+        _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)  
+
+        equipment_gen_1 = EquipmentGenerator(
+            equipment=equipment_1,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+
+        equipment_gen_2 = EquipmentGenerator(
+            equipment=equipment_2,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+
+        refrigerator_power_1 = []
+        for _ in range(100):
+            refrigerator_power = equipment_gen_1._get_fridge_power()
+            annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
+            refrigerator_power_1.append(annual_consumption)
+
+        refrigerator_power_2 = []
+        for _ in range(100):
+            refrigerator_power = equipment_gen_2._get_fridge_power()
+            annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
+            refrigerator_power_2.append(annual_consumption)
+
+        mean_1 = np.mean(refrigerator_power_1)
+        mean_2 = np.mean(refrigerator_power_2)
+        assert mean_1 > 400
+        assert mean_1 < 700
+        assert mean_2 > 1200
+        assert mean_2 < 1800
+
+    @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
+    def test_cooking(self, occ):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": true,
+                "cooking_products_fuel": "electric",
+                "usage_frequency_per_week": {"min": 4, "max": 15}
+            }
+        }
+        """
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
+        occupancy, sleep = occ_gen.household_annual_schedule()
+        _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        cooking_schedule,_ = equipment_gen.cooking_annual_schedule()
+        total_consumption = sum(sum(week) for week in cooking_schedule) / 4000  # kWh
+        assert total_consumption > 200
+        assert total_consumption < 400
+
+    @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
+    def test_dishwasher(self, occ):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": true,
+                "dishwasher_efficient": true,
+                "dishwashing_operational_logic": {
+                    "pattern_type": "independent_frequency",
+                    "usage_frequency_per_week": {"min": 0, "max": 7}
+                }
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
+        occupancy, sleep = occ_gen.household_annual_schedule()
+        _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        _,cooking_end_times = equipment_gen.cooking_annual_schedule()
+        dishwasher_schedule = equipment_gen.dishwasher_annual_schedule(cooking_end_times)
+        total_consumption = sum(sum(week) for week in dishwasher_schedule) / 4000  # kWh
+        assert total_consumption > 50
+        assert total_consumption < 250
+
+
+    
+
+
+
+
+    
+
+    
