@@ -1,0 +1,1971 @@
+Shadowing Combinations
+..Solar Distribution=FullExterior
+..In the following, only the first 10 reference surfaces will be shown.
+..But all surfaces are used in the calculations.
+==================================
+Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=WALL_SDR_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=38
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=38
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_SDR_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=38
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=38
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=40
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=WALL_SDR_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=22
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=22
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_SDR_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=22
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=22
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=23
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDR_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=ROOF_RIGHT
+..Surface=WALL_SDR_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=ROOF_LEFT
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_SDR_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=ROOF_RIGHT
+..Surface=WALL_SDR_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_SDR_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=5
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=ROOF_LEFT
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_SDL_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=Mir-OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREEZEWAY_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREEZEWAY_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREEZEWAY_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=BREEZEWAYROOF is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT1_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT1_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDB_UNIT1_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT2_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDB_UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_FRONTROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT3_FRONTROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDB_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_FRONTROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT1_BACKROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDF_UNIT1_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT1_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_BACKROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT2_BACKROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDF_UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=26
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT3_BACKROW_BOTTOMFLOOR
+==================================
+Surface=DOOR_LDF_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_BACKROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_BACKROW_BOTTOMFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=9
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT3_BACKROW_BOTTOMFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_BACKROW_BOTTOMFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT1_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT1_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDB_UNIT1_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT2_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDB_UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_FRONTROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT3_FRONTROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDB_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_FRONTROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT1_BACKROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDF_UNIT1_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT1_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_BACKROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT2_BACKROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDF_UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=20
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT3_BACKROW_MIDDLEFLOOR
+==================================
+Surface=DOOR_LDF_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=4
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_BACKROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_BACKROW_MIDDLEFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=6
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT3_BACKROW_MIDDLEFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_BACKROW_MIDDLEFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=ROOF_RIGHT is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=ROOF_LEFT is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-BREEZEWAYROOF is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=iz-CEILING_UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=ROOF_BACK is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=ROOF_FRONT is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_BACKROW_TOPFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT3_BACKROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT3_BACKROW_TOPFLOOR
+==================================
+Surface=DOOR_LDF_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT3_FRONTROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDR_UNIT3_FRONTROW_TOPFLOOR
+==================================
+Surface=WINDOW_SDR_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT3_FRONTROW_TOPFLOOR
+==================================
+Surface=DOOR_LDB_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT1_FRONTROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_FRONTROW_TOPFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT1_FRONTROW_TOPFLOOR
+==================================
+Surface=DOOR_LDB_UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT2_BACKROW_TOPFLOOR
+==================================
+Surface=DOOR_LDF_UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT2_BACKROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT2_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDF_UNIT2_FRONTROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDF_UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT3_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT2_BACKROW_TOPFLOOR
+..Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDB_UNIT2_FRONTROW_TOPFLOOR
+==================================
+Surface=DOOR_LDB_UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT2_FRONTROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDR_1.UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDB_1.UNIT1_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=3
+..Surface=OVERHANG_LDB_UNIT1_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT2_BACKROW_TOPFLOOR
+..Surface=OVERHANG_LDB_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_LDB_UNIT1_BACKROW_TOPFLOOR
+==================================
+Surface=WINDOW_LDB_UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_SDL_1.UNIT1_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=2
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_BACKROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=WINDOW_SDL_UNIT3_BACKROW_TOPFLOOR
+==================================
+Surface=WINDOW_SDL_UNIT3_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=WALL_LDF_1.UNIT1_BACKROW_TOPFLOOR is used as Receiving Surface in calculations and is convex.
+Number of general casting surfaces=8
+..Surface=OVERHANG_LDF_UNIT1_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT2_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDR_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_SDL_UNIT3_FRONTROW_TOPFLOOR
+..Surface=OVERHANG_LDF_UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT3_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT1_FRONTROW_TOPFLOOR
+..Surface=WALL_LDB_1.UNIT2_FRONTROW_TOPFLOOR
+Number of back surfaces=0
+Number of receiving sub surfaces=1
+....Surface=DOOR_LDF_UNIT1_BACKROW_TOPFLOOR
+==================================
+Surface=DOOR_LDF_UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=FLOOR_UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0
+==================================
+Surface=CEILING_UNIT1_BACKROW_TOPFLOOR is not used as Receiving Surface in calculations.
+Number of general casting surfaces=0
+Number of back surfaces=0
+Number of receiving sub surfaces=0

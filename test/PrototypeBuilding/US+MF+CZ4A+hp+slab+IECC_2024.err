@@ -1,0 +1,1177 @@
+Program Version,EnergyPlus, Version 25.2.0-cf7368216c, YMD=2026.02.02 13:44,
+   ** Warning ** Output:PreprocessorMessage="GroundTempCalc - Slab" has the following Warning condition:
+   **   ~~~   ** Slab thickness [0.100 m] reset to 0.122 m  for computational stability.
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** Weather file location will be used rather than entered (IDF) Location object.
+   **   ~~~   ** ..Location object=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA WMO=744860
+   **   ~~~   ** ..Weather File Location=Boston Logan IntL Arpt MA USA TMY3 WMO#=725090
+   **   ~~~   ** ..due to location differences, Latitude difference=[1.71] degrees, Longitude difference=[2.78] degrees.
+   **   ~~~   ** ..Time Zone difference=[0.0] hour(s), Elevation difference=[14.29] percent, [1.00] meters.
+   ** Warning ** GetSurfaceData: InterZone Surface Azimuths do not match as expected.
+   **   ~~~   **   Azimuth=270.0, Tilt=90.0, in Surface=WALL_SDL_1.UNIT3_BACKROW_TOPFLOOR, Zone=LIVING_UNIT3_BACKROW_TOPFLOOR
+   **   ~~~   **   Azimuth=270.0, Tilt=90.0, in Surface=WALL_SDL_1.UNIT2_BACKROW_TOPFLOOR, Zone=LIVING_UNIT2_BACKROW_TOPFLOOR
+   **   ~~~   ** ..surface class of first surface=Wall
+   **   ~~~   ** ..surface class of second surface=Wall
+   ** Warning ** CalculateZoneVolume: 1 zone is not fully enclosed. For more details use:  Output:Diagnostics,DisplayExtrawarnings; 
+   ** Warning ** CheckUsedConstructions: There are 11 nominally unused constructions in input.
+   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;
+   ************* Beginning System Sizing Calculations
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_FRONTROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_FRONTROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_FRONTROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_BACKROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_BACKROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_BACKROW_BOTTOMFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_FRONTROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_FRONTROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_FRONTROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_BACKROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_BACKROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_BACKROW_MIDDLEFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_FRONTROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_FRONTROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_FRONTROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT1_BACKROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT2_BACKROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** The Standard Ratings is calculated for Coil:Cooling:DX:SingleSpeed = DX COOLING COIL_UNIT3_BACKROW_TOPFLOOR but not at the AHRI test condition due to curve out of bound.
+   **   ~~~   **  Review the Standard Ratings calculations in the Engineering Reference for this coil type. Also, use Output:Diagnostics, DisplayExtraWarnings for further guidance.
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_FRONTROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_FRONTROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_FRONTROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_FRONTROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_FRONTROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_FRONTROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_BACKROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_BACKROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_BACKROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_BACKROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_BACKROW_BOTTOMFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_BACKROW_BOTTOMFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_FRONTROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_FRONTROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_FRONTROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_FRONTROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_FRONTROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_FRONTROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_BACKROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_BACKROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_BACKROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_BACKROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_BACKROW_MIDDLEFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_BACKROW_MIDDLEFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_FRONTROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_FRONTROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_FRONTROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_FRONTROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_FRONTROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_FRONTROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT1_BACKROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT1_BACKROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT2_BACKROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT2_BACKROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Coil:WaterHeating:AirToWaterHeatPump:Wrapped "HEAT PUMP WATER HEATER EVAPORATOR_UNIT3_BACKROW_TOPFLOOR": Rated air volume flow rate per watt of rated total water heating capacity is out of range
+   **   ~~~   ** Min Rated Vol Flow Per Watt=[4.027E-005], Rated Vol Flow Per Watt=[1.260E-004], Max Rated Vol Flow Per Watt=[8.056E-005]. See Input-Output Reference Manual for valid range.
+   ** Warning ** Water heater = WATER HEATER_TANK_UNIT3_BACKROW_TOPFLOOR:  Recovery Efficiency and Energy Factor could not be calculated during the test for standard ratings
+   **   ~~~   ** Setpoint was never recovered and/or heater never turned on
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_FRONTROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_FRONTROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_FRONTROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_BACKROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_BACKROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_BACKROW_BOTTOMFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_FRONTROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_FRONTROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_FRONTROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_BACKROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_BACKROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_BACKROW_MIDDLEFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_FRONTROW_TOPFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_FRONTROW_TOPFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_FRONTROW_TOPFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT1_BACKROW_TOPFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT2_BACKROW_TOPFLOOR
+   ** Warning ** Check input. Pump nominal power or motor efficiency is set to 0, for pump=MAINS PRESSURE_UNIT3_BACKROW_TOPFLOOR
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.56 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.56 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.56 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.56 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (6.33 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT1_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT1_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT2_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT2_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.53 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "CLOTHES WASHER_UNIT3_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "DISHWASHER_UNIT3_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (6.36 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 00:00 - 00:10
+   **   ~~~   ** ...target water temperature     = 48.89 C
+   **   ~~~   ** ...hot water temperature        = 42.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** Processing Monthly Tabular Reports: Variable names not valid for this simulation
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual variables.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (3.61E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature is greater than the hot water temperature by (4.45E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.40E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.40E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.40E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (3.57E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature is greater than the hot water temperature by (4.41E-003 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 04:50 - 05:00
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.55 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.71E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SINKS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "SHOWERS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** CalcEquipmentFlowRates: "BATHS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature is greater than the hot water temperature by (3.86E-002 C)
+   **   ~~~   **  Environment=NEW.YORK-JOHN.F.KENNEDY.INTL.AP_NY_USA ANN HTG 99.6% CONDNS DB, at Simulation time=01/21 05:00 - 05:10
+   **   ~~~   ** ...target water temperature     = 40.56 C
+   **   ~~~   ** ...hot water temperature        = 40.52 C
+   **   ~~~   ** ...Target water temperature should be less than or equal to the hot water temperature. Verify temperature setpoints and schedules.
+   ** Warning ** Temperature out of range [-100. to 200.] (PsyPsatFnTemp)
+   **   ~~~   **  Routine=PsyTwbFnTdbWPb, Environment=ANNUAL, at Simulation time=04/08 09:20 - 09:30
+   **   ~~~   **  Input Temperature=-674.16
+   ************* Simulation Error Summary *************
+   ************* There are 25 unused schedules in input.
+   ************* There are 4 unused week schedules in input.
+   ************* There are 2 unused day schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873668  Min=5.551818
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873668  Min=5.551818
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.853397  Min=5.552799
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.853397  Min=5.552799
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.866536  Min=5.551034
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.866536  Min=5.551034
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.853591  Min=5.554824
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.853591  Min=5.554824
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873074  Min=5.552395
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873074  Min=5.552395
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.849138  Min=5.550327
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.849138  Min=5.550327
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.882822  Min=5.548708
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.882822  Min=5.548708
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873748  Min=5.558389
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873748  Min=5.558389
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.883638  Min=5.561138
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.883638  Min=5.561138
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.872542  Min=5.566230
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.872542  Min=5.566230
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871709  Min=5.558124
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871709  Min=5.558124
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871865  Min=5.559924
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871865  Min=5.559924
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873964  Min=5.558059
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873964  Min=5.558059
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873702  Min=5.557355
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873702  Min=5.557355
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871227  Min=5.558606
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.871227  Min=5.558606
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT1_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.875285  Min=5.553278
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT1_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.875285  Min=5.553278
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT2_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.877038  Min=5.557401
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT2_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.877038  Min=5.557401
+   *************
+   *************  ** Warning ** "CLOTHES WASHER_UNIT3_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873943  Min=5.547891
+   *************
+   *************  ** Warning ** "DISHWASHER_UNIT3_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 731511 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=8.873943  Min=5.547891
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35137 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540334  Min=0.000018
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35137 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540334  Min=0.000018
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35137 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540334  Min=0.000018
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35021 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520064  Min=0.000033
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35021 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520064  Min=0.000033
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35021 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520064  Min=0.000033
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35285 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.533202  Min=0.000010
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35285 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.533202  Min=0.000010
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_FRONTROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35285 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.533202  Min=0.000010
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34663 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520258  Min=0.000009
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34663 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520258  Min=0.000009
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34663 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.520258  Min=0.000009
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35341 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539740  Min=0.000083
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35341 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539740  Min=0.000083
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35341 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539740  Min=0.000083
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35109 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.515805  Min=0.000009
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35109 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.515805  Min=0.000009
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_BACKROW_BOTTOMFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35109 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.515805  Min=0.000009
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35689 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540630  Min=0.000050
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35689 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540630  Min=0.000050
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35689 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540630  Min=0.000050
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35615 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540369  Min=0.000011
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35615 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540369  Min=0.000011
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35615 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540369  Min=0.000011
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35247 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.537894  Min=0.000052
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35247 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.537894  Min=0.000052
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_FRONTROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35247 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.537894  Min=0.000052
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35119 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.541952  Min=0.000066
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35119 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.541952  Min=0.000066
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35119 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.541952  Min=0.000066
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35413 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.543705  Min=0.000034
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35413 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.543705  Min=0.000034
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35413 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.543705  Min=0.000034
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34773 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540609  Min=0.000044
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34773 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540609  Min=0.000044
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_BACKROW_TOPFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34773 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540609  Min=0.000044
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35405 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.549489  Min=0.000006
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35405 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.549489  Min=0.000006
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35405 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.549489  Min=0.000006
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35467 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540415  Min=0.000014
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35467 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540415  Min=0.000014
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35467 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.540415  Min=0.000014
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34997 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.550304  Min=0.000016
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34997 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.550304  Min=0.000016
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_FRONTROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 34997 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.550304  Min=0.000016
+   *************
+   *************  ** Warning ** "SINKS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35429 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539208  Min=0.000038
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35429 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539208  Min=0.000038
+   *************
+   *************  ** Warning ** "BATHS_UNIT1_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35429 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.539208  Min=0.000038
+   *************
+   *************  ** Warning ** "SINKS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35345 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538375  Min=0.000004
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35345 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538375  Min=0.000004
+   *************
+   *************  ** Warning ** "BATHS_UNIT2_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35345 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538375  Min=0.000004
+   *************
+   *************  ** Warning ** "SINKS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35253 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538531  Min=0.000046
+   *************
+   *************  ** Warning ** "SHOWERS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35253 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538531  Min=0.000046
+   *************
+   *************  ** Warning ** "BATHS_UNIT3_BACKROW_MIDDLEFLOOR" - Target water temperature should be less than or equal to the hot water temperature error continues...
+   *************  **   ~~~   **   This error occurred 35253 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=0.538531  Min=0.000046
+   *************
+   *************  ** Warning ** Temperature out of range [-100. to 200.] (PsyPsatFnTemp)
+   *************  **   ~~~   **   This error occurred 4 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 0 times.
+   *************  **   ~~~   **   Max=-146.200745 C  Min=-674.164185 C
+   *************
+   *************
+   ************* ===== Final Error Summary =====
+   ************* The following error categories occurred.  Consider correcting or noting.
+   ************* InterZone Surface Azimuths -- mismatch
+   ************* ..The azimuths (outward facing angle) of two interzone surfaces should not be the same.
+   ************* ..Normally, the absolute difference between the two azimuths will be 180 degrees.
+   ************* ..You can turn on the report: Output:Surfaces:List,Details; to inspect your surfaces.
+   ************* Nominally Unused Constructions
+   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause
+   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm
+   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 4 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 28237492 Warning; 0 Severe Errors; Elapsed Time=00hr 04min 38.56sec
