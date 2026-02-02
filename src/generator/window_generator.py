@@ -85,7 +85,7 @@ class WindowGenerator:
 
     
 
-    def window_annual_schedule(self, occupancy_active_mask: list[list[bool]]) -> list[float]:
+    def window_annual_schedule(self, occupancy_active_mask: list[list[bool]]) -> list[list[float]]:
         schedule = [[0.0 for _ in row] for row in occupancy_active_mask]
         if self.window.heating_season is not None:
             if self.window.heating_season == WindowOpeningBehavior.FREQUENTLY_OPEN:

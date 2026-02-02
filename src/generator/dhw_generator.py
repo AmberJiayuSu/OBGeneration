@@ -1,5 +1,5 @@
 from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from generator.OB_generator import ScheduleUtils
+from generator.ob_utils import ScheduleUtils
 import model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
 from stochastic.distribution_config import DistributionConfig
@@ -14,8 +14,8 @@ class DHWAssumptions(BaseModel):
     hot_water_per_person_per_day: float = Field(..., description="Hot water usage per person per day in liters.")
     efficient_washer_per_cycle: float = Field(..., description="Hot water usage per washing machine cycle in liters.")
     inefficient_washer_per_cycle: float = Field(..., description="Hot water usage per washing machine cycle in liters.")
-    efficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.", default=10.0)
-    inefficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.", default=15.0)
+    efficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.")
+    inefficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.")
 
     @classmethod
     def from_json_file(cls, path: str | Path) -> "DHWAssumptions":

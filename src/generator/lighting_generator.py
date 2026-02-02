@@ -48,7 +48,7 @@ class LightingGenerator:
         else:
             schedule = [1.0 if occ else 0.0 for occ in occupancy_mask_weekly]
 
-        # Adjust for sleep times 
+        # Adjust for sleep times
         # Assumption: during sleep time, lighting usage is zero
         schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly, schedule, 0.0)
         return schedule

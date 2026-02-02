@@ -1,5 +1,5 @@
 from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from generator.OB_generator import ScheduleUtils
+from generator.ob_utils import ScheduleUtils
 import model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
 from stochastic.distribution_config import DistributionConfig
@@ -173,9 +173,9 @@ class EquipmentAssumptions(BaseModel):
         project_root = Path(__file__).parent.parent.parent
         data_dir = project_root / "data" / "activity_initial_probability"
         return cls(
-            baseload=120.0,
-            watts_per_person_active=80.0,
-            watts_per_person_sleep=20.0,
+            baseload=150.0,
+            watts_per_person_active=120.0,
+            watts_per_person_sleep=40.0,
             resolution_mins=resolution_mins,
             laundry=LaundryAssumptions(
                 efficient_washer=DistributionConfig(dist_type="normal", params={"mean": 410.0, "std": 135.0, "lower": 0.0, "int": False}).build(),
@@ -274,7 +274,7 @@ class EquipmentGenerator:
         fridge_power = self._get_fridge_power()
         cooking_schedule, cooking_ends = self.weekly_cooking_usage_schedule(weekly_active_mask, last_week)
         dishwashing_schedule, dishwasher_num_cycles = self.weekly_dishwasher_usage_schedule(weekly_active_mask,cooking_ends,last_week)
-    
+
         total_schedule = []
         for i in range(len(weekly_active_mask)):
             total_power = baseload_schedule[i] + laundry_schedule[i] + fridge_power + cooking_schedule[i] + dishwashing_schedule[i]
@@ -518,6 +518,7 @@ class EquipmentGenerator:
 
     def weekly_dishwasher_usage_schedule(self, weekly_active_mask:list[bool], cooking_ending:list[float], last_week: bool) -> tuple[list[float], list[int]]:
         """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
+        import time
         dishwasher = self.equipment.dishwasher
         dishwasher_assumptions = self.equipment_assumptions.dishwasher
         res_min = self.resolution_mins
@@ -534,7 +535,9 @@ class EquipmentGenerator:
                 # Dishwasher runs after cooking events
                 for end_time in cooking_ending:
                     start_index = end_time + 1
-                    day = ScheduleUtils.weekly_index_day(start_index, res_min)
+                    if start_index >= len(weekly_active_mask):
+                        continue  # skip if exceeds week
+                    day = ScheduleUtils.weekly_index_day(start_index, res_min) // 7
                     weekly_num_cycles[day] += 1
                     cycle_duration = round(dishwasher_assumptions.dishwasher_cycle_duration.sample() * 60 / res_min)
                     cycle_duration = max(1, cycle_duration)  # Ensure at least 1 index
@@ -547,7 +550,7 @@ class EquipmentGenerator:
                 for end_time in cooking_ending:
                     day = ScheduleUtils.weekly_index_day(end_time, res_min)
                     days.add(day)
-                for day in days:
+                for day_idx, day in enumerate(days):
                     weekly_num_cycles[day] += 1
                     day_start = day * 24 * (60 // res_min)
                     day_end = day_start + 24 * (60 // res_min)
@@ -565,20 +568,25 @@ class EquipmentGenerator:
                 # assume dishwasher gets full after every 3 cooking events
                 for i in range(0, len(cooking_ending), 3):
                     end_time = cooking_ending[i]
+                    if (end_time + 1) >= len(weekly_active_mask):
+                        continue  # skip if exceeds week
                     start_index = end_time + 1
                     day = ScheduleUtils.weekly_index_day(start_index, res_min)
                     weekly_num_cycles[day] += 1
                     day_end = (day + 1) * 24 * (60 // res_min)
-                    end_ind = min(cooking_ending[i + 3], day_end) if i + 3 < len(cooking_ending) else day_end   
-                    while True:
+                    end_ind = min(cooking_ending[i + 3], day_end) if i + 3 < len(cooking_ending) else day_end
+                    attempt = 0
+                    while attempt < 100:
+                        attempt += 1
                         start_index = start_time_dist.sample_from_range(start_index, end_ind)
                         cycle_duration = round(dishwasher_assumptions.dishwasher_cycle_duration.sample() * 60 / res_min)
                         cycle_duration = max(1, cycle_duration)  # Ensure at least 1 index
+                        end_ind = min(end_ind, len(weekly_active_mask))
                         if start_index + cycle_duration >= len(weekly_active_mask):
                             continue  # skip if exceeds week
                         break
                     dishwasher_power = self._get_dishwasher_power()
-                    for i in range(start_index, start_index + cycle_duration):
+                    for i in range(start_index, end_ind):
                         dishwasher_schedule[i] = dishwasher_power
             elif operation.pattern_type == Equipment.DishwashingPattern.INDEPENDENT_FREQUENCY:
                 cnt = 0

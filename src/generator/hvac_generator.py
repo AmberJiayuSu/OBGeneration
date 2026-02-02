@@ -76,9 +76,10 @@ class HVACGenerator:
         self.hvac = hvac
         self.assumptions = assumptions
 
-    def _get_trv_temp(self, level: HVAC.IntensityLevel) -> float:
+    @staticmethod
+    def _get_trv_temp(assumptions: HVACAssumptions,level: HVAC.IntensityLevel) -> float:
         """Helper method to map intensity level to temperature."""
-        trv = self.assumptions.trv
+        trv = assumptions.trv
         level_to_temp = {
             HVAC.IntensityLevel.MINIMUM: trv.valve_minimum,
             HVAC.IntensityLevel.LOW: trv.valve_low,
@@ -130,15 +131,15 @@ class HVACGenerator:
         # if valve control
         elif heating.type=="valve":
             # start with active level
-            base_temp = self._get_trv_temp(heating.active_level)
+            base_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.active_level)
             schedule = [base_temp for _ in range(len(occupancy_mask_weekly))]
 
             # adjust for sleep
-            sleep_temp = self._get_trv_temp(heating.sleep_level)
+            sleep_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.sleep_level)
             schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly, schedule, sleep_temp)
 
             # adjust for absence
-            absent_temp = self._get_trv_temp(heating.absent_level)
+            absent_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.absent_level)
             schedule = OccupancyGenerator.revise_by_absence(occupancy_mask_weekly, schedule, absent_temp)
             return schedule
        

@@ -413,6 +413,44 @@
                 }
             }
         },
+        "window": {
+            "type": "object",
+            "description": "The window operation profile of the household.",
+            "properties": {
+                "heating_season": {
+                    "type": "string",
+                    "description": "Indicates the window operation behavior during the heating season.",
+                    "enum": [
+                        "frequently_open",
+                        "occasionally_open",
+                        "always_closed"
+                    ]
+                },
+                "cooling_season": {
+                    "type": "string",
+                    "description": "Indicates the window operation behavior during the cooling season.",
+                    "enum": [
+                        "frequently_open",
+                        "occasionally_open",
+                        "always_closed"
+                    ]
+                },
+                "shoulder_season": {
+                    "type": "string",
+                    "description": "Indicates the window operation behavior during the shoulder seasons (spring and fall).",
+                    "enum": [
+                        "frequently_open",
+                        "occasionally_open",
+                        "always_closed"
+                    ]
+                }
+            },
+            "required": [
+                "heating_season",
+                "cooling_season",
+                "shoulder_season"
+            ]
+        },
         "equipment": {
             "type": "object",
             "description": "The equipment usage profile of the household.",
