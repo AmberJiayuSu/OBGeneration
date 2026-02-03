@@ -18,7 +18,7 @@
  numCompSizeTableEntry=         684
  NumOfRVariable=       44876
  NumOfRVariable(Total)=       44876
- NumOfRVariable(Actual)=        1216
+ NumOfRVariable(Actual)=        1360
  NumOfRVariable(Summed)=        1126
  NumOfRVariable(Meter)=        1054
  NumOfIVariable=        1275
@@ -32,7 +32,7 @@
  MaxVerticesPerSurface=           4
  ClippingAlgorithm=SutherlandHodgman
  MonthlyFieldSetInputCount=          22
- NumConsideredOutputVariables=          22
+ NumConsideredOutputVariables=          23
  MaxConsideredOutputVariables=       10000
  numActuatorsUsed=           0
  numEMSActuatorsAvailable=           0
