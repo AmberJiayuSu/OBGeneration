@@ -587,6 +587,22 @@
                                 "gas",
                                 "other"
                             ]
+                        },
+                        "usage_frequency_per_week": {
+                            "type": "object",
+                            "description": "Frequency of cooking products usage per week.",
+                            "properties": {
+                                "min": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Lower bound of cooking products usage frequency per week."
+                                },
+                                "max": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "description": "Upper bound of cooking products usage frequency per week."
+                                }
+                            }
                         }
                     },
                     "required": [
