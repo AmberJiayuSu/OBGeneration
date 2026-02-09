@@ -15,7 +15,7 @@ WeekRange = Tuple[int, int]  # (start_week, end_week) where weeks are 1-52
 
 class WindowAssumptions(BaseModel):
     """Window operation assumptions."""
-    model_config = ConfigDict(validate_assignment=True)
+    model_config = ConfigDict(validate_assignment=True, arbitrary_types_allowed=True)
     heating_season: WeekRange = Field(..., description="Start and end week numbers for heating season (inclusive, weeks 1-52).")
     cooling_season: WeekRange = Field(..., description="Start and end week numbers for cooling season (inclusive, weeks 1-52).")
     shoulder_season: list[WeekRange] = Field(..., description="Start and end week numbers for shoulder seasons (inclusive, weeks 1-52).")

@@ -164,7 +164,6 @@
                 }
             },
             "required": [
-                "if_led",
                 "when_house_empty",
                 "when_daylight_bright"
             ]

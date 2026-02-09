@@ -574,6 +574,7 @@ class EquipmentGenerator:
                     day = ScheduleUtils.weekly_index_day(start_index, res_min)
                     weekly_num_cycles[day] += 1
                     day_end = (day + 1) * 24 * (60 // res_min)
+                    # end_ind is the end index for the potential dishwasher cycle based on the next cooking event or the end of the day
                     end_ind = min(cooking_ending[i + 3], day_end) if i + 3 < len(cooking_ending) else day_end
                     attempt = 0
                     while attempt < 100:
@@ -581,12 +582,13 @@ class EquipmentGenerator:
                         start_index = start_time_dist.sample_from_range(start_index, end_ind)
                         cycle_duration = round(dishwasher_assumptions.dishwasher_cycle_duration.sample() * 60 / res_min)
                         cycle_duration = max(1, cycle_duration)  # Ensure at least 1 index
-                        end_ind = min(end_ind, len(weekly_active_mask))
-                        if start_index + cycle_duration >= len(weekly_active_mask):
+                        actual_end_ind = start_index + cycle_duration
+                        actual_end_ind = min(actual_end_ind, len(weekly_active_mask))
+                        if actual_end_ind >= len(weekly_active_mask):
                             continue  # skip if exceeds week
                         break
                     dishwasher_power = self._get_dishwasher_power()
-                    for i in range(start_index, end_ind):
+                    for i in range(start_index, actual_end_ind):
                         dishwasher_schedule[i] = dishwasher_power
             elif operation.pattern_type == Equipment.DishwashingPattern.INDEPENDENT_FREQUENCY:
                 cnt = 0
