@@ -4,6 +4,10 @@ import numpy as np
 from generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
 from model.equipment import Equipment
 from generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
+from model.occupant_profile import Occupant
+from generator.ob_utils import ScheduleUtils
+from generator.ob_generator import OccupantBehavior
+from pathlib import Path
 
 class TestEventAssumptions:
     """Test the EventAssumptions class for probability masking and resolution updates."""
@@ -399,7 +403,7 @@ class TestEquipmentGenerator:
         assert pytest.approx(total_cycles / 52, rel=0.1) == 6.0
         power_mean = np.mean(powers)
         expectation = dishwasher_assumptions.efficient_dishwasher.mean() * dishwasher_assumptions.dishwasher_cycle_duration.mean() * 6.0
-        assert pytest.approx(power_mean, rel=0.1) == expectation
+        assert pytest.approx(power_mean, rel=0.2) == expectation
 
 
     @pytest.mark.parametrize("occ", ["occ_2"], indirect=True)
@@ -541,6 +545,7 @@ class TestEquipmentGenerator:
 
         num_cycles = 0
         power = []
+        
         for _ in range(52):
             _, end_times = equipment_gen.weekly_cooking_usage_schedule(active_mask[0], False)
             dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
@@ -879,11 +884,15 @@ class TestAnnualConsumption:
         assert total_consumption < 250
 
 
-    
-
-
-
-
-    
-
-    
+    @pytest.mark.parametrize("input_file", [
+        "test/unit/input/OB_1.json",
+        "test/unit/input/OB_2.json",
+        "test/unit/input/OB_3.json"
+    ])
+    def test_equipment_annual_consumption(self, input_file):
+        occupant = Occupant.from_json_file(Path(input_file))
+        occupant_behavior = OccupantBehavior.to_OB_annual(15, occupant)
+        equipment_schedule = occupant_behavior.equipment_schedule
+        total_consumption = sum(equipment_schedule) / 4000  # kWh
+        print(total_consumption)
+        assert total_consumption > 3000

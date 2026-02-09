@@ -1,5 +1,5 @@
 from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from generator.ob_utils import ScheduleUtils
+from generator.ob_utils import ScheduleUtils, get_project_root
 import model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
 from stochastic.distribution_config import DistributionConfig
@@ -169,11 +169,11 @@ class EquipmentAssumptions(BaseModel):
     @classmethod
     def default(cls, resolution_mins: int = 15) -> "EquipmentAssumptions":
         """Returns the standard/default assumptions for equipment power."""
-        # Get project root directory (this file is at src/generator/equipment_generator.py)
-        project_root = Path(__file__).parent.parent.parent
+        # Get project root directory using robust path resolution
+        project_root = get_project_root()
         data_dir = project_root / "data" / "activity_initial_probability"
         return cls(
-            baseload=150.0,
+            baseload=250.0,
             watts_per_person_active=120.0,
             watts_per_person_sleep=40.0,
             resolution_mins=resolution_mins,
