@@ -43,10 +43,11 @@ class LightingGenerator:
         schedule = []
         length = len(occupancy_mask_weekly)
         #full on always
-        if not lighting.when_house_empty:
-            schedule = [1.0] * length
-        else:
-            schedule = [1.0 if occ else 0.0 for occ in occupancy_mask_weekly]
+        # if not lighting.when_house_empty:
+        #     schedule = [1.0] * length
+        # else:
+        #     schedule = [1.0 if occ else 0.0 for occ in occupancy_mask_weekly]
+        schedule = [1.0] * length
 
         # Adjust for sleep times
         # Assumption: during sleep time, lighting usage is zero

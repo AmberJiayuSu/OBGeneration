@@ -154,17 +154,12 @@
             "type": "object",
             "description": "The lighting usage profile of the household.",
             "properties": {
-                "when_house_empty": {
-                    "type": "boolean",
-                    "description": "TRUE if lights are turned off when the entire household leaves."
-                },
                 "when_daylight_bright": {
                     "type": "boolean",
                     "description": "TRUE if lights are turned off when natural daylight is sufficient."
                 }
             },
             "required": [
-                "when_house_empty",
                 "when_daylight_bright"
             ]
         },

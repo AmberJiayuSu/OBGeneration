@@ -10,5 +10,5 @@ class Lighting(BaseModel):
        
     """
     when_house_empty: bool = Field(..., description="Indicates if lighting is on when the house is empty.")
-    when_daylight_bright: bool = Field(..., description="Indicates if lighting is adjusted based on daylight brightness.")
+    #when_daylight_bright: bool = Field(..., description="Indicates if lighting is adjusted based on daylight brightness.")
 
