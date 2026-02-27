@@ -1,9 +1,9 @@
 import pytest
 
-from model.lighting import Lighting
-from model.occupancy import Occupancy
-from generator.lighting_generator import LightingGenerator
-from generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.model.lighting import Lighting
+from ob_generation.model.occupancy import Occupancy
+from ob_generation.generator.lighting_generator import LightingGenerator
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
 
 
 class TestLightingGeneration:

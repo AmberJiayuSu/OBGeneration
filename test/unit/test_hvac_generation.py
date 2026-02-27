@@ -1,9 +1,9 @@
 import pytest
 import numpy as np
 
-from generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
-from model.hvac import HVAC
-from generator.hvac_generator import HVACAssumptions, HVACGenerator
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.model.hvac import HVAC
+from ob_generation.generator.hvac_generator import HVACAssumptions, HVACGenerator
 
 
 class TestHVACGeneration:

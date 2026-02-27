@@ -1,8 +1,8 @@
-from stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from generator.ob_utils import ScheduleUtils, get_project_root
-import model.equipment as Equipment
+from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
+from ob_generation.generator.ob_utils import ScheduleUtils, get_project_root
+import ob_generation.model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
-from stochastic.distribution_config import DistributionConfig
+from ob_generation.stochastic.distribution_config import DistributionConfig
 import json
 from pathlib import Path
 import csv

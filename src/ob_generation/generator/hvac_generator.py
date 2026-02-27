@@ -1,6 +1,6 @@
 
-from generator.occupancy_generator import OccupancyGenerator
-import model.hvac as HVAC
+from ob_generation.generator.occupancy_generator import OccupancyGenerator
+import ob_generation.model.hvac as HVAC
 from pydantic import BaseModel, Field
 import json
 from pathlib import Path

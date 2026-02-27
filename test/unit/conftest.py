@@ -8,7 +8,7 @@ is automatically available in all test files.
 import pytest
 import numpy as np
 
-from model.occupancy import Occupancy
+from ob_generation.model.occupancy import Occupancy
 
 @pytest.fixture(autouse=True)
 def reset_random_seed():

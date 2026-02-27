@@ -1,8 +1,8 @@
-import model.lighting as Lighting
-from generator.occupancy_generator import OccupancyGenerator
+import ob_generation.model.lighting as Lighting
+from ob_generation.generator.occupancy_generator import OccupancyGenerator
 from pydantic import BaseModel, Field
-from stochastic.distribution import Distribution
-from stochastic.distribution_config import DistributionConfig
+from ob_generation.stochastic.distribution import Distribution
+from ob_generation.stochastic.distribution_config import DistributionConfig
 
 
 # class LightingAssumptions(BaseModel):

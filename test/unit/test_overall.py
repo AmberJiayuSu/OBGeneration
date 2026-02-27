@@ -1,6 +1,6 @@
-from generator.ob_generator import OccupantBehavior
-from model.occupant_profile import Occupant
-from generator.ob_utils import ScheduleUtils
+from ob_generation.generator.ob_generator import OccupantBehavior
+from ob_generation.model.occupant_profile import Occupant
+from ob_generation.generator.ob_utils import ScheduleUtils
 from pathlib import Path
 import json
 import pytest

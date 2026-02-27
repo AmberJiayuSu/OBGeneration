@@ -51,6 +51,8 @@ coverage.xml
 .pytest_cache/
 cover/
 
+
+
 # Translations
 *.mo
 *.pot
@@ -212,4 +214,9 @@ __marimo__/
 #data
 *.csv
 *.json
+
+#output
+*.png
+*.jpg
+*.jpeg
 

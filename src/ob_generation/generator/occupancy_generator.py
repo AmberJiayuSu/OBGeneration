@@ -1,6 +1,6 @@
-from stochastic.distribution import Distribution,NormalDistribution
-from model.occupancy import Occupancy, TimeRange
-from stochastic.distribution_config import DistributionConfig
+from ob_generation.stochastic.distribution import Distribution,NormalDistribution
+from ob_generation.model.occupancy import Occupancy, TimeRange
+from ob_generation.stochastic.distribution_config import DistributionConfig
 from enum import Enum
 import random
 from pydantic import BaseModel, Field, ConfigDict

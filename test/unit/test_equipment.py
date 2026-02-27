@@ -1,12 +1,12 @@
 import pytest
 import numpy as np
 
-from generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
-from model.equipment import Equipment
-from generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
-from model.occupant_profile import Occupant
-from generator.ob_utils import ScheduleUtils
-from generator.ob_generator import OccupantBehavior
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.model.equipment import Equipment
+from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
+from ob_generation.model.occupant_profile import Occupant
+from ob_generation.generator.ob_utils import ScheduleUtils
+from ob_generation.generator.ob_generator import OccupantBehavior
 from pathlib import Path
 
 class TestEventAssumptions:
