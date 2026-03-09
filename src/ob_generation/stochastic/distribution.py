@@ -122,6 +122,26 @@ class UniformDistribution(Distribution):
                 f"upper={self._upper}, int={self._int})")
 
 
+class BinomialDistribution(Distribution):
+    """Binomial distribution: number of successes in n trials with probability p."""
+    def __init__(self, n: int, p: float):
+        if not (0.0 <= p <= 1.0):
+            raise ValueError("p must be in [0, 1]")
+        if n < 0:
+            raise ValueError("n must be non-negative")
+        self._n = n
+        self._p = p
+
+    def sample(self) -> int:
+        return sum(1 for _ in range(self._n) if random.random() < self._p)
+
+    def mean(self) -> float:
+        return self._n * self._p
+
+    def __repr__(self) -> str:
+        return f"BinomialDistribution(n={self._n}, p={self._p})"
+
+
 class CategoricalDistribution(Distribution):
     """Samples indices based on probability weights (like a discrete probability distribution)."""
     def __init__(self, probabilities: list[float]):

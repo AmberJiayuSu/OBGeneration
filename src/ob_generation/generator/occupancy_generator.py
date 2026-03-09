@@ -20,7 +20,8 @@ class RoleAssumption(BaseModel):
     """Defines the behavior for a specific occupant role."""
     model_config = ConfigDict(arbitrary_types_allowed=True)
     role: OccupantRole = Field(..., description="The occupant role.")
-    days_away_freq: Distribution = Field(..., description="How many days/week this role leaves home.")
+    weekday_away_prob: Distribution = Field(..., description="Probability that this role leaves home on any weekday.")
+    weekend_away_prob: Distribution = Field(..., description="Probability that this role leaves home on any weekend day.")
     weekday_leave_time: Optional[Distribution] = Field(..., description="Time of departure on weekdays.")
     weekday_return_time: Optional[Distribution] = Field(..., description="Time of return on weekdays.")
     weekend_leave_time: Optional[Distribution] = Field(..., description="Time of departure on weekends.")
@@ -49,7 +50,8 @@ class OccupancyAssumptions(BaseModel):
     def _build_role(d: dict) -> RoleAssumption:
         return RoleAssumption(
             role=OccupantRole(d["role"]),
-            days_away_freq=DistributionConfig(**d["days_away_freq"]).build(),
+            weekday_away_prob=DistributionConfig(**d["weekday_away_prob"]).build(),
+            weekend_away_prob=DistributionConfig(**d["weekend_away_prob"]).build(),
             weekday_leave_time=OccupancyAssumptions._maybe_build_dist(d, "weekday_leave_time"),
             weekday_return_time=OccupancyAssumptions._maybe_build_dist(d, "weekday_return_time"),
             weekend_leave_time=OccupancyAssumptions._maybe_build_dist(d, "weekend_leave_time"),
@@ -71,10 +73,12 @@ class OccupancyAssumptions(BaseModel):
     @classmethod
     def default(cls) -> "OccupancyAssumptions":
         """Returns the standard/default assumptions."""
+        # TODO: Update away probabilities based on data (e.g. from the American Time Use Survey)
         return cls(
             daily_commuter=RoleAssumption(
                 role = OccupantRole.DAILY_COMMUTER,
-                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
                 weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
@@ -82,7 +86,8 @@ class OccupancyAssumptions(BaseModel):
             ),
             hybrid_worker=RoleAssumption(
                 role = OccupantRole.HYBRID_WORKER,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 4}).build(),
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
                 weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
@@ -90,7 +95,8 @@ class OccupancyAssumptions(BaseModel):
             ),
             stayathome=RoleAssumption(
                 role = OccupantRole.STAYATHOME,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 1, "max": 3}).build(),
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
                 weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.5, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.0, "std": 1.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 2.25, "lower": 0.0, "upper": 24.0, "int": False}).build(),
@@ -98,7 +104,8 @@ class OccupancyAssumptions(BaseModel):
             ),
             k12_or_daycare=RoleAssumption(
                 role = OccupantRole.K12_OR_DAYCARE,
-                days_away_freq=DistributionConfig(dist_type="constant", params={"value": 5}).build(),
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
                 weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.0, "std": 0.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 15.5, "std": 1.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 10.5, "std": 2.25, "lower": 0.0, "upper": 24.0, "int": False}).build(),
@@ -106,7 +113,8 @@ class OccupancyAssumptions(BaseModel):
             ),
             college_student=RoleAssumption(
                 role = OccupantRole.COLLEGE_STUDENT,
-                days_away_freq=DistributionConfig(dist_type="uniform", params={"min": 3, "max": 5}).build(),
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
                 weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.0, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
                 weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.5, "std": 1.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
@@ -336,25 +344,10 @@ class SingleOccupantTracker:
     def sample_weekdays(self, household_away_intervals: list[TimeRange | None], away_days: list[int], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
         """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
         intervals = []
-        if self.role == OccupantRole.DAILY_COMMUTER or self.role == OccupantRole.K12_OR_DAYCARE:
+        # no household level away days, so sample for each day based on role assumptions
+        if not away_days:
             for d in range(5):
-                time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
-                    self.assumption.weekday_leave_time,
-                    self.assumption.weekday_return_time,
-                    household_away_intervals[d],
-                    sleep_schedule[d],
-                    self.resolution_hours
-                )
-                intervals.append(time_range)
-        elif self.role == OccupantRole.HYBRID_WORKER or self.role == OccupantRole.COLLEGE_STUDENT:
-            # if household level always occupied, then sample for away on site days, else use household away days for away on site days
-            if not away_days:
-                away_days = random.sample(range(5), self.assumption.days_away_freq.sample())
-            # hybrid worker cannot have all 5 days following onsite schedule
-            elif self.role == OccupantRole.HYBRID_WORKER and len(away_days) == 5:
-                away_days = random.sample(range(5), self.assumption.days_away_freq.sample())
-            for d in range(5):
-                if d in away_days:
+                if self.assumption.weekday_away_prob.sample() == 1:
                     time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
                         self.assumption.weekday_leave_time,
                         self.assumption.weekday_return_time,
@@ -365,31 +358,42 @@ class SingleOccupantTracker:
                     intervals.append(time_range)
                 else:
                     intervals.append(household_away_intervals[d])
-        elif self.role == OccupantRole.STAYATHOME:
-            #intervals = household_away_intervals
-            # if household level always occupied, then sample for away on site days, else use household away days for away on site days
-            if not away_days:
-                away_days = random.sample(range(5), self.assumption.days_away_freq.sample())
-            for d in range(5):
-                if d in away_days:
-                    time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
-                        self.assumption.weekday_leave_time,
-                        self.assumption.weekday_return_time,
-                        household_away_intervals[d],
-                        sleep_schedule[d],
-                        self.resolution_hours
-                    )
-                    intervals.append(time_range)
-                else:
-                    intervals.append(household_away_intervals[d])
+        # follow household level away days for on site days if not always out
+        else:
+            # hybrid worker assumed to not be 5 days always out, so not sampling for on site days if household level has 5 away days
+            if self.role == OccupantRole.HYBRID_WORKER and len(away_days) == 5:
+                for d in range(5):
+                    if self.assumption.weekday_away_prob.sample() == 1:
+                        time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                            self.assumption.weekday_leave_time,
+                            self.assumption.weekday_return_time,
+                            household_away_intervals[d],
+                            sleep_schedule[d],
+                            self.resolution_hours
+                        )
+                        intervals.append(time_range)
+            else:
+                for d in range(5):
+                    # for roles that stay home sometimes, if not away just follow household pattern for that day 
+                    if self.role != OccupantRole.DAILY_COMMUTER and self.role != OccupantRole.K12_OR_DAYCARE and d not in away_days:
+                        intervals.append(household_away_intervals[d])
+                    # otherwise sample based on role assumptions
+                    else:
+                        time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                            self.assumption.weekday_leave_time,
+                            self.assumption.weekday_return_time,
+                            household_away_intervals[d],
+                            sleep_schedule[d],
+                            self.resolution_hours
+                        )
+                        intervals.append(time_range)
         return intervals
     
     def sample_weekends(self, household_away_intervals: list[TimeRange | None], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
         """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
         intervals = []
         for d in range(2):
-            if_away = random.randint(0, 1)
-            if if_away:
+            if self.assumption.weekend_away_prob.sample() == 1:
                 time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
                     self.assumption.weekend_leave_time,
                     self.assumption.weekend_return_time,
@@ -415,17 +419,25 @@ class OccupancyGenerator:
         self.occupancy = occupancy
         self.assumptions = assumptions
         self.occupants_cnt = occupancy.num_occupants
-        if self.occupancy.weekday_pattern.is_always_occupied:
+        if self.occupancy.weekday_pattern is None:
+            self.enforce_weekday_away = False
+        elif self.occupancy.weekday_pattern.is_always_occupied:
+            self.enforce_weekday_away = True
             self.weekday_away = None
         else:
+            self.enforce_weekday_away = True
             self.weekday_away = TimeRangeDistribution(
                 occupancy.weekday_pattern.away_interval,
                 start_variance=1.0,
                 end_variance=1.0,
                 resolution_mins=resolution_mins) if occupancy.weekday_pattern.away_interval else None
-        if self.occupancy.weekend_pattern.is_always_occupied:
+        if self.occupancy.weekend_pattern is None:
+            self.enforce_weekend_away = False
+        elif self.occupancy.weekend_pattern.is_always_occupied:
+            self.enforce_weekend_away = True
             self.weekend_away = None
         else:
+            self.enforce_weekend_away = True
             self.weekend_away = TimeRangeDistribution(
                 occupancy.weekend_pattern.away_interval,
                 start_variance=2.0,
@@ -480,42 +492,68 @@ class OccupancyGenerator:
         
     def household_weekday_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
         """Generates the household's overall weekday away schedule based on individual occupant patterns."""
-        weekday_away_intervals, away_days = self.weekday_away_interval(sleep_schedule)
-        all_occupant_intervals = []
-        for tracker in self.trackers:
-            occupant_intervals = tracker.sample_weekdays(weekday_away_intervals, away_days, sleep_schedule)
-            all_occupant_intervals.append(occupant_intervals)
+        if self.enforce_weekday_away:
+            weekday_away_intervals, away_days = self.weekday_away_interval(sleep_schedule)
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekdays(weekday_away_intervals, away_days, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
 
-        schedule = []
-        ratio = 1.0 / self.occupants_cnt 
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
 
-        for d in range(5):
-            away_interval = weekday_away_intervals[d]
-            for h in range(24 * self.num_per_hour):
-                hour = h / self.num_per_hour
-                # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
-                if away_interval is not None:
-                    if away_interval.contains_hour(hour):
-                        schedule.append(0.0)
-                        continue 
+            for d in range(5):
+                away_interval = weekday_away_intervals[d]
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+                    # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
+                    if away_interval is not None:
+                        if away_interval.contains_hour(hour):
+                            schedule.append(0.0)
+                            continue 
 
-                # -- REGION 2: CALCULATE RAW PRESENCE ---
-                people_present = 0
-                for i in range(self.occupants_cnt):
-                    occupant_away_interval = all_occupant_intervals[i][d]
-                    if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
-                       people_present += 1
+                    # -- REGION 2: CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
 
-                # -- REGION 3: LAST MAN STANDING (The Fix) ---
-                # If no one is calculated to be present but we're outside the 
-                # absolute zero range, ensure at least one person is home
-                if people_present == 0:
-                    people_present = 1
-                
-                # Calculate fraction
-                frac = round(people_present * ratio, 4)
-                schedule.append(frac)
-        return schedule
+                    # -- REGION 3: LAST MAN STANDING (The Fix) ---
+                    # If no one is calculated to be present but we're outside the 
+                    # absolute zero range, ensure at least one person is home
+                    if people_present == 0:
+                        people_present = 1
+                    
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        else:
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekdays([None] * 5, [], sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+                schedule = []
+
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(5):
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+
+                    # -- CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        
     
     def weekend_away_interval(self, sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
         """ Based on the household's weekday away patterns, sample and return the away intervals for each weeend."""
@@ -539,42 +577,66 @@ class OccupancyGenerator:
         
     def household_weekend_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
         """Generates the household's overall weekend away schedule based on individual occupant patterns."""
-        weekend_away_intervals = self.weekend_away_interval(sleep_schedule)
-        all_occupant_intervals = []
-        for tracker in self.trackers:
-            occupant_intervals = tracker.sample_weekends(weekend_away_intervals, sleep_schedule)
-            all_occupant_intervals.append(occupant_intervals)
+        if self.enforce_weekend_away:
+            weekend_away_intervals = self.weekend_away_interval(sleep_schedule)
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekends(weekend_away_intervals, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
 
-        schedule = []
-        ratio = 1.0 / self.occupants_cnt 
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
 
-        for d in range(2):
-            away_interval = weekend_away_intervals[d]
-            for h in range(24 * self.num_per_hour):
-                hour = h / self.num_per_hour
-                # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
-                if away_interval is not None:
-                    if away_interval.contains_hour(hour):
-                        schedule.append(0.0)
-                        continue 
+            for d in range(2):
+                away_interval = weekend_away_intervals[d]
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+                    # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
+                    if away_interval is not None:
+                        if away_interval.contains_hour(hour):
+                            schedule.append(0.0)
+                            continue 
 
-                # -- REGION 2: CALCULATE RAW PRESENCE ---
-                people_present = 0
-                for i in range(self.occupants_cnt):
-                    occupant_away_interval = all_occupant_intervals[i][d]
-                    if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
-                       people_present += 1
+                    # -- REGION 2: CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
 
-                # -- REGION 3: LAST MAN STANDING (The Fix) ---
-                # If no one is calculated to be present but we're outside the 
-                # absolute zero range, ensure at least one person is home
-                if people_present == 0:
-                    people_present = 1
+                    # -- REGION 3: LAST MAN STANDING (The Fix) ---
+                    # If no one is calculated to be present but we're outside the 
+                    # absolute zero range, ensure at least one person is home
+                    if people_present == 0:
+                        people_present = 1
+                    
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        else:
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekends([None] * 2, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+            
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(2):
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
                 
-                # Calculate fraction
-                frac = round(people_present * ratio, 4)
-                schedule.append(frac)
-        return schedule
+                    # -- CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
     
 
  

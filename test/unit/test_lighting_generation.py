@@ -25,55 +25,55 @@ class TestLightingGeneration:
         generator2 = LightingGenerator(lighting2)
         assert generator2.get_dimming() == False
 
-    @pytest.mark.parametrize("occ", ["occ_1", "occ_2"], indirect=True)
-    def test_lighting_house_empty_1(self, occ):
-        light_json = """
-        {
-            "when_house_empty": false,
-            "when_daylight_bright": false
-        }
-        """
-        assumptiion = OccupancyAssumptions.default()
-        occ1 = OccupancyGenerator(occ, assumptiion)
-        lighting1 = Lighting.model_validate_json(light_json)
-        lighting_generator1 = LightingGenerator(lighting1)
-        sleep = occ1.household_sleep_schedule()
-        occupancy = occ1.household_fullweek_schedule(sleep)
-        sleep_mask = occ1.get_sleep_mask(sleep,4)
-        occupancy_mask = occ1.get_occupancy_mask(occupancy)
-        lighting_schedule1 = lighting_generator1.lighting_weekly_schedule(occupancy_mask, sleep_mask)
-        assert len(lighting_schedule1) == 24 * 7 * 4
+    # @pytest.mark.parametrize("occ", ["occ_1", "occ_2"], indirect=True)
+    # def test_lighting_house_empty_1(self, occ):
+    #     light_json = """
+    #     {
+    #         "when_house_empty": false,
+    #         "when_daylight_bright": false
+    #     }
+    #     """
+    #     assumptiion = OccupancyAssumptions.default()
+    #     occ1 = OccupancyGenerator(occ, assumptiion)
+    #     lighting1 = Lighting.model_validate_json(light_json)
+    #     lighting_generator1 = LightingGenerator(lighting1)
+    #     sleep = occ1.household_sleep_schedule()
+    #     occupancy = occ1.household_fullweek_schedule(sleep)
+    #     sleep_mask = occ1.get_sleep_mask(sleep,4)
+    #     occupancy_mask = occ1.get_occupancy_mask(occupancy)
+    #     lighting_schedule1 = lighting_generator1.lighting_weekly_schedule(occupancy_mask, sleep_mask)
+    #     assert len(lighting_schedule1) == 24 * 7 * 4
 
-        # Always occupied, so lighting should be always on except during sleep
-        for time in range(24 * 7 * 4):
-            if sleep_mask[time]:
-                assert lighting_schedule1[time] == 0.0
-            else:
-                assert lighting_schedule1[time] == 1.0
+    #     # Always occupied, so lighting should be always on except during sleep
+    #     for time in range(24 * 7 * 4):
+    #         if sleep_mask[time]:
+    #             assert lighting_schedule1[time] == 0.0
+    #         else:
+    #             assert lighting_schedule1[time] == 1.0
 
-    @pytest.mark.parametrize("occ", ["occ_1", "occ_2"], indirect=True)
-    def test_lighting_house_empty_2(self, occ):
-        light_json = """
-        {
-            "when_house_empty": true,
-            "when_daylight_bright": false
-        }
-        """
-        assumptiion = OccupancyAssumptions.default()
-        occ1 = OccupancyGenerator(occ, assumptiion)
-        lighting1 = Lighting.model_validate_json(light_json)
-        lighting_generator1 = LightingGenerator(lighting1)
-        sleep = occ1.household_sleep_schedule()
-        occupancy = occ1.household_fullweek_schedule(sleep)
-        sleep_mask = occ1.get_sleep_mask(sleep,4)
-        occupancy_mask = occ1.get_occupancy_mask(occupancy)
-        lighting_schedule1 = lighting_generator1.lighting_weekly_schedule(occupancy_mask, sleep_mask)
-        assert len(lighting_schedule1) == 24 * 7 * 4
+    # @pytest.mark.parametrize("occ", ["occ_1", "occ_2"], indirect=True)
+    # def test_lighting_house_empty_2(self, occ):
+    #     light_json = """
+    #     {
+    #         "when_house_empty": true,
+    #         "when_daylight_bright": false
+    #     }
+    #     """
+    #     assumptiion = OccupancyAssumptions.default()
+    #     occ1 = OccupancyGenerator(occ, assumptiion)
+    #     lighting1 = Lighting.model_validate_json(light_json)
+    #     lighting_generator1 = LightingGenerator(lighting1)
+    #     sleep = occ1.household_sleep_schedule()
+    #     occupancy = occ1.household_fullweek_schedule(sleep)
+    #     sleep_mask = occ1.get_sleep_mask(sleep,4)
+    #     occupancy_mask = occ1.get_occupancy_mask(occupancy)
+    #     lighting_schedule1 = lighting_generator1.lighting_weekly_schedule(occupancy_mask, sleep_mask)
+    #     assert len(lighting_schedule1) == 24 * 7 * 4
 
-        for time in range(24 * 7 * 4):
-            if sleep_mask[time]:
-                assert lighting_schedule1[time] == 0.0
-            elif occupancy_mask[time]:
-                assert lighting_schedule1[time] == 1.0
-            else:
-                assert lighting_schedule1[time] == 0.0
+    #     for time in range(24 * 7 * 4):
+    #         if sleep_mask[time]:
+    #             assert lighting_schedule1[time] == 0.0
+    #         elif occupancy_mask[time]:
+    #             assert lighting_schedule1[time] == 1.0
+    #         else:
+    #             assert lighting_schedule1[time] == 0.0

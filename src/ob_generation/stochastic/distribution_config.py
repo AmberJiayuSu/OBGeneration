@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any, Dict, Literal, Optional
 from pydantic import BaseModel, Field
 
-from ob_generation.stochastic.distribution import Constant, NormalDistribution, UniformDistribution, CategoricalDistribution
+from ob_generation.stochastic.distribution import Constant, NormalDistribution, UniformDistribution, CategoricalDistribution, BinomialDistribution
 
 
-DistType = Literal["normal", "uniform", "constant", "categorical"]
+DistType = Literal["normal", "uniform", "constant", "categorical", "binomial"]
 
 
 class DistributionConfig(BaseModel):
@@ -14,11 +14,12 @@ class DistributionConfig(BaseModel):
     JSON-friendly config that builds your Distribution objects directly.
 
     Supported:
-    - normal:  params = { "mean": ..., "std": ..., "int": true/false?, "lower": ..., "upper": ... }
-    - uniform: params = { "min": ..., "max": ..., "int": true/false? }
-             + context can override bounds via {"lower": ..., "upper": ...}
-    - constant: params = { "value": ... }
+    - normal:    params = { "mean": ..., "std": ..., "int": true/false?, "lower": ..., "upper": ... }
+    - uniform:   params = { "min": ..., "max": ..., "int": true/false? }
+               + context can override bounds via {"lower": ..., "upper": ...}
+    - constant:  params = { "value": ... }
     - categorical: params = { "weights" : [value1, value2, ...] }
+    - binomial:  params = { "n": ..., "p": ... }
     """
     dist_type: DistType
     params: Dict[str, Any] = Field(default_factory=dict)
@@ -59,6 +60,11 @@ class DistributionConfig(BaseModel):
             if not weights:
                 raise ValueError("categorical distribution requires non-empty 'weights' list")
             return CategoricalDistribution(weights)
+
+        if self.dist_type == "binomial":
+            if "n" not in p or "p" not in p:
+                raise ValueError("binomial requires params={'n': ..., 'p': ...}")
+            return BinomialDistribution(n=int(p["n"]), p=float(p["p"]))
 
         # should be unreachable due to Literal typing
         raise ValueError(f"Unsupported dist_type: {self.dist_type}")    

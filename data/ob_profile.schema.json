@@ -137,7 +137,7 @@
                         }
                     },
                     "required": [
-                        "start_hour",
+                        "starxst_hour",
                         "end_hour"
                     ]
                 }
@@ -145,8 +145,6 @@
             "required": [
                 "num_occupants",
                 "household_composition",
-                "weekday_pattern",
-                "weekend_pattern",
                 "sleep_time"
             ]
         },
