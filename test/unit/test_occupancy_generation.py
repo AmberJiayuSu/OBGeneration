@@ -24,7 +24,8 @@ from ob_generation.model.occupancy import (
     HouseholdComposition,
     TimeRange,
     WeekdayOccupancyPattern,
-    WeekendOccupancyPattern
+    WeekendOccupancyPattern,
+    SleepPattern
 )
 
 
@@ -126,7 +127,7 @@ class TestOccupancyGenerator:
             household_composition=HouseholdComposition(stayathome=1),
             weekday_pattern=WeekdayOccupancyPattern(is_always_occupied=True),
             weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_time=TimeRange(start_hour=22.0, end_hour=6.0)
+            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
         )
         assumptions = OccupancyAssumptions.default()
         generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=60)
@@ -149,7 +150,7 @@ class TestOccupancyGenerator:
                 num_of_days=5
             ),
             weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_time=TimeRange(start_hour=22.0, end_hour=6.0)
+            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
         )
         assumptions = OccupancyAssumptions.default()
 
@@ -177,7 +178,7 @@ class TestOccupancyGenerator:
                 num_of_days=5
             ),
             weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_time=TimeRange(start_hour=22.0, end_hour=6.0)
+            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
         )
         assumptions = OccupancyAssumptions.default()
 
@@ -215,7 +216,7 @@ class TestOccupancyGenerator:
                 num_of_days=5
             ),
             weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_time=TimeRange(start_hour=22.0, end_hour=6.0)
+            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
         )
         assumptions = OccupancyAssumptions.default()
         generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=30)
@@ -262,9 +263,12 @@ class TestOccupancyGenerator:
             "weekend_pattern": {
             "is_always_occupied": true
             },
-            "sleep_time": {
-            "start_hour": 22,
-            "end_hour": 6
+            "sleep_pattern": {
+                "is_always_awake": false,
+                "sleep_time": {
+                    "start_hour": 22,
+                    "end_hour": 6
+                }
             }
         }
         """
@@ -436,9 +440,12 @@ class TestOccupancyGenerator:
                     "end_hour": 16
                 }
             },
-            "sleep_time": {
-                "start_hour": 0,
-                "end_hour": 8
+            "sleep_pattern": {
+                "is_always_awake": false,
+                "sleep_time": {
+                    "start_hour": 0,
+                    "end_hour": 8
+                }
             }
         }
         """
@@ -614,9 +621,12 @@ class TestOccupancyGenerator:
                     "end_hour": 22
                 }
             },
-            "sleep_time": {
-                "start_hour": 0,
-                "end_hour": 8
+            "sleep_pattern": {
+                "is_always_awake": false,
+                "sleep_time": {
+                    "start_hour": 0,
+                    "end_hour": 8
+                }
             }
         }
         """
@@ -781,10 +791,6 @@ class TestOccupancyGenerator:
             },
             "weekend_pattern": {
                 "is_always_occupied": true
-            },
-            "sleep_time": {
-                "start_hour": 2,
-                "end_hour": 6
             }
         }
         """

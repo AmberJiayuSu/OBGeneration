@@ -52,13 +52,18 @@ class WeekendOccupancyPattern(BaseModel):
     is_always_occupied: bool = Field(...)
     away_interval: Optional[TimeRange] = Field(None)
 
+class SleepPattern(BaseModel):
+    """Defines the typical sleep time pattern for the household."""
+    is_always_awake: bool = Field(...)
+    sleep_time: Optional[TimeRange] = Field(None)
+
 class Occupancy(BaseModel):
     """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
     num_occupants: int = Field(..., ge=1)
     household_composition: HouseholdComposition
     weekday_pattern: Optional[WeekdayOccupancyPattern] = None
     weekend_pattern: Optional[WeekendOccupancyPattern] = None
-    sleep_time: TimeRange
+    sleep_pattern:  Optional[SleepPattern] = None
 
     @model_validator(mode='after')
     def validate_household_composition(self):

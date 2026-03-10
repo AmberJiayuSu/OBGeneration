@@ -207,8 +207,7 @@ class TimeRangeDistribution:
             # No constraints
             updated_start_dist = start_dist
             updated_end_dist = end_dist
-        
-        if away_time is None:
+        elif away_time is None:
             upper = 24 - resolution_hours
             # Only sleep constraint
             if sleep_time.wraps_midnight:
@@ -650,12 +649,12 @@ class OccupancyGenerator:
     
     def household_sleep_schedule(self) -> list[TimeRange | None]:
         """Generates the household's sleep time schedule."""
-        sleep_time = self.occupancy.sleep_time
-        if sleep_time is None:
+        sleep_pattern = self.occupancy.sleep_pattern
+        if sleep_pattern.is_always_awake:
             return [None] * 7
         else:
             sleep_range_dist = TimeRangeDistribution(
-                sleep_time,
+                sleep_pattern.sleep_time,
                 start_variance=1.0,
                 end_variance=1.0,
                 resolution_mins= self.resolution_mins
@@ -665,6 +664,53 @@ class OccupancyGenerator:
                 sleep_schedule.append(sleep_range_dist.sample())
             return sleep_schedule
     
+    @staticmethod
+    def infer_sleep_from_occupancy(
+        daily_schedule: list[float],
+        resolution_mins: int = 15,
+        sleep_start_floor: float = 2.0,
+        sleep_end_ceil: float = 5.0,
+    ) -> "TimeRange | None":
+        """
+        Post-infers a sleep window for one day from its occupancy schedule.
+
+        Sleep is assumed to cross 4am. If occupancy < 1 at 4am (not everyone home),
+        returns None. Otherwise finds the contiguous full-occupancy block containing
+        4am and returns:
+            start = max(sleep_start_floor, block_start + 1h)
+            end   = min(sleep_end_ceil,   block_end   - 1h)
+        Returns None if the resulting window is degenerate (start >= end).
+        """
+        num_per_hour = 60 // resolution_mins
+        idx_4am = 4 * num_per_hour
+
+        if daily_schedule[idx_4am] < 1.0:
+            return None
+
+        # Walk backward from 4am to find contiguous full-occupancy start
+        t_start_idx = idx_4am
+        while t_start_idx > 0 and daily_schedule[t_start_idx - 1] >= 1.0:
+            t_start_idx -= 1
+
+        # Walk forward from 4am to find contiguous full-occupancy end
+        t_end_idx = idx_4am
+        n = len(daily_schedule)
+        while t_end_idx < n - 1 and daily_schedule[t_end_idx + 1] >= 1.0:
+            t_end_idx += 1
+
+        resolution_hours = resolution_mins / 60
+        t_start_hour = t_start_idx * resolution_hours
+        t_end_hour = (t_end_idx + 1) * resolution_hours  # exclusive end
+
+        sleep_start = max(sleep_start_floor, t_start_hour + 1.0)
+        sleep_end = min(sleep_end_ceil, t_end_hour - 1.0)
+
+        if sleep_start >= sleep_end:
+            return None
+
+        return TimeRange(start_hour=sleep_start, end_hour=sleep_end)
+    
+
     @staticmethod
     def get_sleep_mask(sleep_schedule: list[TimeRange | None], num_per_hour: int) -> list[bool]:
         """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
@@ -724,8 +770,21 @@ class OccupancyGenerator:
         annual_schedule = []
         annual_sleep_schedule = []
         for w in range(53):
-            sleep_schedule = self.household_sleep_schedule()
-            weekly_schedule = self.household_fullweek_schedule(sleep_schedule)
+            if self.occupancy.sleep_pattern is not None:
+                sleep_schedule = self.household_sleep_schedule()
+                weekly_schedule = self.household_fullweek_schedule(sleep_schedule)
+            else:
+                # No sleep pattern provided: generate occupancy freely, then post-infer sleep
+                weekly_schedule = self.household_fullweek_schedule([None] * 7)
+                slots_per_day = 24 * self.num_per_hour
+                sleep_schedule = [
+                    OccupancyGenerator.infer_sleep_from_occupancy(
+                        weekly_schedule[d * slots_per_day:(d + 1) * slots_per_day],
+                        self.resolution_mins,
+                    )
+                    for d in range(7)
+                ]
+
             sleep_mask = OccupancyGenerator.get_sleep_mask(sleep_schedule, self.num_per_hour)
             if w < 52:
                 annual_schedule.append(weekly_schedule)

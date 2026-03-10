@@ -34,9 +34,12 @@ def occ_1() -> Occupancy:
         "weekend_pattern": {
             "is_always_occupied": true
         },
-        "sleep_time": {
-            "start_hour": 22,
-            "end_hour": 6
+        "sleep_pattern": {
+            "is_always_awake": false,
+            "sleep_time": {
+                "start_hour": 22,
+                "end_hour": 6
+            }
         }
     }
     """
@@ -69,9 +72,12 @@ def occ_2() -> Occupancy:
                 "end_hour": 20
             }
         },
-        "sleep_time": {
-            "start_hour": 22,
-            "end_hour": 6
+        "sleep_pattern": {
+            "is_always_awake": false,
+            "sleep_time": {
+                "start_hour": 22,
+                "end_hour": 6
+            }
         }
     }
     """

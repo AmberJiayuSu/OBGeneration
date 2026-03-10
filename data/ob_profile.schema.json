@@ -119,33 +119,45 @@
                         "is_always_occupied"
                     ]
                 },
-                "sleep_time": {
+                "sleep_pattern": {
                     "type": "object",
                     "description": "Typical sleep time range for the household (applies to both weekdays and weekends).",
                     "properties": {
-                        "start_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the latest occupant typically goes to sleep."
+                        "is_always_awake": {
+                            "type": "boolean",
+                            "description": "Indicates if there is always someone is typically awake (not sleeping) throughout the entire day."
                         },
-                        "end_hour": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 23,
-                            "description": "Hour of the day (0-23) when the earliest occupant typically wakes up."
+                        "sleep_interval": {
+                            "type": "object",
+                            "description": "If NOT always awake: The time range when the house is typically unoccupied by sleeping occupants.",
+                            "properties": {
+                                "start_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the latest occupant typically goes to sleep."
+                                },
+                                "end_hour": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 23,
+                                    "description": "Hour of the day (0-23) when the earliest occupant typically wakes up."
+                                }
+                            },
+                            "required": [
+                                "start_hour",
+                                "end_hour"
+                            ]
                         }
                     },
                     "required": [
-                        "starxst_hour",
-                        "end_hour"
-                    ]
+                        "is_always_awake"
+                     ]
                 }
             },
             "required": [
                 "num_occupants",
-                "household_composition",
-                "sleep_time"
+                "household_composition"
             ]
         },
         "lighting": {
