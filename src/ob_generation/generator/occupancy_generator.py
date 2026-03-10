@@ -77,48 +77,48 @@ class OccupancyAssumptions(BaseModel):
         return cls(
             daily_commuter=RoleAssumption(
                 role = OccupantRole.DAILY_COMMUTER,
-                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.5, "std": 1.25, "lower": 0.0, "upper": 24.0, "int": False}).build()
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.917}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p":  0.428}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.68, "std": 1.4, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 19.13, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.85, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.82, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             hybrid_worker=RoleAssumption(
                 role = OccupantRole.HYBRID_WORKER,
-                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 16.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.5, "std": 1.25, "lower": 0.0, "upper": 24.0, "int": False}).build()
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.351}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.428}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.58, "std": 1.9, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.18, "std": 2.4, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.85, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.82, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             stayathome=RoleAssumption(
                 role = OccupantRole.STAYATHOME,
-                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.5, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.0, "std": 1.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 2.25, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.5, "std": 1.25, "lower": 0.0, "upper": 24.0, "int": False}).build()
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.581}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.450}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.03, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.9, "std": 3.1, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.47, "std": 2.1, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.63, "std": 3.1, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             k12_or_daycare=RoleAssumption(
                 role = OccupantRole.K12_OR_DAYCARE,
-                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.0, "std": 0.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 15.5, "std": 1.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 10.5, "std": 2.25, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 15.5, "std": 0.75, "lower": 0.0, "upper": 24.0, "int": False}).build()
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p":  0.742}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.448}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 0.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.9, "std": 3.2, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.33, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.7, "std": 2.6, "lower": 0.0, "upper": 24.0, "int": False}).build()
             ),
             college_student=RoleAssumption(
                 role = OccupantRole.COLLEGE_STUDENT,
-                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 1.0}).build(),
-                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.0, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.0, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.5, "std": 1.75, "lower": 0.0, "upper": 24.0, "int": False}).build(),
-                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 18.5, "std": 2.75, "lower": 0.0, "upper": 24.0, "int": False}).build()
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.3}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.3}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.42, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 18.85, "std": 3.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.65, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 19.5, "std": 3.0, "lower": 0.0, "upper": 24.0, "int": False}).build()
             )
         )
     
