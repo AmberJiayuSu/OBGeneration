@@ -7,12 +7,13 @@ from matplotlib.figure import Figure
 
 def get_project_root() -> Path:
     """Find the project root directory.
-    
+
     Tries multiple strategies:
-    1. Uses __file__ if available (works in normal execution)
-    2. Searches upward from current working directory for pyproject.toml or data directory
-    3. Checks OCCUPANCY_GENERATION_ROOT environment variable
-    
+    1. Checks OCCUPANCY_GENERATION_ROOT environment variable
+    2. Uses __file__ if available (works in normal execution)
+    3. Searches upward from current working directory for pyproject.toml or data directory
+    4. Fallback using 'src' in the current working directory path
+
     Returns:
         Path to project root directory
     """
@@ -25,11 +26,11 @@ def get_project_root() -> Path:
     
     # Strategy 2: Try __file__ approach (works when running as script/module)
     try:
-        # This file is at src/generator/ob_utils.py, so go up 3 levels to project root
+        # This file is at src/ob_generation/generator/ob_utils.py, so go up 4 levels to project root
         file_path = Path(__file__).resolve()
         if file_path.exists():
-            # Try going up from src/generator/ob_utils.py -> src/generator -> src -> project_root
-            candidate = file_path.parent.parent.parent
+            # src/ob_generation/generator/ob_utils.py -> generator -> ob_generation -> src -> project_root
+            candidate = file_path.parent.parent.parent.parent
             if (candidate / "pyproject.toml").exists() or (candidate / "data").exists():
                 return candidate
     except (NameError, AttributeError):

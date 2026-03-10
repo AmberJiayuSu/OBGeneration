@@ -362,6 +362,8 @@ class EquipmentGenerator:
             weekly_num_cycles = [0] * total_num_days
             washer_power, dryer_power = self._get_laundry_power() # W
             num_cycle = self.laundry_frequency_dist.sample()
+            if last_week:
+                num_cycle = max(1, int(num_cycle/7)) # scale down laundry frequency for the last week to avoid excessive events when masked probabilities are low due to occupancy mask
             laundry_schedule = [0.0] * (len(weekly_active_mask))
             cnt = 0
             while cnt < num_cycle:
@@ -444,6 +446,8 @@ class EquipmentGenerator:
         else:
             end_times = []
             num_cooking = self.cooking_frequency_dist.sample()
+            if last_week:
+                num_cooking = max(1, int(num_cooking/7)) # scale down cooking frequency for the last week to avoid excessive events when masked probabilities are low due to occupancy mask
             cnt = 0
             while cnt < num_cooking:
                 cooking_power = self._get_cooking_power()
@@ -469,7 +473,7 @@ class EquipmentGenerator:
                         period_start = 0
                         perid_end = 10 * num_per_hour - 1
                         duration = cooking_assumptions.weekend_breakfast_duration.sample()
-                    elif 10 <= start_hour < 15: 
+                    elif 10 <= start_hour < 15:
                         period_start = 10 * num_per_hour
                         perid_end = 15 * num_per_hour - 1
                         duration = cooking_assumptions.weekend_lunch_duration.sample()
@@ -593,6 +597,8 @@ class EquipmentGenerator:
             elif operation.pattern_type == Equipment.DishwashingPattern.INDEPENDENT_FREQUENCY:
                 cnt = 0
                 frequency_per_week = self.dishwasher_frequency_dist.sample()
+                if last_week:
+                    frequency_per_week = max(1, int(frequency_per_week/7)) # scale down dishwasher frequency for the last week to avoid excessive events when masked probabilities are low due to occupancy mask
                 while cnt < frequency_per_week:
                     start_index = start_time_dist.sample()
                     cycle_duration = round(dishwasher_assumptions.dishwasher_cycle_duration.sample() * 60 / res_min)

@@ -614,6 +614,7 @@ class OccupancyGenerator:
                     schedule.append(frac)
             return schedule
         else:
+            all_occupant_intervals = []
             for tracker in self.trackers:
                 occupant_intervals = tracker.sample_weekends([None] * 2, sleep_schedule)
                 all_occupant_intervals.append(occupant_intervals)
@@ -668,7 +669,7 @@ class OccupancyGenerator:
     def infer_sleep_from_occupancy(
         daily_schedule: list[float],
         resolution_mins: int = 15,
-        sleep_start_floor: float = 2.0,
+        sleep_start_floor: float = 1.0,
         sleep_end_ceil: float = 5.0,
     ) -> "TimeRange | None":
         """
@@ -702,8 +703,11 @@ class OccupancyGenerator:
         t_start_hour = t_start_idx * resolution_hours
         t_end_hour = (t_end_idx + 1) * resolution_hours  # exclusive end
 
-        sleep_start = max(sleep_start_floor, t_start_hour + 1.0)
-        sleep_end = min(sleep_end_ceil, t_end_hour - 1.0)
+        # Shift the entire inferred window by a single N(0, 1hr) draw before clamping,
+        # so the result varies day-to-day instead of always snapping to floor/ceil.
+        delta = random.gauss(0.0, 1.0)
+        sleep_start = max(sleep_start_floor - delta, t_start_hour + 1.0 + delta)
+        sleep_end = min(sleep_end_ceil + delta, t_end_hour - 1.0 + delta)
 
         if sleep_start >= sleep_end:
             return None

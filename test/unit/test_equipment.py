@@ -1,7 +1,10 @@
 import pytest
 import numpy as np
+import time
+import signal
 
 from ob_generation.generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.model.occupancy import Occupancy
 from ob_generation.model.equipment import Equipment
 from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
 from ob_generation.model.occupant_profile import Occupant
@@ -839,6 +842,74 @@ class TestAnnualConsumption:
         total_consumption = sum(sum(week) for week in cooking_schedule) / 4000  # kWh
         assert total_consumption > 200
         assert total_consumption < 400
+
+
+    def test_cooking_run_long(self):
+        occ_json = """
+        {
+            "num_occupants": 1,
+            "household_composition": {
+                "daily_commuter": 0,
+                "hybrid_worker": 0,
+                "stayathome": 1,
+                "k12_or_daycare": 0,
+                "college_student": 0
+            },
+            "weekday_pattern": null,
+            "weekend_pattern": null,
+            "sleep_pattern": null
+        }
+        """
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+               "has_cooking_products": true,
+               "cooking_products_fuel": "electric",
+               "usage_frequency_per_week": {
+                 "min": 18,
+                 "max": 21
+               }
+             }
+        }
+        """
+        occ = Occupancy.model_validate_json(occ_json)
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
+        occupancy, sleep = occ_gen.household_annual_schedule()
+        _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            active_mask=active_mask,
+            sleep_mask=sleep_mask,
+            occupancy=occupancy,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        def _timeout(_signum, _frame):
+            raise TimeoutError("cooking_annual_schedule() exceeded 10s limit")
+
+        signal.signal(signal.SIGALRM, _timeout)
+        signal.alarm(10)
+        try:
+            t0 = time.perf_counter()
+            _, _ = equipment_gen.cooking_annual_schedule()
+            elapsed = time.perf_counter() - t0
+            assert elapsed < 10.0, f"cooking_annual_schedule() took {elapsed:.2f}s"
+        except TimeoutError as e:
+            pytest.fail(str(e))
+        finally:
+            signal.alarm(0)  # cancel alarm if finished in time
 
     @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
     def test_dishwasher(self, occ):
