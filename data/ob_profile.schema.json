@@ -3,6 +3,34 @@
     "type": "object",
     "description": "The profile of occupant behavior in an household for stochastic schedule generation.",
     "properties": {
+        "meta": {
+            "type": "object",
+            "description": "Metadata about the profile instance. [Source: set automatically by the input pipeline.]",
+            "properties": {
+                "source": {
+                    "type": "string",
+                    "enum": [
+                        "user_reported",
+                        "recs/census_imputed",
+                        "mixed"
+                    ],
+                    "description": "How this profile was generated. 'user_reported' means a real occupant filled in the profile directly. 'recs/census_imputed' means the pipeline populated it stochastically from population data. 'mixed' means some sections are user-reported and others imputed."
+                },
+                "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Date the profile was created or last updated (ISO 8601 format: YYYY-MM-DD)."
+                },
+                "zip_code": {
+                    "type": "string",
+                    "pattern": "^[0-9]{5}$",
+                    "description": "Optional ZIP code of the household location. [Used for: Linking profile to local variables, and stratifying urban-scale batch runs by geography. Source: user-reported or derived from RECS/Census sampling frame.] Could be other ID, we are not super sure yet."
+                }
+            },
+            "required": [
+                "source"
+            ]
+        },
         "occupancy": {
             "type": "object",
             "description": "The occupancy of the household (number of occupants, household composition, occupancy patterns).",
@@ -10,11 +38,11 @@
                 "num_occupants": {
                     "type": "integer",
                     "minimum": 1,
-                    "description": "The number of occupants in the household."
+                    "description": "The number of occupants in the household, "
                 },
                 "household_composition": {
                     "type": "object",
-                    "description": "The composition of the household based on daily mobility patterns.",
+                    "description": "The composition of the household based on daily mobility patterns. [Used for: Informing the stochastic schedule generation, the underlying model is a 3-state (away, home, sleep) markov chain model from ATUS.] [Source: user-reported or derived from RECS/Census sampling frame. Note: The categories are designed to be mutually exclusive and collectively exhaustive for the purpose of modeling daily occupancy patterns, but they may not capture all nuances of real household compositions.]",
                     "properties": {
                         "daily_commuter": {
                             "type": "integer",
@@ -45,7 +73,7 @@
                 },
                 "weekday_pattern": {
                     "type": "object",
-                    "description": "Defines the unoccupied patterns for weekdays. Any weekdays NOT covered by the primary or secondary intervals are assumed to be occupied (home).",
+                    "description": "Defines the unoccupied household patterns for weekdays. [Used for: Serving as anchor point to tune stochastically generated occupant state.] [Source: user-reported.]",
                     "properties": {
                         "is_always_occupied": {
                             "type": "boolean",
@@ -86,7 +114,7 @@
                 },
                 "weekend_pattern": {
                     "type": "object",
-                    "description": "Defines the unoccupied patterns for weekends.",
+                    "description": "Defines the unoccupied household patterns for weekends. [Used for: Serving as anchor point to tune stochastically generated occupant state.] [Source: user-reported.]",
                     "properties": {
                         "is_always_occupied": {
                             "type": "boolean",
@@ -121,7 +149,7 @@
                 },
                 "sleep_pattern": {
                     "type": "object",
-                    "description": "Typical sleep time range for the household (applies to both weekdays and weekends).",
+                    "description": "Typical sleep time range for the household (applies to both weekdays and weekends). [Used for: Serving as anchor point to tune stochastically generated occupant state.] [Source: user-reported.]",
                     "properties": {
                         "is_always_awake": {
                             "type": "boolean",
@@ -152,7 +180,7 @@
                     },
                     "required": [
                         "is_always_awake"
-                     ]
+                    ]
                 }
             },
             "required": [
