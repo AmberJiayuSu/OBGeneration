@@ -1,0 +1,828 @@
+from ob_generation.stochastic.distribution import Distribution,NormalDistribution
+from ob_generation.model.occupancy import Occupancy, TimeRange
+from ob_generation.stochastic.distribution_config import DistributionConfig
+from enum import Enum
+import random
+from pydantic import BaseModel, Field, ConfigDict
+import json
+from pathlib import Path
+from typing import Optional
+import warnings
+
+
+class OccupantRole(Enum):
+    DAILY_COMMUTER = "daily_commuter"
+    HYBRID_WORKER = "hybrid_worker"
+    STAYATHOME = "stayathome"
+    K12_OR_DAYCARE = "k12_or_daycare"
+    COLLEGE_STUDENT = "college_student"
+
+class RoleAssumption(BaseModel):
+    """Defines the behavior for a specific occupant role."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    role: OccupantRole = Field(..., description="The occupant role.")
+    weekday_away_prob: Distribution = Field(..., description="Probability that this role leaves home on any weekday.")
+    weekend_away_prob: Distribution = Field(..., description="Probability that this role leaves home on any weekend day.")
+    weekday_leave_time: Optional[Distribution] = Field(..., description="Time of departure on weekdays.")
+    weekday_return_time: Optional[Distribution] = Field(..., description="Time of return on weekdays.")
+    weekend_leave_time: Optional[Distribution] = Field(..., description="Time of departure on weekends.")
+    weekend_return_time: Optional[Distribution] = Field(..., description="Time of return on weekends.")
+
+
+class OccupancyAssumptions(BaseModel):
+    """Master configuration for household behavioral assumptions."""
+    daily_commuter: RoleAssumption
+    hybrid_worker: RoleAssumption
+    stayathome: RoleAssumption
+    k12_or_daycare: RoleAssumption
+    college_student: RoleAssumption
+
+    @staticmethod
+    def _maybe_build_dist(d: dict, key: str) -> Optional[Distribution]:
+        """
+        Build a Distribution from a config dict at d[key], or return None if null/missing.
+        """
+        cfg = d.get(key, None)
+        if cfg is None:
+            return None
+        return DistributionConfig(**cfg).build()
+
+    @staticmethod
+    def _build_role(d: dict) -> RoleAssumption:
+        return RoleAssumption(
+            role=OccupantRole(d["role"]),
+            weekday_away_prob=DistributionConfig(**d["weekday_away_prob"]).build(),
+            weekend_away_prob=DistributionConfig(**d["weekend_away_prob"]).build(),
+            weekday_leave_time=OccupancyAssumptions._maybe_build_dist(d, "weekday_leave_time"),
+            weekday_return_time=OccupancyAssumptions._maybe_build_dist(d, "weekday_return_time"),
+            weekend_leave_time=OccupancyAssumptions._maybe_build_dist(d, "weekend_leave_time"),
+            weekend_return_time=OccupancyAssumptions._maybe_build_dist(d, "weekend_return_time"),
+        )
+
+    @classmethod
+    def from_json_file(cls, path: str | Path) -> "OccupancyAssumptions":
+        data = json.loads(Path(path).read_text())
+
+        return cls(
+            daily_commuter=cls._build_role(data["daily_commuter"]),
+            hybrid_worker=cls._build_role(data["hybrid_worker"]),
+            stayathome=cls._build_role(data["stayathome"]),
+            k12_or_daycare=cls._build_role(data["k12_or_daycare"]),
+            college_student=cls._build_role(data["college_student"]),
+        )
+
+    @classmethod
+    def default(cls) -> "OccupancyAssumptions":
+        """Returns the standard/default assumptions."""
+        # TODO: Update away probabilities based on data (e.g. from the American Time Use Survey)
+        return cls(
+            daily_commuter=RoleAssumption(
+                role = OccupantRole.DAILY_COMMUTER,
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.917}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p":  0.428}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 6.68, "std": 1.4, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 19.13, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.85, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.82, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build()
+            ),
+            hybrid_worker=RoleAssumption(
+                role = OccupantRole.HYBRID_WORKER,
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.351}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.428}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.58, "std": 1.9, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.18, "std": 2.4, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.85, "std": 2.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.82, "std": 2.5, "lower": 0.0, "upper": 24.0, "int": False}).build()
+            ),
+            stayathome=RoleAssumption(
+                role = OccupantRole.STAYATHOME,
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.581}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.450}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.03, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.9, "std": 3.1, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.47, "std": 2.1, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.63, "std": 3.1, "lower": 0.0, "upper": 24.0, "int": False}).build()
+            ),
+            k12_or_daycare=RoleAssumption(
+                role = OccupantRole.K12_OR_DAYCARE,
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p":  0.742}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.448}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 7.5, "std": 0.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 17.9, "std": 3.2, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 9.33, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 20.7, "std": 2.6, "lower": 0.0, "upper": 24.0, "int": False}).build()
+            ),
+            college_student=RoleAssumption(
+                role = OccupantRole.COLLEGE_STUDENT,
+                weekday_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.3}).build(),
+                weekend_away_prob =DistributionConfig(dist_type="binomial", params={"n": 1, "p": 0.3}).build(),
+                weekday_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.42, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekday_return_time=DistributionConfig(dist_type="normal", params={"mean": 18.85, "std": 3.0, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_leave_time=DistributionConfig(dist_type="normal", params={"mean": 8.65, "std": 1.8, "lower": 0.0, "upper": 24.0, "int": False}).build(),
+                weekend_return_time=DistributionConfig(dist_type="normal", params={"mean": 19.5, "std": 3.0, "lower": 0.0, "upper": 24.0, "int": False}).build()
+            )
+        )
+    
+
+
+
+class TimeRangeDistribution:
+    """Distribution for time ranges within a day."""
+    def __init__(self, time_range: TimeRange, start_variance:float, end_variance:float, resolution_mins: int = 15):
+        self.resolution_mins = resolution_mins
+        self.resolution_hours = resolution_mins / 60
+        upper_bound = 24.0 - self.resolution_hours
+        self.start_dist = NormalDistribution(
+            mean= time_range.start_hour ,
+            stddev=start_variance,
+            lower=0.0,
+            upper=upper_bound,
+            int=False
+        )
+        self.end_dist = NormalDistribution(
+            mean= time_range.end_hour ,
+            stddev=end_variance,
+            lower=0.0,
+            upper=upper_bound,
+            int=False
+        )
+        self.wraps_midnight = time_range.wraps_midnight
+
+    
+
+    @staticmethod
+    def _snap_to_resolution( time: float, resolution_hours:float) -> float:
+        """Snap a time value to the nearest resolution point."""
+        snapped = round(time / resolution_hours) * resolution_hours
+        return min(snapped, 24.0 - resolution_hours)
+
+
+    def sample(self) -> TimeRange:
+        """
+        Samples a single occupant's leave and return times ensuring logical consistency.
+
+        Args:
+            start_dist: Distribution for leave time
+            end_dist: Distribution for return time
+            wraps_midnight: If True, allows return time < leave time (crosses midnight)
+
+        Returns:
+            Tuple of (start_time, end_time)
+        """
+        MAX_ATTEMPTS = 1000
+        INNER_ATTEMPTS = 20
+
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(self.start_dist.sample(), self.resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(self.end_dist.sample(), self.resolution_hours)
+                if self.wraps_midnight or end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
+
+        # Fallback: if bounds make it impossible to satisfy end > start,
+        # allow end >= start to avoid infinite loop
+        return TimeRange(start_hour=start_time, end_hour=end_time)
+
+    @staticmethod
+    def sample_with_away_sleep_bounds(start_dist: NormalDistribution, end_dist: NormalDistribution, away_time: Optional[TimeRange], sleep_time: Optional[TimeRange],
+                                      resolution_hours: float) -> tuple[Optional[TimeRange]]:
+        """
+        Samples a single occupant's leave and return times ensuring logical consistency.
+        Leave and return times must be outside BOTH the away_time period (when no one is home) AND sleep_time period.
+
+        Args:
+            start_dist: Distribution for leave time
+            end_dist: Distribution for return time
+            away_time: TimeRange defining when no one is home (household-level constraint)
+            sleep_time: TimeRange defining when occupants are asleep
+            resolution_hours: Time resolution in hours
+
+        Returns:
+            individual_away_time: The sampled away period for this individual
+        """
+
+        # Now sample individual away time that's outside BOTH sleep and household away bounds
+        if away_time is None and sleep_time is None:
+            # No constraints
+            updated_start_dist = start_dist
+            updated_end_dist = end_dist
+        elif away_time is None:
+            upper = 24 - resolution_hours
+            # Only sleep constraint
+            if sleep_time.wraps_midnight:
+                upper = sleep_time.start_hour   
+            updated_start_dist = start_dist.with_bounds(lower=sleep_time.end_hour, upper=upper)
+            updated_end_dist = end_dist.with_bounds(lower=sleep_time.end_hour, upper=upper)
+        elif sleep_time is None:
+            # Only household away constraint
+            if away_time.wraps_midnight:
+                updated_start_dist = start_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
+                updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
+            else:
+                # Sample before away starts or after away ends
+                updated_start_dist = start_dist.with_bounds(lower=0, upper=away_time.start_hour)
+                updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=24 - resolution_hours)
+        else:
+            sleep_upper = 24 - resolution_hours
+            # Only sleep constraint
+            if sleep_time.wraps_midnight:
+                sleep_upper = sleep_time.start_hour
+            if away_time.wraps_midnight:
+                valid_start = max(away_time.end_hour, sleep_upper)
+                valid_end = min(away_time.start_hour, sleep_time.start_hour)
+                updated_start_dist = start_dist.with_bounds(lower=valid_start, upper=valid_end)
+                updated_end_dist = end_dist.with_bounds(lower=valid_start, upper=valid_end)
+            else:
+                updated_start_dist = start_dist.with_bounds(lower=sleep_time.end_hour, upper=away_time.start_hour)
+                updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=sleep_upper)
+
+        MAX_ATTEMPTS = 1000
+        INNER_ATTEMPTS = 20
+
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(updated_start_dist.sample(), resolution_hours=resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=resolution_hours)
+                if end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
+
+        # Fallback
+        return TimeRange(start_hour=start_time, end_hour=end_time)
+        
+    @staticmethod
+    def sample_with_bounds(start_dist: NormalDistribution, end_dist: NormalDistribution, away_time: Optional[TimeRange], resolution_hours: float) -> Optional[TimeRange]:
+        """
+        Samples a single occupant's leave and return times ensuring logical consistency.
+        Leave and return times must be outside the away_time period (when no one is home).
+
+        Args:
+            start_dist: Distribution for leave time
+            end_dist: Distribution for return time
+            away_time: TimeRange defining when no one is home
+        Returns:
+            Tuple of (start_time, end_time)
+        """
+        if away_time is None:
+            updated_start_dist = start_dist
+            updated_end_dist = end_dist
+        elif away_time.wraps_midnight:
+            updated_start_dist = start_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
+            updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
+        else:
+            updated_start_dist = start_dist.with_bounds(lower=0, upper=away_time.start_hour)
+            updated_end_dist = end_dist.with_bounds(lower=away_time.end_hour, upper=24 - resolution_hours)
+
+        MAX_ATTEMPTS = 1000
+        INNER_ATTEMPTS = 20
+
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(updated_start_dist.sample(), resolution_hours=resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=resolution_hours)
+                if away_time is None or away_time.wraps_midnight or end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
+
+        # Fallback: if bounds make it impossible to satisfy end > start,
+        if away_time is None:
+            return TimeRange(start_hour=start_time, end_hour=end_time)
+        else:
+            return away_time
+        
+    @staticmethod
+    def sample_with_sleep_bounds(start_dist: NormalDistribution, end_dist: NormalDistribution, sleep_time: Optional[TimeRange], resolution_hours: float) -> Optional[TimeRange]:
+        """
+        Samples a single occupant's leave and return times ensuring logical consistency.
+        Leave and return times must be outside the sleep_time period.
+
+        Args:
+            start_dist: Distribution for leave time
+            end_dist: Distribution for return time
+            sleep_time: TimeRange defining when the occupant is sleeping
+        """
+        if sleep_time is None:
+            updated_start_dist = start_dist
+            updated_end_dist = end_dist
+        else:
+            upper = 24
+            if sleep_time.wraps_midnight:
+                upper = sleep_time.start_hour
+            updated_start_dist = start_dist.with_bounds(lower=sleep_time.end_hour, upper=upper)
+            updated_end_dist = end_dist.with_bounds(lower=sleep_time.end_hour, upper=upper)
+     
+        MAX_ATTEMPTS = 1000
+        INNER_ATTEMPTS = 20
+
+        total_attempts = 0
+        while total_attempts < MAX_ATTEMPTS:
+            start_time = TimeRangeDistribution._snap_to_resolution(updated_start_dist.sample(), resolution_hours=resolution_hours)
+            for _ in range(INNER_ATTEMPTS):
+                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=resolution_hours)
+                if sleep_time is None or end_time > start_time:
+                    return TimeRange(start_hour=start_time, end_hour=end_time)
+            total_attempts += INNER_ATTEMPTS
+
+        return TimeRange(start_hour=start_time, end_hour=end_time)
+
+        
+        
+
+
+
+
+class SingleOccupantTracker:
+    def __init__(self, role: OccupantRole, assumption: RoleAssumption, resolution_mins):
+        self.role = role
+        self.assumption = assumption
+        self.resolution_hours = resolution_mins / 60
+
+    def sample_weekdays(self, household_away_intervals: list[TimeRange | None], away_days: list[int], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+        """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
+        intervals = []
+        # no household level away days, so sample for each day based on role assumptions
+        if not away_days:
+            for d in range(5):
+                if self.assumption.weekday_away_prob.sample() == 1:
+                    time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                        self.assumption.weekday_leave_time,
+                        self.assumption.weekday_return_time,
+                        household_away_intervals[d],
+                        sleep_schedule[d],
+                        self.resolution_hours
+                    )
+                    intervals.append(time_range)
+                else:
+                    intervals.append(household_away_intervals[d])
+        # follow household level away days for on site days if not always out
+        else:
+            # hybrid worker assumed to not be 5 days always out, so not sampling for on site days if household level has 5 away days
+            if self.role == OccupantRole.HYBRID_WORKER and len(away_days) == 5:
+                for d in range(5):
+                    if self.assumption.weekday_away_prob.sample() == 1:
+                        time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                            self.assumption.weekday_leave_time,
+                            self.assumption.weekday_return_time,
+                            household_away_intervals[d],
+                            sleep_schedule[d],
+                            self.resolution_hours
+                        )
+                        intervals.append(time_range)
+            else:
+                for d in range(5):
+                    # for roles that stay home sometimes, if not away just follow household pattern for that day 
+                    if self.role != OccupantRole.DAILY_COMMUTER and self.role != OccupantRole.K12_OR_DAYCARE and d not in away_days:
+                        intervals.append(household_away_intervals[d])
+                    # otherwise sample based on role assumptions
+                    else:
+                        time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                            self.assumption.weekday_leave_time,
+                            self.assumption.weekday_return_time,
+                            household_away_intervals[d],
+                            sleep_schedule[d],
+                            self.resolution_hours
+                        )
+                        intervals.append(time_range)
+        return intervals
+    
+    def sample_weekends(self, household_away_intervals: list[TimeRange | None], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+        """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
+        intervals = []
+        for d in range(2):
+            if self.assumption.weekend_away_prob.sample() == 1:
+                time_range = TimeRangeDistribution.sample_with_away_sleep_bounds(
+                    self.assumption.weekend_leave_time,
+                    self.assumption.weekend_return_time,
+                    household_away_intervals[d],
+                    sleep_schedule[d],
+                    self.resolution_hours
+                )
+                intervals.append(time_range)
+            else:
+                intervals.append(household_away_intervals[d])
+        return intervals
+       
+
+
+class OccupancyGenerator:
+
+    def __init__(self, occupancy: Occupancy, assumptions: OccupancyAssumptions, resolution_mins: int = 15):
+        warnings.warn(
+            "occupancy_generator_normal is deprecated; use occupancy_generator instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if 60 % resolution_mins != 0:
+            raise ValueError(
+                f"resolution_mins must evenly divide 60. Got {resolution_mins}. "
+                f"Valid values: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60"
+            )
+        self.occupancy = occupancy
+        self.assumptions = assumptions
+        self.occupants_cnt = occupancy.num_occupants
+        if self.occupancy.weekday_pattern is None:
+            self.enforce_weekday_away = False
+        elif self.occupancy.weekday_pattern.is_always_occupied:
+            self.enforce_weekday_away = True
+            self.weekday_away = None
+        else:
+            self.enforce_weekday_away = True
+            self.weekday_away = TimeRangeDistribution(
+                occupancy.weekday_pattern.away_interval,
+                start_variance=1.0,
+                end_variance=1.0,
+                resolution_mins=resolution_mins) if occupancy.weekday_pattern.away_interval else None
+        if self.occupancy.weekend_pattern is None:
+            self.enforce_weekend_away = False
+        elif self.occupancy.weekend_pattern.is_always_occupied:
+            self.enforce_weekend_away = True
+            self.weekend_away = None
+        else:
+            self.enforce_weekend_away = True
+            self.weekend_away = TimeRangeDistribution(
+                occupancy.weekend_pattern.away_interval,
+                start_variance=2.0,
+                end_variance=2.0,
+                resolution_mins=resolution_mins) if occupancy.weekend_pattern.away_interval else None
+        self.trackers = self._get_single_occupant_tracker(resolution_mins)
+        self.num_per_hour = 60 // resolution_mins
+        self.resolution_mins = resolution_mins
+        
+            
+    def _get_single_occupant_tracker(self, resolution_mins: int) -> list[SingleOccupantTracker]:
+        """Generates a list of SingleOccupantTracker instances based on the household composition."""
+        trackers = []
+        comp = self.occupancy.household_composition
+        role_counts = {
+            OccupantRole.DAILY_COMMUTER: comp.daily_commuter,
+            OccupantRole.HYBRID_WORKER: comp.hybrid_worker,
+            OccupantRole.STAYATHOME: comp.stayathome,
+            OccupantRole.K12_OR_DAYCARE: comp.k12_or_daycare,
+            OccupantRole.COLLEGE_STUDENT: comp.college_student
+        }
+        for role, count in role_counts.items():
+            assumption = getattr(self.assumptions, role.value)
+            for _ in range(count):
+                trackers.append(SingleOccupantTracker(role, assumption, resolution_mins))
+        return trackers
+        
+    def weekday_away_interval(self, sleep_schedule: list[TimeRange | None]) -> tuple[list[TimeRange | None], list[int]]:
+        """ Based on the household's weekday away patterns, sample and return the away intervals for each weekday."""
+        occupancy = self.occupancy
+        if occupancy.weekday_pattern.is_always_occupied:
+            return [None] * 5, []  # No one leaves on weekdays
+        else:
+            weekdays = [0,1,2,3,4]
+            away_days = random.sample(weekdays, occupancy.weekday_pattern.num_of_days)
+            interval = []
+            for d in weekdays:
+                if d in away_days:
+                    sleep_range = sleep_schedule[d]
+                    if sleep_range is not None:
+                        interval.append(TimeRangeDistribution.sample_with_sleep_bounds(
+                            self.weekday_away.start_dist,
+                            self.weekday_away.end_dist,
+                            sleep_range,
+                            self.weekday_away.resolution_hours
+                        ))
+                    else:
+                        interval.append(self.weekday_away.sample())
+                else:
+                    interval.append(None)
+            return interval,away_days
+        
+    def household_weekday_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+        """Generates the household's overall weekday away schedule based on individual occupant patterns."""
+        if self.enforce_weekday_away:
+            weekday_away_intervals, away_days = self.weekday_away_interval(sleep_schedule)
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekdays(weekday_away_intervals, away_days, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(5):
+                away_interval = weekday_away_intervals[d]
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+                    # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
+                    if away_interval is not None:
+                        if away_interval.contains_hour(hour):
+                            schedule.append(0.0)
+                            continue 
+
+                    # -- REGION 2: CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # -- REGION 3: LAST MAN STANDING (The Fix) ---
+                    # If no one is calculated to be present but we're outside the 
+                    # absolute zero range, ensure at least one person is home
+                    if people_present == 0:
+                        people_present = 1
+                    
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        else:
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekdays([None] * 5, [], sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+                schedule = []
+
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(5):
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+
+                    # -- CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        
+    
+    def weekend_away_interval(self, sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+        """ Based on the household's weekday away patterns, sample and return the away intervals for each weeend."""
+        occupancy = self.occupancy
+        if occupancy.weekend_pattern.is_always_occupied:
+            return [None] * 2 # No one leaves on weekends
+        else:
+            interval = []
+            for d in range(2):
+                sleep_range = sleep_schedule[d]
+                if sleep_range is not None:
+                    interval.append(TimeRangeDistribution.sample_with_sleep_bounds(
+                        self.weekend_away.start_dist,
+                        self.weekend_away.end_dist,
+                        sleep_range,
+                        self.weekend_away.resolution_hours
+                    ))
+                else:
+                    interval.append(self.weekend_away.sample())
+            return interval
+        
+    def household_weekend_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+        """Generates the household's overall weekend away schedule based on individual occupant patterns."""
+        if self.enforce_weekend_away:
+            weekend_away_intervals = self.weekend_away_interval(sleep_schedule)
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekends(weekend_away_intervals, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(2):
+                away_interval = weekend_away_intervals[d]
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+                    # --- REGION 1: ABSOLUTE ZERO (Hard Constraint) ---
+                    if away_interval is not None:
+                        if away_interval.contains_hour(hour):
+                            schedule.append(0.0)
+                            continue 
+
+                    # -- REGION 2: CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # -- REGION 3: LAST MAN STANDING (The Fix) ---
+                    # If no one is calculated to be present but we're outside the 
+                    # absolute zero range, ensure at least one person is home
+                    if people_present == 0:
+                        people_present = 1
+                    
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+        else:
+            all_occupant_intervals = []
+            for tracker in self.trackers:
+                occupant_intervals = tracker.sample_weekends([None] * 2, sleep_schedule)
+                all_occupant_intervals.append(occupant_intervals)
+            
+            schedule = []
+            ratio = 1.0 / self.occupants_cnt 
+
+            for d in range(2):
+                for h in range(24 * self.num_per_hour):
+                    hour = h / self.num_per_hour
+                
+                    # -- CALCULATE RAW PRESENCE ---
+                    people_present = 0
+                    for i in range(self.occupants_cnt):
+                        occupant_away_interval = all_occupant_intervals[i][d]
+                        if occupant_away_interval is None or not occupant_away_interval.contains_hour(hour):
+                            people_present += 1
+
+                    # Calculate fraction
+                    frac = round(people_present * ratio, 4)
+                    schedule.append(frac)
+            return schedule
+    
+
+ 
+    
+    def household_fullweek_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+        """Generates the household's full week away schedule based on individual occupant patterns."""
+        weekday_schedule = self.household_weekday_schedule(sleep_schedule[:5])
+        weekend_schedule = self.household_weekend_schedule(sleep_schedule[5:7])
+        fullweek_schedule = weekday_schedule + weekend_schedule
+        return fullweek_schedule
+    
+    def household_sleep_schedule(self) -> list[TimeRange | None]:
+        """Generates the household's sleep time schedule."""
+        sleep_pattern = self.occupancy.sleep_pattern
+        if sleep_pattern.is_always_awake:
+            return [None] * 7
+        else:
+            sleep_range_dist = TimeRangeDistribution(
+                sleep_pattern.sleep_time,
+                start_variance=1.0,
+                end_variance=1.0,
+                resolution_mins= self.resolution_mins
+            )
+            sleep_schedule = []
+            for _ in range(7):
+                sleep_schedule.append(sleep_range_dist.sample())
+            return sleep_schedule
+    
+    @staticmethod
+    def infer_sleep_from_occupancy(
+        daily_schedule: list[float],
+        resolution_mins: int = 15,
+        sleep_start_floor: float = 1.0,
+        sleep_end_ceil: float = 5.0,
+    ) -> "TimeRange | None":
+        """
+        Post-infers a sleep window for one day from its occupancy schedule.
+
+        Sleep is assumed to cross 4am. If occupancy < 1 at 4am (not everyone home),
+        returns None. Otherwise finds the contiguous full-occupancy block containing
+        4am and returns:
+            start = max(sleep_start_floor, block_start + 1h)
+            end   = min(sleep_end_ceil,   block_end   - 1h)
+        Returns None if the resulting window is degenerate (start >= end).
+        """
+        num_per_hour = 60 // resolution_mins
+        idx_4am = 4 * num_per_hour
+
+        if daily_schedule[idx_4am] < 1.0:
+            return None
+
+        # Walk backward from 4am to find contiguous full-occupancy start
+        t_start_idx = idx_4am
+        while t_start_idx > 0 and daily_schedule[t_start_idx - 1] >= 1.0:
+            t_start_idx -= 1
+
+        # Walk forward from 4am to find contiguous full-occupancy end
+        t_end_idx = idx_4am
+        n = len(daily_schedule)
+        while t_end_idx < n - 1 and daily_schedule[t_end_idx + 1] >= 1.0:
+            t_end_idx += 1
+
+        resolution_hours = resolution_mins / 60
+        t_start_hour = t_start_idx * resolution_hours
+        t_end_hour = (t_end_idx + 1) * resolution_hours  # exclusive end
+
+        # Shift the entire inferred window by a single N(0, 1hr) draw before clamping,
+        # so the result varies day-to-day instead of always snapping to floor/ceil.
+        delta = random.gauss(0.0, 1.0)
+        sleep_start = max(sleep_start_floor - delta, t_start_hour + 1.0 + delta)
+        sleep_end = min(sleep_end_ceil + delta, t_end_hour - 1.0 + delta)
+
+        if sleep_start >= sleep_end:
+            return None
+
+        return TimeRange(start_hour=sleep_start, end_hour=sleep_end)
+    
+
+    @staticmethod
+    def get_sleep_mask(sleep_schedule: list[TimeRange | None], num_per_hour: int) -> list[bool]:
+        """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
+        mask = [False] * (24 * 7 * num_per_hour)
+        for d in range(7):
+            sleep_info = sleep_schedule[d]
+            if sleep_info is not None:
+                for h in range(24 * num_per_hour):
+                    hour = h / num_per_hour
+                    hour_index = d * 24 * num_per_hour + h
+                    if sleep_info.contains_hour(hour):
+                        mask[hour_index] = True
+        return mask
+    
+    @staticmethod
+    def revise_by_sleep(sleep_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Revisions to an existing schedule based on sleep times. 
+            Assume both inputs (sleep_weekly_mask and existing_schedule) should be in the same length."""
+        assert len(sleep_weekly_mask) == len(existing_schedule), "sleep mask and schedule must have the same length"
+        return [
+            value if asleep else v
+            for v, asleep in zip(existing_schedule, sleep_weekly_mask)
+        ]
+    
+    @staticmethod
+    def get_occupancy_mask(occupancy_schedule: list[float]) -> list[bool]:
+        """ Generates a mask indicating occupied hours (True) vs unoccupied hours (False)."""
+        mask = [occ > 0.0 for occ in occupancy_schedule]
+        return mask
+    
+    @staticmethod
+    def revise_by_absence(occupancy_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Revisions to an existing schedule based on occupancy times. 
+            Assume both inputs (occupancy_weekly_mask and existing_schedule) should be in the same length."""
+        assert len(occupancy_weekly_mask) == len(existing_schedule), "occupancy mask and schedule must have the same length"
+        return [
+            value if not occupied else v
+            for v, occupied in zip(existing_schedule, occupancy_weekly_mask)
+        ]
+    
+    @staticmethod
+    def get_active_mask(occupancy_schedule: list[float], sleep_schedule: list[bool]) -> list[bool]:
+        """ Generates a mask indicating active hours (True) vs sleep or unoccupied hours (False)."""
+        mask = [
+            (occ > 0.0) and (not asleep)
+            for occ, asleep in zip(occupancy_schedule, sleep_schedule)
+        ]
+        return mask
+    
+
+    def household_annual_schedule(self) -> tuple[list[list[float]], list[list[bool]]]:
+        """ Generates the household's annual schedule by repeating the weekly schedule 52 weeks + 1 day.
+            Returns:
+                Tuple of (annual_schedule, annual_sleep_schedule)
+                for sleep schedule, True indicates sleep hours.
+        """
+        annual_schedule = []
+        annual_sleep_schedule = []
+        for w in range(53):
+            if self.occupancy.sleep_pattern is not None:
+                sleep_schedule = self.household_sleep_schedule()
+                weekly_schedule = self.household_fullweek_schedule(sleep_schedule)
+            else:
+                # No sleep pattern provided: generate occupancy freely, then post-infer sleep
+                weekly_schedule = self.household_fullweek_schedule([None] * 7)
+                slots_per_day = 24 * self.num_per_hour
+                sleep_schedule = [
+                    OccupancyGenerator.infer_sleep_from_occupancy(
+                        weekly_schedule[d * slots_per_day:(d + 1) * slots_per_day],
+                        self.resolution_mins,
+                    )
+                    for d in range(7)
+                ]
+
+            sleep_mask = OccupancyGenerator.get_sleep_mask(sleep_schedule, self.num_per_hour)
+            if w < 52:
+                annual_schedule.append(weekly_schedule)
+                annual_sleep_schedule.append(sleep_mask)
+            else:
+                # For the 53rd week, only add the first day (to make 365 days)
+                annual_schedule.append(weekly_schedule[:24 * self.num_per_hour])
+                annual_sleep_schedule.append(sleep_mask[:24 * self.num_per_hour])
+        return annual_schedule, annual_sleep_schedule
+    
+    def get_annual_mask(self, annual_schedule: list[list[float]], annual_sleep_schedule: list[list[bool]]) -> tuple[list[list[bool]], list[list[bool]], list[list[bool]]]:
+        """ Generates the annual occupancy, sleep, and active masks based on the annual schedule.
+            Returns:
+            Tuple of (annual_occupancy_mask, annual_sleep_schedule, annual_active_mask)
+        """
+        annual_occupancy_mask = []
+        annual_active_mask = []
+        for w in range(len(annual_schedule)):
+            weekly_schedule = annual_schedule[w]
+            sleep_schedule = annual_sleep_schedule[w]
+            weekly_mask = OccupancyGenerator.get_occupancy_mask(weekly_schedule)
+            annual_occupancy_mask.append(weekly_mask)
+            active_mask = OccupancyGenerator.get_active_mask(weekly_schedule, sleep_schedule)
+            annual_active_mask.append(active_mask)
+        return annual_occupancy_mask, annual_sleep_schedule, annual_active_mask
+    
+        
+            
+
+                
+        

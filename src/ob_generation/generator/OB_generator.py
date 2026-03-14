@@ -1,5 +1,5 @@
 from ob_generation.model.occupant_profile import Occupant
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.generator.occupancy_generator_normal import OccupancyGenerator, OccupancyAssumptions
 from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
 from ob_generation.generator.lighting_generator import LightingGenerator
 from ob_generation.generator.dhw_generator import DHWGenerator, DHWAssumptions
