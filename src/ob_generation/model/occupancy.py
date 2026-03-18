@@ -16,6 +16,16 @@ class ScheduleRigidness(str, Enum):
     MOSTLY_CONSISTENT = "mostly_consistent"
     STRICT = "strict"
 
+    def to_std_dev_hours(self) -> float:
+        """Convert rigidness level to a standard deviation in hours."""
+        mapping = {
+            ScheduleRigidness.HIGHLY_VARIABLE: 2.0,
+            ScheduleRigidness.SOMEWHAT_VARIABLE: 1.0,
+            ScheduleRigidness.MOSTLY_CONSISTENT: 0.5,
+            ScheduleRigidness.STRICT: 0.25
+        }
+        return mapping[self]
+
 
 class TimeRange(BaseModel):
     """
@@ -41,27 +51,42 @@ class TimeRange(BaseModel):
             return hour >= self.start_hour or hour < self.end_hour
 
 
-class ClusterComposition(BaseModel):
-    """Number of household members assigned to each mobility cluster.
-    All counts must sum to num_occupants. The same 5 clusters apply to both
-    weekday and weekend; the household can have different compositions for each.
-    - mostly_home: near-zero away probability all day
-    - long_day_away: away from early morning through evening (work, school, day trip)
-    - morning_away: away peaking in the early morning through late morning (~4am–12pm)
-    - afternoon_away: away peaking from late morning through early evening
-    - evening_night_away: away rising into evening and night
+class MobilityCluster(str, Enum):
+    """Mobility cluster for a single occupant.
+    Maps to a Markov-chain centroid (cluster index 0–4) in the generator.
+    - MOSTLY_HOME: near-zero away probability all day
+    - LONG_DAY_AWAY: away from early morning through evening (work, school, day trip)
+    - MORNING_AWAY: away peaking early morning through late morning (~4am–12pm)
+    - AFTERNOON_AWAY: away peaking from late morning through early evening
+    - EVENING_NIGHT_AWAY: away rising into evening and night
     """
-    mostly_home: int = Field(default=0, ge=0)
-    long_day_away: int = Field(default=0, ge=0)
-    morning_away: int = Field(default=0, ge=0)
-    afternoon_away: int = Field(default=0, ge=0)
-    evening_night_away: int = Field(default=0, ge=0)
+    MOSTLY_HOME = "mostly_home"
+    LONG_DAY_AWAY = "long_day_away"
+    MORNING_AWAY = "morning_away"
+    AFTERNOON_AWAY = "afternoon_away"
+    EVENING_NIGHT_AWAY = "evening_night_away"
+
+    def to_cluster_index(self) -> int:
+        """Convert mobility cluster to a corresponding index."""
+        mapping = {
+            MobilityCluster.MOSTLY_HOME: 0,
+            MobilityCluster.LONG_DAY_AWAY: 1,
+            MobilityCluster.MORNING_AWAY: 2,
+            MobilityCluster.AFTERNOON_AWAY: 3,
+            MobilityCluster.EVENING_NIGHT_AWAY: 4
+        }
+        return mapping[self]
+
+
+class OccupantMobilityProfile(BaseModel):
+    """Weekday and weekend mobility cluster assignment for a single occupant."""
+    weekday_cluster: MobilityCluster
+    weekend_cluster: MobilityCluster
 
 
 class HouseholdComposition(BaseModel):
-    """Mobility cluster composition of the household for weekdays and weekends."""
-    weekday: ClusterComposition
-    weekend: ClusterComposition
+    """Per-occupant mobility cluster assignments for the household."""
+    occupants: list[OccupantMobilityProfile]
 
 
 class WeekdayOccupancyPattern(BaseModel):
@@ -93,15 +118,10 @@ class Occupancy(BaseModel):
 
     @model_validator(mode='after')
     def validate_household_composition(self):
-        """Validate that cluster counts sum to num_occupants for both weekday and weekend."""
+        """Validate that the number of occupant profiles matches num_occupants."""
         if self.household_composition is None:
             return self
-        wd = self.household_composition.weekday
-        we = self.household_composition.weekend
-        wd_total = wd.mostly_home + wd.long_day_away + wd.morning_away + wd.afternoon_away + wd.evening_night_away
-        we_total = we.mostly_home + we.long_day_away + we.morning_away + we.afternoon_away + we.evening_night_away
-        if wd_total != self.num_occupants:
-            raise ValueError(f"Weekday cluster counts sum to {wd_total}, expected {self.num_occupants}.")
-        if we_total != self.num_occupants:
-            raise ValueError(f"Weekend cluster counts sum to {we_total}, expected {self.num_occupants}.")
+        n = len(self.household_composition.occupants)
+        if n != self.num_occupants:
+            raise ValueError(f"household_composition has {n} occupant(s), expected {self.num_occupants}.")
         return self
