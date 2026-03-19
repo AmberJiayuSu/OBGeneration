@@ -538,6 +538,15 @@ class OccupancyGenerator:
         return active_mask, sleep_mask
     
     @staticmethod
+    def apply_to_mask(mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+        """ Apply a binary mask to an existing schedule, setting masked bins to the specified value while leaving unmasked bins unchanged."""
+        assert len(mask) == len(existing_schedule), "mask and schedule must have the same length"
+        return [
+            value if masked else v
+            for v, masked in zip(existing_schedule, mask)
+        ]
+    
+    @staticmethod
     def to_occupancy_schedule(occ_states: list[list[HouseholdOccupancyFractions]]) -> list[float]:
         """Convert the generated occupancy states into a schedule of home occupancy fractions for each time bin across the year.
 
