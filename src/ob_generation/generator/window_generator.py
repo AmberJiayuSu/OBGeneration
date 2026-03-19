@@ -1,6 +1,5 @@
 from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
 from ob_generation.generator.ob_utils import ScheduleUtils
-import ob_generation.model.equipment as Equipment
 from pydantic import BaseModel, Field, ConfigDict
 from ob_generation.stochastic.distribution_config import DistributionConfig
 import json

@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from pathlib import Path
 import json
-from ob_generation.model.occupancy import Occupancy
+from ob_generation.model.occupancy_old import Occupancy
 from ob_generation.model.lighting import Lighting
 from ob_generation.model.equipment import Equipment
 from ob_generation.model.hvac import HVAC

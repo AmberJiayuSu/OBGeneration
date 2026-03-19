@@ -1,5 +1,5 @@
 from ob_generation.model.occupant_profile import Occupant
-from ob_generation.generator.occupancy_generator_normal import OccupancyGenerator, OccupancyAssumptions
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
 from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
 from ob_generation.generator.lighting_generator import LightingGenerator
 from ob_generation.generator.dhw_generator import DHWGenerator, DHWAssumptions
@@ -63,29 +63,30 @@ class OccupantBehavior(BaseModel):
     @staticmethod
     def to_OB_annual(resolution_mins: int, occupant_profile: Occupant) -> "OccupantBehavior":
         """ Generate annual occupancy behavior schedules. """
-        occ_gen = OccupancyGenerator( occupant_profile.occupancy, OccupancyAssumptions.default(), resolution_mins)
-        occupancy_schedule,sleep_schedule = occ_gen.household_annual_schedule()
-        occupancy_mask, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy_schedule, sleep_schedule)
+        occ_gen = OccupancyGenerator( occupant_profile.occupancy, ClusterAssumptions.default(), resolution_mins)
+        occupancy_states = occ_gen.generate()
+        occ_schedule = OccupancyGenerator.to_occupancy_schedule(occupancy_states)
+        active_mask,sleep_mask = OccupancyGenerator.active_sleep_mask(occ_schedule)
         lighting_gen = LightingGenerator(occupant_profile.lighting)
         if_dimming = lighting_gen.get_dimming()
-        lighting_schedule = lighting_gen.lighting_annual_schedule(occupancy_mask, sleep_mask)
+        lighting_schedule = lighting_gen.lighting_annual_schedule( sleep_mask)
 
-        equipment_gen = EquipmentGenerator(occupant_profile.equipment,active_mask,sleep_mask, occupancy_schedule, occupant_profile.occupancy.num_occupants, resolution_mins, EquipmentAssumptions.default())
+        equipment_gen = EquipmentGenerator(occupant_profile.equipment,occupancy_states, occupant_profile.occupancy.num_occupants, resolution_mins, EquipmentAssumptions.default())
         equipment_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule()
 
         dhw_gen = DHWGenerator( DHWAssumptions.default(), occupant_profile.equipment, occupant_profile.occupancy.num_occupants, laundry_cycles, dishwasher_cycles, resolution_mins)
         flow_rate, dhw_schedule = dhw_gen.dhw_annual_schedule()
 
         hvac_gen = HVACGenerator( occupant_profile.hvac, HVACAssumptions.default())
-        heating_setpoint = hvac_gen.heating_setpoint_annual_schedule(occupancy_mask, sleep_mask)
-        cooling_setpoint = hvac_gen.cooling_setpoint_annual_schedule(occupancy_mask, sleep_mask)
+        heating_setpoint = hvac_gen.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling_setpoint = hvac_gen.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
         window_gen = WindowGenerator(occupant_profile.window, WindowAssumptions.default(), resolution_mins)
         window_schedule = window_gen.window_annual_schedule(active_mask)
 
         return OccupantBehavior(
             num_occupants=occupant_profile.occupancy.num_occupants,
-            occupancy_schedule=ScheduleUtils.flatten_schedule(occupancy_schedule),
+            occupancy_schedule=occ_schedule,
             lighting_schedule=ScheduleUtils.flatten_schedule(lighting_schedule),
             lighting_if_dimming= 1.0 if if_dimming else 0.0,
             equipment_schedule=ScheduleUtils.flatten_schedule(equipment_schedule),
