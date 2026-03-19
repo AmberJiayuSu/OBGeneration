@@ -6,7 +6,7 @@ import numpy as np
 from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path
-from typing import Optional, NamedTuple
+from typing import Optional, NamedTuple, Tuple
 from ob_generation.generator.ob_utils import ScheduleUtils, get_project_root
 import pandas as pd
 
@@ -105,7 +105,7 @@ class TimeRangeDistribution:
         while total_attempts < MAX_ATTEMPTS:
             start_time = TimeRangeDistribution._snap_to_resolution(updated_start_dist.sample(), resolution_hours=self.resolution_hours)
             for _ in range(INNER_ATTEMPTS):
-                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=resolution_hours)
+                end_time = TimeRangeDistribution._snap_to_resolution(updated_end_dist.sample(), resolution_hours=self.resolution_hours)
                 if self.wraps_midnight or end_time > start_time:
                     return TimeRange(start_hour=start_time, end_hour=end_time)
             total_attempts += INNER_ATTEMPTS
@@ -311,8 +311,7 @@ class ClusterAssumptions:
         flat = [OccupancyState(s) for s in states[:365 * num_bins]]
         bins_per_week = 7 * num_bins
         return [flat[i:i + bins_per_week] for i in range(0, len(flat), bins_per_week)]
-
-      
+  
     
 
 class HouseholdOccupancyFractions(NamedTuple):
@@ -328,9 +327,6 @@ class OccupancyGenerator:
         self.cluster_assumptions = cluster_assumptions
         self.sim_resolution_min = sim_resolution_min
 
-    ## TODO: 1. we use age to map to actual mobility pattern, but keep mobility pattern at this layer 
-
-    ## TODO: 2. see how the household information (away time, sleep time) can be a constraints for the occupancy generation. For example, if the household has a sleep time of 10pm-6am, then the occupancy state should be sleep during that time.
 
 
     def apply_away_time(self) -> None:
@@ -518,3 +514,37 @@ class OccupancyGenerator:
             sleep_time = self.household_sleep_time_annually(away_time)
             occ_states = self.apply_sleep_time(occ_states, sleep_time)
         return occ_states
+    
+    @staticmethod
+    def active_sleep_mask(occ_states:list[list[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> Tuple(list[list[bool]], list[list[bool]]):
+        """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
+
+        A bin is considered "active" if the home fraction >= active_threshold.
+        A bin is considered "sleep" if the sleep fraction >= active_threshold.
+        """
+        active_mask = [[False] * len(week) for week in occ_states]
+        sleep_mask = [[False] * len(week) for week in occ_states]
+        for w in range(len(occ_states)):
+            week = occ_states[w]
+            for t in range(len(week)):
+                time_bin = week[t]
+                total_home_sleep = time_bin.home + time_bin.sleep
+                if total_home_sleep > 0.0: 
+                    ratio = time_bin.home / total_home_sleep
+                    if ratio >= active_threshold:
+                        active_mask[w][t] = True
+                    else:
+                        sleep_mask[w][t] = True
+        return active_mask, sleep_mask
+    
+    @staticmethod
+    def to_occupancy_schedule(occ_states: list[list[HouseholdOccupancyFractions]]) -> list[float]:
+        """Convert the generated occupancy states into a schedule of home occupancy fractions for each time bin across the year.
+
+        This flattens the weekly structure into a single list of 365 * bins_per_day fractions, where each fraction represents the expected proportion of occupants at home (including both active and sleep) during that time bin.
+        """
+        schedule = []
+        for week in occ_states:
+            for time_bin in week:
+                schedule.append(time_bin.home + time_bin.sleep)
+        return schedule
