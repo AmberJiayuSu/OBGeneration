@@ -21,10 +21,10 @@ class HeatingDefaultSetpoints(BaseModel):
     absent_setpoint: float = Field(20.0, description="Absent heating setpoint in Celsius")
 
 class CoolingDefaultSetpoints(BaseModel):
-    """Default setpoints for heating thermostat control."""
-    active_setpoint: float = Field(23.0, description="Active heating setpoint in Celsius")
-    sleep_setpoint: float = Field(22.0, description="Sleep heating setpoint in Celsius")
-    absent_setpoint: float = Field(24.0, description="Absent heating setpoint in Celsius")
+    """Default setpoints for cooling thermostat control."""
+    active_setpoint: float = Field(23.0, description="Active cooling setpoint in Celsius")
+    sleep_setpoint: float = Field(22.0, description="Sleep cooling setpoint in Celsius")
+    absent_setpoint: float = Field(24.0, description="Absent cooling setpoint in Celsius")
 
 
 class HVACAssumptions(BaseModel):
@@ -91,137 +91,147 @@ class HVACGenerator:
             raise ValueError(f"Unknown intensity level: {level}")
         return level_to_temp[level]
 
-    def heating_setpoint_annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def heating_setpoint_annual_schedule(self, active_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         if self.hvac.heating is None:
             return None
         
-        assert len(occupancy_mask_annual) == len(sleep_mask_annual), "occupancy and sleep must have same #weeks"
-        assert len(occupancy_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
+        assert len(active_mask_annual) == len(sleep_mask_annual), "active and sleep must have same #weeks"
+        assert len(active_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
 
         schedule: list[list[float]] = []
-        for weekly_occupancy, weekly_sleep_mask in zip(occupancy_mask_annual, sleep_mask_annual):
-            assert len(weekly_occupancy) == len(weekly_sleep_mask), "weekly occupancy/sleep length mismatch"
-            schedule.append(self.heating_setpoint_weekly_schedule(weekly_occupancy, weekly_sleep_mask))
+        for weekly_active_mask, weekly_sleep_mask in zip(active_mask_annual, sleep_mask_annual):
+            assert len(weekly_active_mask) == len(weekly_sleep_mask), "weekly active/sleep length mismatch"
+            schedule.append(self.heating_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask))
         return schedule
         
        
-    def heating_setpoint_weekly_schedule(self, occupancy_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
+    def heating_setpoint_weekly_schedule(self, active_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         heating = self.hvac.heating
         minimum_setpoint = self.assumptions.minimum_heating_setpoint
         #if no control at all.
         if heating.type=="no_control":
-            schedule = [self.assumptions.heating_defaults.active_setpoint for _ in range(len (occupancy_mask_weekly))] # default 22C always on
+            schedule = [self.assumptions.heating_defaults.active_setpoint for _ in range(len (active_mask_weekly))] # default  always on
             return schedule
+        
         #if binary control
         elif heating.type=="binary":
-            # start with active state
-            base_temp = self.assumptions.heating_defaults.active_setpoint if heating.active_state else minimum_setpoint
-            schedule = [base_temp for _ in range(len(occupancy_mask_weekly))]
-
-            # adjust for sleep
-            sleep_temp = self.assumptions.heating_defaults.sleep_setpoint if heating.sleep_state else minimum_setpoint
-            schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly, schedule, sleep_temp)
-
-            # adjust for absence
+            # start with absent_state
             absent_temp = self.assumptions.heating_defaults.absent_setpoint if heating.absent_state else minimum_setpoint
-            schedule = OccupancyGenerator.revise_by_absence(occupancy_mask_weekly, schedule, absent_temp)
+            schedule = [absent_temp for _ in range(len(active_mask_weekly))]
+
+             # adjust for sleep
+            sleep_temp = self.assumptions.heating_defaults.sleep_setpoint if heating.sleep_state else minimum_setpoint
+            schedule = OccupancyGenerator.apply_to_mask(sleep_mask_weekly, schedule, sleep_temp)
+
+            # adjust for active
+            active_temp = self.assumptions.heating_defaults.active_setpoint if heating.active_state else minimum_setpoint
+            schedule = OccupancyGenerator.apply_to_mask(active_mask_weekly, schedule, active_temp)
+
             return schedule
+        
         # if valve control
         elif heating.type=="valve":
-            # start with active level
-            base_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.active_level)
-            schedule = [base_temp for _ in range(len(occupancy_mask_weekly))]
+            # start with absent level
+            base_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.absent_level)
+            schedule = [base_temp for _ in range(len(active_mask_weekly))]
 
             # adjust for sleep
             sleep_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.sleep_level)
-            schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly, schedule, sleep_temp)
+            schedule = OccupancyGenerator.apply_to_mask(sleep_mask_weekly, schedule, sleep_temp)
 
-            # adjust for absence
-            absent_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.absent_level)
-            schedule = OccupancyGenerator.revise_by_absence(occupancy_mask_weekly, schedule, absent_temp)
+             # adjust for active level
+            active_temp = HVACGenerator._get_trv_temp(self.assumptions, heating.active_level)
+            schedule = OccupancyGenerator.apply_to_mask(active_mask_weekly, schedule, active_temp)
+
             return schedule
        
         # if setpoint control
         elif heating.type=="thermostat":
-            if heating.active_setpoint is not None:
-                schedule =  [heating.active_setpoint for _ in range(len (occupancy_mask_weekly))]
+            if heating.absent_setpoint is not None:
+                schedule =  [heating.absent_setpoint for _ in range(len (active_mask_weekly))]
             else:
-                schedule = [minimum_setpoint for _ in range(len (occupancy_mask_weekly))]
-            # adjust for setback
+                schedule = [minimum_setpoint for _ in range(len (active_mask_weekly))]
+            # adjust for sleep
             if heating.sleep_setpoint is not None:
                 setback = heating.sleep_setpoint
-                schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly,schedule, setback)
+                schedule = OccupancyGenerator.apply_to_mask(sleep_mask_weekly, schedule, setback)
             else:
-                schedule = OccupancyGenerator.revise_by_sleep(sleep_mask_weekly, schedule, minimum_setpoint)
-            # adjust for absence
-            if heating.absent_setpoint is not None:
-                setback = heating.absent_setpoint
-                schedule = OccupancyGenerator.revise_by_absence(occupancy_mask_weekly, schedule, setback)
+                schedule = OccupancyGenerator.apply_to_mask(sleep_mask_weekly, schedule, minimum_setpoint)
+            # adjust for active
+            if heating.active_setpoint is not None:
+                active_temp = heating.active_setpoint
+                schedule = OccupancyGenerator.apply_to_mask(active_mask_weekly, schedule, active_temp)
             else:
-                schedule = OccupancyGenerator.revise_by_absence(occupancy_mask_weekly, schedule, minimum_setpoint)
+                schedule = OccupancyGenerator.apply_to_mask(active_mask_weekly, schedule, minimum_setpoint)
+           
             return schedule
         else:
             raise NotImplementedError(f"Heating type {heating.type} not yet implemented.")
 
 
 
-    def cooling_setpoint_annual_schedule(self, occupancy_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def cooling_setpoint_annual_schedule(self, active_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         if self.hvac.cooling is None:
             return None
         
-        assert len(occupancy_mask_annual) == len(sleep_mask_annual), "occupancy and sleep must have same #weeks"
-        assert len(occupancy_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
+        assert len(active_mask_annual) == len(sleep_mask_annual), "active and sleep must have same #weeks"
+        assert len(active_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
 
         schedule: list[list[float]] = []
-        for weekly_occupancy, weekly_sleep_mask in zip(occupancy_mask_annual, sleep_mask_annual):
-            assert len(weekly_occupancy) == len(weekly_sleep_mask), "weekly occupancy/sleep length mismatch"
-            schedule.append(self.cooling_setpoint_weekly_schedule(weekly_occupancy, weekly_sleep_mask))
+        for weekly_active_mask, weekly_sleep_mask in zip(active_mask_annual, sleep_mask_annual):
+            assert len(weekly_active_mask) == len(weekly_sleep_mask), "weekly active/sleep length mismatch"
+            schedule.append(self.cooling_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask))
         return schedule
 
 
-    def cooling_setpoint_weekly_schedule(self, occupied_time_mask_weekly: list[bool], sleep_time_mask_weekly: list[bool]) -> list[float]:
+    def cooling_setpoint_weekly_schedule(self, active_time_mask_weekly: list[bool], sleep_time_mask_weekly: list[bool]) -> list[float]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         cooling = self.hvac.cooling
         cooling_max_setpoint = self.assumptions.maximum_cooling_setpoint
         #if no control at all.
         if cooling.type=="no_control":
-            schedule = [self.assumptions.cooling_defaults.active_setpoint for _ in range(len (occupied_time_mask_weekly))]
+            schedule = [self.assumptions.cooling_defaults.active_setpoint for _ in range(len (active_time_mask_weekly))]
             return schedule
         #if binary control
         elif cooling.type=="binary":
-            # start with active state
-            base_temp = self.assumptions.cooling_defaults.active_setpoint if cooling.active_state else cooling_max_setpoint
-            schedule = [base_temp for _ in range(len(occupied_time_mask_weekly))]
+            # start with absent_state
+            base_temp = self.assumptions.cooling_defaults.absent_setpoint if cooling.absent_state else cooling_max_setpoint
+            schedule = [base_temp for _ in range(len(active_time_mask_weekly))]
 
             # adjust for sleep
             sleep_temp = self.assumptions.cooling_defaults.sleep_setpoint if cooling.sleep_state else cooling_max_setpoint
-            schedule = OccupancyGenerator.revise_by_sleep(sleep_time_mask_weekly, schedule, sleep_temp)
+            schedule = OccupancyGenerator.apply_to_mask(sleep_time_mask_weekly, schedule, sleep_temp)
 
-            # adjust for absence
-            absent_temp = self.assumptions.cooling_defaults.absent_setpoint if cooling.absent_state else cooling_max_setpoint
-            schedule = OccupancyGenerator.revise_by_absence(occupied_time_mask_weekly, schedule, absent_temp)
+            # adjust for active
+            active_temp = self.assumptions.cooling_defaults.active_setpoint if cooling.active_state else cooling_max_setpoint
+            schedule = OccupancyGenerator.apply_to_mask(active_time_mask_weekly, schedule, active_temp)
+
             return schedule
+        
         # if setpoint control
         elif cooling.type=="thermostat":
-            if cooling.active_setpoint is not None:
-                schedule =  [cooling.active_setpoint for _ in range(len (occupied_time_mask_weekly))]
+            # start with absent setpoint
+            if cooling.absent_setpoint is not None:
+                schedule = [cooling.absent_setpoint for _ in range(len (active_time_mask_weekly))]
             else:
-                schedule = [cooling_max_setpoint for _ in range(len (occupied_time_mask_weekly))]
+                schedule = [cooling_max_setpoint for _ in range(len (active_time_mask_weekly))]
+
             # adjust for setback
             if cooling.sleep_setpoint is not None:
                 setback = cooling.sleep_setpoint
-                schedule = OccupancyGenerator.revise_by_sleep(sleep_time_mask_weekly,schedule, setback)
+                schedule = OccupancyGenerator.apply_to_mask(sleep_time_mask_weekly,schedule, setback)
             else:
-                schedule = OccupancyGenerator.revise_by_sleep(sleep_time_mask_weekly, schedule, cooling_max_setpoint)
-            # adjust for absence
-            if cooling.absent_setpoint is not None:
-                setback = cooling.absent_setpoint
-                schedule = OccupancyGenerator.revise_by_absence(occupied_time_mask_weekly, schedule, setback)
+                schedule = OccupancyGenerator.apply_to_mask(sleep_time_mask_weekly, schedule, cooling_max_setpoint)
+
+            # adjust for active
+            if cooling.active_setpoint is not None:
+                active_temp = cooling.active_setpoint
+                schedule = OccupancyGenerator.apply_to_mask(active_time_mask_weekly, schedule, active_temp)
             else:
-                schedule = OccupancyGenerator.revise_by_absence(occupied_time_mask_weekly, schedule, cooling_max_setpoint)
+                schedule = OccupancyGenerator.apply_to_mask(active_time_mask_weekly, schedule, cooling_max_setpoint)
             return schedule
         else:
             raise NotImplementedError(f"Cooling type {cooling.type} not yet implemented.")
