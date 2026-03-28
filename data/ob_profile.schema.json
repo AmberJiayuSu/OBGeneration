@@ -2,6 +2,52 @@
     "title": "OB Profile Schema",
     "type": "object",
     "description": "The profile of occupant behavior in an household for stochastic schedule generation.",
+    "$defs": {
+        "TimeRange": {
+            "type": "object",
+            "description": "A time range with fractional start and end hours [0, 24). Wraps midnight when end_hour < start_hour.",
+            "properties": {
+                "start_hour": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 24,
+                    "description": "Hour of day (0–24, exclusive) when the interval starts."
+                },
+                "end_hour": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 24,
+                    "description": "Hour of day (0–24, exclusive) when the interval ends."
+                }
+            },
+            "required": ["start_hour", "end_hour"]
+        },
+        "ScheduleRigidness": {
+            "type": "string",
+            "description": "How consistently a time pattern is followed. Maps to a standard deviation applied to start/end hours: highly_variable ~2 hrs, somewhat_variable ~1 hr, mostly_consistent ~30 min, strict ~15 min.",
+            "enum": ["highly_variable", "somewhat_variable", "mostly_consistent", "strict"]
+        },
+        "MobilityCluster": {
+            "type": "string",
+            "description": "Daily mobility pattern for a single occupant, mapping to a Markov-chain cluster from ATUS.",
+            "enum": ["mostly_home", "long_day_away", "morning_away", "afternoon_away", "evening_night_away"]
+        },
+        "OccupantMobilityProfile": {
+            "type": "object",
+            "description": "Weekday and weekend mobility cluster assignment for a single occupant.",
+            "properties": {
+                "weekday_cluster": {
+                    "$ref": "#/$defs/MobilityCluster",
+                    "description": "Mobility cluster for weekdays (Mon–Fri)."
+                },
+                "weekend_cluster": {
+                    "$ref": "#/$defs/MobilityCluster",
+                    "description": "Mobility cluster for weekends (Sat–Sun)."
+                }
+            },
+            "required": ["weekday_cluster", "weekend_cluster"]
+        }
+    },
     "properties": {
         "meta": {
             "type": "object",
@@ -42,34 +88,18 @@
                 },
                 "household_composition": {
                     "type": "object",
-                    "description": "The composition of the household based on daily mobility patterns. [Used for: Informing the stochastic schedule generation, the underlying model is a 3-state (away, home, sleep) markov chain model from ATUS.] [Source: user-reported or derived from RECS/Census sampling frame. Note: The categories are designed to be mutually exclusive and collectively exhaustive for the purpose of modeling daily occupancy patterns, but they may not capture all nuances of real household compositions.]",
+                    "description": "Per-occupant mobility cluster assignments for the household. [Used for: Informing the stochastic schedule generation, the underlying model is a 3-state (away, home, sleep) markov chain model from ATUS.] [Source: user-reported or derived from RECS/Census sampling frame.]",
                     "properties": {
-                        "daily_commuter": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "Number of adults who COMMUTE to a workplace 5 days a week (excludes remote workers)."
-                        },
-                        "hybrid_worker": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "Number of adults who commute to a workplace 1-4 days a week."
-                        },
-                        "stayathome": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "Number of people home most of the day (e.g., full-time remote workers, retirees, stay-at-home parents, infants not in daycare)."
-                        },
-                        "k12_or_daycare": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "Number of children attending school or daycare daily (regular away-from-home schedule)."
-                        },
-                        "college_student": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "description": "Number of college students (typically irregular/variable schedules)."
+                        "occupants": {
+                            "type": "array",
+                            "description": "List of mobility profiles, one per occupant. Length must equal num_occupants.",
+                            "items": {
+                                "$ref": "#/$defs/OccupantMobilityProfile"
+                            },
+                            "minItems": 1
                         }
-                    }
+                    },
+                    "required": ["occupants"]
                 },
                 "weekday_pattern": {
                     "type": "object",
@@ -80,32 +110,18 @@
                             "description": "Indicates if the household is typically occupied by at least one person throughout ALL weekdays (e.g. retirees)."
                         },
                         "away_interval": {
-                            "type": "object",
-                            "description": "If NOT always occupied: The time range when the house is empty.",
-                            "properties": {
-                                "start_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the last person leaves."
-                                },
-                                "end_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the first person returns."
-                                }
-                            },
-                            "required": [
-                                "start_hour",
-                                "end_hour"
-                            ]
+                            "$ref": "#/$defs/TimeRange",
+                            "description": "If NOT always occupied: The time range when the house is empty."
                         },
                         "num_of_days": {
                             "type": "integer",
                             "minimum": 1,
                             "maximum": 5,
                             "description": "Number of weekdays (1-5) the away interval applies to."
+                        },
+                        "away_time_rigidness": {
+                            "$ref": "#/$defs/ScheduleRigidness",
+                            "description": "How consistently the away interval is followed day-to-day."
                         }
                     },
                     "required": [
@@ -121,26 +137,12 @@
                             "description": "Indicates if the household is typically occupied by at least one person throughout the entire weekend."
                         },
                         "away_interval": {
-                            "type": "object",
-                            "description": "If NOT always occupied: The time range when the house is empty.",
-                            "properties": {
-                                "start_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the last person leaves."
-                                },
-                                "end_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour (0-23) when the first person returns."
-                                }
-                            },
-                            "required": [
-                                "start_hour",
-                                "end_hour"
-                            ]
+                            "$ref": "#/$defs/TimeRange",
+                            "description": "If NOT always occupied: The time range when the house is empty."
+                        },
+                        "away_time_rigidness": {
+                            "$ref": "#/$defs/ScheduleRigidness",
+                            "description": "How consistently the away interval is followed day-to-day."
                         }
                     },
                     "required": [
@@ -153,29 +155,15 @@
                     "properties": {
                         "is_always_awake": {
                             "type": "boolean",
-                            "description": "Indicates if there is always someone is typically awake (not sleeping) throughout the entire day."
+                            "description": "Indicates if there is always someone typically awake (not sleeping) throughout the entire day."
                         },
-                        "sleep_interval": {
-                            "type": "object",
-                            "description": "If NOT always awake: The time range when the house is typically unoccupied by sleeping occupants.",
-                            "properties": {
-                                "start_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour of the day (0-23) when the latest occupant typically goes to sleep."
-                                },
-                                "end_hour": {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 23,
-                                    "description": "Hour of the day (0-23) when the earliest occupant typically wakes up."
-                                }
-                            },
-                            "required": [
-                                "start_hour",
-                                "end_hour"
-                            ]
+                        "sleep_time": {
+                            "$ref": "#/$defs/TimeRange",
+                            "description": "If NOT always awake: The time range when the household is typically asleep."
+                        },
+                        "sleep_time_rigidness": {
+                            "$ref": "#/$defs/ScheduleRigidness",
+                            "description": "How consistently the sleep interval is followed night-to-night."
                         }
                     },
                     "required": [
@@ -184,8 +172,7 @@
                 }
             },
             "required": [
-                "num_occupants",
-                "household_composition"
+                "num_occupants"
             ]
         },
         "lighting": {
