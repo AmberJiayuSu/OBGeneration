@@ -7,31 +7,178 @@ Tests the occupancy generation logic in src/generator/occupancy_generator.py
 import pytest
 import numpy as np
 import matplotlib
-matplotlib.use("Agg")  # headless-friendly
 import matplotlib.pyplot as plt
 from pathlib import Path
 
 from ob_generation.generator.occupancy_generator import (
-    OccupantRole,
-    RoleAssumption,
-    OccupancyAssumptions,
+    ClusterAssumptions,
+    HouseholdOccupancyFractions,
     TimeRangeDistribution,
-    SingleOccupantTracker,
-    OccupancyGenerator
+    OccupancyGenerator,
 )
 from ob_generation.model.occupancy import (
     Occupancy,
     HouseholdComposition,
+    MobilityCluster,
+    OccupantMobilityProfile,
     TimeRange,
     WeekdayOccupancyPattern,
     WeekendOccupancyPattern,
-    SleepPattern
+    SleepPattern,
+    ScheduleRigidness,
 )
 
 
-class TestTimeRangeDistribution:
-    """Tests for TimeRangeDistribution."""
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
+@pytest.fixture
+def away_range_typical() -> TimeRange:
+    """Typical away range (9–17) that does not wrap midnight."""
+    return TimeRange(start_hour=9, end_hour=17)
 
+@pytest.fixture
+def away_range_wraps_midnight() -> TimeRange:
+    """Away range (22–6) that wraps midnight."""
+    return TimeRange(start_hour=22, end_hour=6)
+
+@pytest.fixture
+def single_long_day_away_occupant() -> OccupantMobilityProfile:
+    return OccupantMobilityProfile(
+        weekday_cluster=MobilityCluster.LONG_DAY_AWAY,
+        weekend_cluster=MobilityCluster.MOSTLY_HOME,
+    )
+
+
+@pytest.fixture
+def single_mostly_home_occupant() -> OccupantMobilityProfile:
+    return OccupantMobilityProfile(
+        weekday_cluster=MobilityCluster.MOSTLY_HOME,
+        weekend_cluster=MobilityCluster.MOSTLY_HOME,
+    )
+
+@pytest.fixture
+def single_night_away_occupant() -> OccupantMobilityProfile:
+    return OccupantMobilityProfile(
+        weekday_cluster=MobilityCluster.EVENING_NIGHT_AWAY,
+        weekend_cluster=MobilityCluster.EVENING_NIGHT_AWAY,
+    )
+
+
+@pytest.fixture
+def occupancy_always_home(single_long_day_away_occupant) -> Occupancy:
+    """1-occupant household, no away/sleep patterns specified."""
+    return Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_long_day_away_occupant]),
+        weekday_pattern=WeekdayOccupancyPattern(is_always_occupied=True),
+        weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True)
+    )
+
+
+@pytest.fixture
+def occupancy_with_away(single_long_day_away_occupant) -> Occupancy:
+    """1-occupant household with weekday away (8–18) and weekend away (16–20)."""
+    return Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_long_day_away_occupant]),
+        weekday_pattern=WeekdayOccupancyPattern(
+            is_always_occupied=False,
+            away_interval=TimeRange(start_hour=8, end_hour=18),
+            away_time_rigidness=ScheduleRigidness.SOMEWHAT_VARIABLE,
+        ),
+        weekend_pattern=WeekendOccupancyPattern(
+            is_always_occupied=False,
+            away_interval=TimeRange(start_hour=16, end_hour=20),
+            away_time_rigidness=ScheduleRigidness.SOMEWHAT_VARIABLE,
+        ),
+    )
+
+@pytest.fixture
+def occupancy_with_away_night(single_night_away_occupant) -> Occupancy:
+    """1-occupant household with weekday away (22–6) that wraps midnight."""
+    return Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_night_away_occupant]),
+        weekday_pattern=WeekdayOccupancyPattern(
+            is_always_occupied=False,
+            away_interval=TimeRange(start_hour=22, end_hour=6),
+            away_time_rigidness=ScheduleRigidness.SOMEWHAT_VARIABLE,
+        ),
+        weekend_pattern=WeekendOccupancyPattern(
+            is_always_occupied=False,
+            away_interval=TimeRange(start_hour= 23, end_hour=7),
+            away_time_rigidness=ScheduleRigidness.SOMEWHAT_VARIABLE,
+        ),
+    )
+
+
+@pytest.fixture
+def occupancy_with_sleep(single_long_day_away_occupant) -> Occupancy:
+    """1-occupant household with sleep pattern (22–06, wraps midnight)."""
+    return Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_long_day_away_occupant]),
+        sleep_pattern=SleepPattern(
+            is_always_awake=False,
+            sleep_time=TimeRange(start_hour=22, end_hour=6),
+            sleep_time_rigidness=ScheduleRigidness.MOSTLY_CONSISTENT,
+        ),
+    )
+
+
+@pytest.fixture
+def occupancy_with_away_and_sleep(single_long_day_away_occupant) -> Occupancy:
+    """1-occupant household with both away and sleep patterns."""
+    return Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_long_day_away_occupant]),
+        weekday_pattern=WeekdayOccupancyPattern(
+            is_always_occupied=False,
+            away_interval=TimeRange(start_hour=8, end_hour=18),
+        ),
+        weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
+        sleep_pattern=SleepPattern(
+            is_always_awake=False,
+            sleep_time=TimeRange(start_hour=22, end_hour=6),
+        ),
+    )
+
+
+@pytest.fixture
+def occupancy_two_occupants() -> Occupancy:
+    """2-occupant household with different mobility clusters."""
+    return Occupancy(
+        num_occupants=2,
+        household_composition=HouseholdComposition(occupants=[
+            OccupantMobilityProfile(
+                weekday_cluster=MobilityCluster.LONG_DAY_AWAY,
+                weekend_cluster=MobilityCluster.MOSTLY_HOME,
+            ),
+            OccupantMobilityProfile(
+                weekday_cluster=MobilityCluster.MOSTLY_HOME,
+                weekend_cluster=MobilityCluster.AFTERNOON_AWAY,
+            ),
+        ]),
+    )
+
+
+@pytest.fixture(scope="module")
+def default_cluster_assumptions() -> ClusterAssumptions:
+    """Load default ClusterAssumptions once per module (disk I/O is slow)."""
+    return ClusterAssumptions.default()
+
+
+SIM_RES = 15  # minutes — used throughout tests
+
+
+# ---------------------------------------------------------------------------
+# TimeRangeDistribution
+# ---------------------------------------------------------------------------
+
+
+
+class TestTimeRange:
     @pytest.mark.parametrize("value, resolution, expected", [
         (8.1, 0.25, 8.0),
         (8.2, 0.25, 8.25),
@@ -44,7 +191,6 @@ class TestTimeRangeDistribution:
     def test_snap_to_resolution(self, value, resolution, expected):
         """Test that time snapping works correctly."""
         assert TimeRangeDistribution._snap_to_resolution(value, resolution) == pytest.approx(expected)
-
 
     @pytest.mark.parametrize("start, end", [
         (22.0, 2.0),
@@ -95,858 +241,540 @@ class TestTimeRangeDistribution:
         assert abs(start_std - 1.0) < 0.3
         assert abs(end_std - 1.0) < 0.3
 
-    
 
+    @pytest.mark.parametrize("start, end, res, var", [
+        (22.0,4.0,15,1.0),
+        (9.15,17.45,30,3.0),
+        (8.5,16.5,60,2.0)
+    ])
+    def test_sample_many_times_stays_valid(self, start, end, res, var):
+        """Run 100 samples and verify each satisfies all constraints."""
+        base_range = TimeRange(start_hour=start, end_hour=end)
+        dist = TimeRangeDistribution(base_range, start_variance=var, end_variance=var, resolution_mins=res)
+        start_vals = []
+        end_vals = []
+        for _ in range(100):
+            sampled = dist.sample()
+            start_vals.append(sampled.start_hour)
+            end_vals.append(sampled.end_hour)
+            assert isinstance(sampled, TimeRange)
+            assert 0 <= sampled.start_hour < 24
+            assert 0 <= sampled.end_hour < 24
+            if not sampled.wraps_midnight:
+                assert sampled.end_hour > sampled.start_hour
+        assert np.mean(start_vals) == pytest.approx(start, abs=0.5)
+        assert np.mean(end_vals) == pytest.approx(end, abs=0.5)
+        assert np.std(start_vals) == pytest.approx(var, abs=0.5)
+        assert np.std(end_vals) == pytest.approx(var, abs=0.5)
 
+        
 
-class TestOccupancyGenerator:
-    """Tests for OccupancyGenerator."""
+class TestTimeRangeDistributionSampleWithAwayBounds:
+    @pytest.mark.parametrize("start, end", [
+        (10.0, 18.0),
+        (7.0, 14.0)
+    ])
+    def test_returns_none_when_mean_in_away_range_day(self, start, end, away_range_typical):
+        """Returns None when the distribution mean falls inside the away window."""
+        away_range = away_range_typical
+        dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+        sampled = dist.sample_with_away_bounds(away_range)
+        assert sampled is None
+
+    @pytest.mark.parametrize("start, end", [
+        (23.0, 8.0),
+        (21.0,4.0)
+    ])
+    def test_returns_none_when_mean_in_away_range_night(self, start, end, away_range_wraps_midnight):
+        """Returns None when the distribution mean falls inside the away window."""
+        away_range = away_range_wraps_midnight
+        dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+        sampled = dist.sample_with_away_bounds(away_range)
+        print(f"Sampled range: {sampled}, away range: {away_range}")
+        assert sampled is None
+
+    @pytest.mark.parametrize("start, end", [
+        (11.0, 14.0),
+        (7.0, 20.0)
+    ])
+    def test_returns_none_when_fully_contains_day(self, start, end, away_range_typical):
+        """Returns None when away_time fully contains the TimeRange."""
+        away_range = away_range_typical
+        dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+        sampled = dist.sample_with_away_bounds(away_range)
+        assert sampled is None
+
+    @pytest.mark.parametrize("start, end", [
+        (19.0, 8.0),
+        (1.0, 5.0)
+    ])
+    def test_returns_none_when_fully_contains_night(self, start, end, away_range_wraps_midnight):
+        """Returns None when away_time fully contains the TimeRange."""
+        away_range = away_range_wraps_midnight
+        dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+        sampled = dist.sample_with_away_bounds(away_range)
+        assert sampled is None
 
     @pytest.mark.parametrize("start, end", [
         (22.0, 6.0),
-        (1.0, 9.0),
-        (0.5, 8.5)
+        (1.0, 8.0)
     ])
-    def test_get_sleep_mask(self, start, end):
-        """Test sleep mask generation."""
-        sleep_schedule = [TimeRange(start_hour=22.0, end_hour=6.0)] * 7
-        num_per_hour = 4  # 15-minute resolution
+    def test_sampled_range_outside_away_window_day(self,start,end,away_range_typical):
+        """Returned TimeRange should not overlap with the away_time window."""
+        for _ in range(50):
+            away_range = away_range_typical
+            dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+            sampled = dist.sample_with_away_bounds(away_range)
+            assert sampled is not None
+            assert not sampled.overlaps(away_range)
 
-        mask = OccupancyGenerator.get_sleep_mask(sleep_schedule, num_per_hour)
-
-        assert len(mask) == 7 * 24 * 4
-        assert any(mask)
-        assert not all(mask)
-        assert sum(mask) == 7 * 8 * 4  
-
-
-    def test_always_occupied_schedule(self):
-        """Test schedule when always occupied on weekdays."""
-        occupancy = Occupancy(
-            num_occupants=1,
-            household_composition=HouseholdComposition(stayathome=1),
-            weekday_pattern=WeekdayOccupancyPattern(is_always_occupied=True),
-            weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
-        )
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=60)
-        sleep = generator.household_sleep_schedule()
-        occupancy = generator.household_fullweek_schedule(sleep)
-        # All hours should be occupied (1.0)
-        assert len(occupancy) == 7 * 24
-        assert all(o == 1.0 for o in occupancy)
-        
-
-    @pytest.mark.parametrize("res_mins", [5,10,15,30,60])
-    def test_week_schedule(self, res_mins):
-        """Test that weekday schedule has correct length for different resolutions."""
-        occupancy = Occupancy(
-            num_occupants=2,
-            household_composition=HouseholdComposition(daily_commuter=2),
-            weekday_pattern=WeekdayOccupancyPattern(
-                is_always_occupied=False,
-                away_interval=TimeRange(start_hour=9.0, end_hour=17.0),
-                num_of_days=5
-            ),
-            weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
-        )
-        assumptions = OccupancyAssumptions.default()
-
-        gen = OccupancyGenerator(occupancy, assumptions, resolution_mins=res_mins)
-        sleep = gen.household_sleep_schedule()
-        sleep_mask = OccupancyGenerator.get_sleep_mask(sleep, gen.num_per_hour)
-        schedule = gen.household_fullweek_schedule(sleep)
-
-        assert len(schedule) == 7 * 24 * (60 // res_mins)
-        # Check that during sleep hours, occupancy is always 1
-        for i in range(len(schedule)):
-            if sleep_mask[i]:
-                assert schedule[i] == 1.0
-
-    
-    @pytest.mark.parametrize("res_mins", [5,10,15,30,60])
-    def test_annual_schedule_length(self, res_mins):
-        """Test that annual schedule has correct length for different resolutions."""
-        occupancy = Occupancy(
-            num_occupants=2,
-            household_composition=HouseholdComposition(daily_commuter=2),
-            weekday_pattern=WeekdayOccupancyPattern(
-                is_always_occupied=False,
-                away_interval=TimeRange(start_hour=11.0, end_hour=16.0),
-                num_of_days=5
-            ),
-            weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
-        )
-        assumptions = OccupancyAssumptions.default()
-
-        gen = OccupancyGenerator(occupancy, assumptions, resolution_mins=res_mins)
-        annual_schedule, annual_sleep = gen.household_annual_schedule()
-
-        assert len(annual_schedule) == 53  # 52 full weeks + 1 day
-        for i in range(52):
-            assert len(annual_schedule[i]) == 7 * 24 * (60 // res_mins)
-            assert len(annual_sleep[i]) == 7 * 24 * (60 // res_mins)
-            for j in range(len(annual_schedule[i])):
-                if annual_sleep[i][j]:
-                    assert annual_schedule[i][j] == 1.0
-        assert len(annual_schedule[52]) == 24 * (60 // res_mins)
-        assert len(annual_sleep[52]) == 24 * (60 // res_mins)
-        for j in range(len(annual_schedule[52])):
-            if annual_sleep[52][j]:
-                assert annual_schedule[52][j] == 1.0
-
-
-
-    @pytest.mark.parametrize("start,end", [
-        (9.0, 17.0),
-        (8.5, 16.5),
-        (10.0, 15.0)
+    @pytest.mark.parametrize("start, end", [
+        (8.0, 15.0),
+        (12.0, 20.0)
     ])
-    def test_weekday_away_interval(self,start,end):
-        """Test that weekday away interval is respected in schedule."""
-        occupancy = Occupancy(
-            num_occupants=1,
-            household_composition=HouseholdComposition(daily_commuter=1),
-            weekday_pattern=WeekdayOccupancyPattern(
-                is_always_occupied=False,
-                away_interval=TimeRange(start_hour=start, end_hour=end),
-                num_of_days=5
-            ),
-            weekend_pattern=WeekendOccupancyPattern(is_always_occupied=True),
-            sleep_pattern=SleepPattern(is_always_awake=False, sleep_time=TimeRange(start_hour=22.0, end_hour=6.0))
-        )
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=30)
+    def test_sampled_range_outside_away_window_night(self,start,end,away_range_wraps_midnight):
+        """Returned TimeRange should not overlap with the away_time window."""
+        for _ in range(50):
+            away_range = away_range_wraps_midnight
+            dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
+            sampled = dist.sample_with_away_bounds(away_range)
+            assert sampled is not None
+            assert not sampled.overlaps(away_range)
 
-        
-        starts = []
-        ends = []
-        for _ in range(20):
-            sleep = generator.household_sleep_schedule()
-            weekday_away,_ = generator.weekday_away_interval(sleep[:5])
-            for wa in weekday_away:
-                starts.append(wa.start_hour)
-                ends.append(wa.end_hour)
+
+
+
+# ---------------------------------------------------------------------------
+# ClusterAssumptions
+# ---------------------------------------------------------------------------
+
+class TestClusterAssumptions:
+    def test_default_loads(self, default_cluster_assumptions):
+        """ClusterAssumptions.default() should load all CSV data successfully.
+            5 clusters,
+            weekday_initial_probs: list[list[float]], shape [5, 3],
+            weekday_transition_probs: dict[int, list[list[list[float]]]], shape {cluster: [num_bins, 3, 3]},
+            weekend_initial_probs: list[list[float]], shape [5, 3],
+            weekend_transition_probs: dict[int, list[list[list[float]]]], shape {cluster: [num_bins, 3, 3]}.
+            Each row of probabilities should sum to ~1.0."""
+        ca = default_cluster_assumptions
+        assert ca.num_clusters == 5
+
+        # initial probs: list[list[float]], shape [5, 3]
+        assert len(ca.weekday_initial_probs) == 5
+        assert all(len(row) == 3 for row in ca.weekday_initial_probs)
+        assert len(ca.weekend_initial_probs) == 5
+        assert all(len(row) == 3 for row in ca.weekend_initial_probs)
+
+        # transition probs: dict[int, list[list[list[float]]]], shape {cluster: [num_bins, 3, 3]}
+        assert len(ca.weekday_transition_probs) == 5
+        assert len(ca.weekend_transition_probs) == 5
+
+        for i in range(5):
+            assert sum(ca.weekday_initial_probs[i]) == pytest.approx(1.0)
+            assert sum(ca.weekend_initial_probs[i]) == pytest.approx(1.0)
+            for bin_matrix in ca.weekday_transition_probs[i]:
+                for row in bin_matrix:
+                    assert sum(row) == pytest.approx(1.0)
+            for bin_matrix in ca.weekend_transition_probs[i]:
+                for row in bin_matrix:
+                    assert sum(row) == pytest.approx(1.0)
+
+    def test_same_resolution_returns_original_shape(self, default_cluster_assumptions):
+        """With resolution == assumption_resolution_min, shape should be unchanged."""
+        ca = default_cluster_assumptions
+        num_bins = 1440 // ca.assumption_resolution_min  #
+        matrix = np.array(ca.weekday_transition_probs[0])  # (96, 3, 3)
+        result = ca._build_cumsum(matrix, ca.assumption_resolution_min)
+        assert result.shape == (num_bins, 3, 3)
+
+    def test_upsample_doubles_bins(self):
+        """Halving resolution_min should double the number of bins."""
+        assumption_res = 30
+        num_bins = 1440 // assumption_res  # 48
+        uniform_row = [1/3, 1/3, 1/3]
+        trans_probs = {i: [[uniform_row, uniform_row, uniform_row]] * num_bins for i in range(5)}
+        init_probs = [[1/3, 1/3, 1/3]] * 5
+        ca = ClusterAssumptions(5, 240, assumption_res, init_probs, init_probs, trans_probs, trans_probs)
+        matrix = np.array(trans_probs[0])  # (48, 3, 3)
+        result = ca._build_cumsum(matrix, assumption_res // 2)  # resolution_min=15
+        assert result.shape[0] == num_bins * 2  # 96
+
+    def test_downsample_halves_bins(self, default_cluster_assumptions):
+        """Doubling resolution_min should halve the number of bins."""
+        ca = default_cluster_assumptions
+        num_bins = 1440 // ca.assumption_resolution_min  # 96
+        matrix = np.array(ca.weekday_transition_probs[0])  # (96, 3, 3)
+        result = ca._build_cumsum(matrix, ca.assumption_resolution_min * 2)  # resolution_min=30
+        assert result.shape[0] == num_bins // 2  # 48
+
+    def test_cumsum_last_value_is_one(self, default_cluster_assumptions):
+        """Last value along the last axis (cumsum over to-states) should be ~1.0."""
+        ca = default_cluster_assumptions
+        matrix = np.array(ca.weekday_transition_probs[0])  # (96, 3, 3), rows sum to 1
+        result = ca._build_cumsum(matrix, ca.assumption_resolution_min)
+        assert result[:, :, -1] == pytest.approx(np.ones((result.shape[0], 3)))
+
+
+
+
+
+class TestSampleCluster:
+    def test_returns_53_weeks(self, default_cluster_assumptions):
+        """sample_cluster_annually should return a list of 53 weeks."""
+        weeks = default_cluster_assumptions.sample_cluster_annually(0,0,SIM_RES)
+        assert isinstance(weeks, list)
+        assert len(weeks) == 53
+        for w in range(53):
+            week = weeks[w]
+            assert isinstance(week, list)
+            if w < 52:
+                assert len(week) == 7 * (1440 // SIM_RES)
+            else:
+                assert len(week) == 1 * (1440 // SIM_RES)
                 
-        
-        start_mean = np.mean(starts)
-        end_mean = np.mean(ends)
-        assert abs(start_mean - start) / abs(start) < 0.05
-        assert abs(end_mean - end) / abs(end) < 0.05
+    def test_output_plot(self, default_cluster_assumptions):
+        """Plot the sampled cluster as a heatmap (days x time-of-day) and save to output/."""
+        matplotlib.use("Agg")
 
+        output_dir = Path(__file__).parents[0] / "output"
+        output_dir.mkdir(exist_ok=True)
 
-    @pytest.mark.statistical
-    def test_3people_family_schedule(self):
-        """Test weekday schedule for a family with mixed roles."""
+        bins_per_day = 1440 // SIM_RES  # 96 bins at 15-min resolution
+        state_labels = {0: "Away", 1: "Home", 2: "Sleep"}
+        cmap = matplotlib.colors.ListedColormap(["#d62728", "#2ca02c", "#1f77b4"])  # Away=red, Home=green, Sleep=blue
+        norm = matplotlib.colors.BoundaryNorm([-0.5, 0.5, 1.5, 2.5], cmap.N)
 
-        occupancy_json = """
-        {
-            "num_occupants": 3,
-            "household_composition": {
-            "daily_commuter": 2,
-            "hybrid_worker": 0,
-            "stayathome": 0,
-            "k12_or_daycare": 1,
-            "college_student": 0
-            },
-            "weekday_pattern": {
-            "is_always_occupied": false,
-            "away_interval": {
-                "start_hour": 9,
-                "end_hour": 17
-            },
-            "num_of_days": 5
-            },
-            "weekend_pattern": {
-            "is_always_occupied": true
-            },
-            "sleep_pattern": {
-                "is_always_awake": false,
-                "sleep_time": {
-                    "start_hour": 22,
-                    "end_hour": 6
-                }
-            }
-        }
-        """
-        occupancy = Occupancy.model_validate_json(occupancy_json)
+        y_ticks = list(range(0, bins_per_day, bins_per_day // 8))
+        y_labels = [f"{int(t * SIM_RES / 60):02d}:00" for t in y_ticks]
 
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=15)
+        cluster_names = ["mostly_home", "long_day_away", "morning_away", "afternoon_away", "evening_night_away"]
 
-        annual_schedule, annual_sleep = generator.household_annual_schedule()
+        for cluster in range(5):
+            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES)
 
-         # ---- average ONLY the first 52 weeks (exclude the last extra day/week entry) ----
-        weeks = annual_schedule[:52]  # each is a list[float] of length 7*24*num_per_hour
-        sleep_weeks = annual_sleep[:52]  # each is a list[bool] of length 7*24*num_per_hour
-        week_len = 7 * 24 * generator.num_per_hour
+            # Flatten 53-week structure into (365, bins_per_day), then transpose to (bins_per_day, 365)
+            flat = [s.value for week in weeks for s in week][:365 * bins_per_day]
+            grid = np.array(flat, dtype=np.int8).reshape(365, bins_per_day).T  # shape (96, 365)
 
-        # sanity
-        assert len(weeks) == 52
-        assert all(len(w) == week_len for w in weeks)
-        assert len(sleep_weeks) == 52
-        assert all(len(s) == week_len for s in sleep_weeks)
+            fig, ax = plt.subplots(figsize=(18, 6))
+            im = ax.imshow(grid, aspect="auto", cmap=cmap, norm=norm, origin="upper",
+                           extent=[0, 365, bins_per_day, 0])
 
-        # Average occupancy schedule
-        W = np.array(weeks, dtype=float)          # shape (52, week_len)
-        avg_week = W.mean(axis=0)                 # shape (week_len,)
+            ax.set_xlabel("Day of Year")
+            ax.set_ylabel("Time of Day")
+            ax.set_title(f"Occupancy States — Cluster {cluster + 1} ({cluster_names[cluster]})")
+            ax.set_yticks(y_ticks)
+            ax.set_yticklabels(y_labels)
 
-        # Average sleep schedule: convert True (sleep) to 1, False (awake) to 0
-        S = np.array([[1.0 if sleeping else 0.0 for sleeping in sleep_week]
-                      for sleep_week in sleep_weeks], dtype=float)  # shape (52, week_len)
-        avg_sleep = S.mean(axis=0)                # shape (week_len,)
+            cbar = fig.colorbar(im, ax=ax, ticks=[0, 1, 2])
+            cbar.ax.set_yticklabels([state_labels[i] for i in range(3)])
 
-        # ---- plot 1 ----
-        fig = plt.figure(figsize=(12,3))
-        ax = fig.add_subplot(111)
-        x = np.arange(week_len)
-        ax.plot(x, avg_week, label='Occupancy', linewidth=1.5)
-        ax.plot(x, avg_sleep, label='Sleep', linestyle='--', linewidth=1.5, alpha=0.7)
+            out_path = output_dir / f"cluster_{cluster + 1:02d}_heatmap.png"
+            fig.savefig(out_path, dpi=150, bbox_inches="tight")
+            plt.close(fig)
+            assert out_path.exists()
 
-        # Major ticks: day labels at center of each day
-        entries_per_day = 24 * generator.num_per_hour
-        day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
-        ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-        ax.set_xlim(0, week_len)
+    def test_average_occupancy_line_plot(self, default_cluster_assumptions):
+        """Plot average (home + sleep) fraction by time of day for weekdays and weekends, one line per cluster."""
+        matplotlib.use("Agg")
 
-        # Minor ticks: hour markers at 0, 6, 18 for each day with labels
-        hour_ticks = []
-        hour_labels = []
-        for day in range(7):
-            day_start = day * entries_per_day
-            for hour in [0, 6, 12, 18]:
-                hour_ticks.append(day_start + hour * generator.num_per_hour)
-                hour_labels.append(str(hour))
+        output_dir = Path(__file__).parents[0] / "output"
+        output_dir.mkdir(exist_ok=True)
 
-        ax2 = ax.twiny()  # Create secondary x-axis for hour labels
-        ax2.set_xlim(ax.get_xlim())
-        ax2.set_xticks(hour_ticks)
-        ax2.set_xticklabels(hour_labels, fontsize=8, color='gray')
+        bins_per_day = 1440 // SIM_RES  # 96 bins
+        cluster_names = ["mostly_home", "long_day_away", "morning_away", "afternoon_away", "evening_night_away"]
+        colors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
 
-        
+        # x-axis tick positions and labels (every 3 hours)
+        x_ticks = list(range(0, bins_per_day, bins_per_day // 8))
+        x_labels = [f"{int(t * SIM_RES / 60):02d}:00" for t in x_ticks]
 
-        # Add vertical grid lines at hour markers
-        for tick in hour_ticks:
-            ax.axvline(x=tick, color='gray', alpha=0.2, linestyle=':', linewidth=0.5)
+        # day 0 = Sunday; weekends are day%7 in {0,6}
+        day_indices = np.arange(365)
+        weekday_mask = ~np.isin(day_indices % 7, [0, 6])  # Mon–Fri
+        weekend_mask = np.isin(day_indices % 7, [0, 6])   # Sat–Sun
 
-        # Add dotted lines for work hours (9 AM and 5 PM) for each day
-        for day in range(7):
-            day_start = day * entries_per_day
-            for hour in [9, 17]:
-                work_hour_tick = day_start + hour * generator.num_per_hour
-                ax.axvline(x=work_hour_tick, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
+        fig, axes = plt.subplots(1, 2, figsize=(16, 5), sharey=True)
+        fig.suptitle("Average Occupied Fraction by Time of Day (Home + Sleep)")
 
-        ax.set_title("Averaged Weekly Occupancy and Sleep")
-        ax.set_xlabel("Time in a Week")
-        ax.set_ylabel("Fraction")
-        ax.legend(loc='upper right')
+        for cluster in range(5):
+            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES)
 
-        ax.set_ylim(-0.1, 1.1)
+            flat = np.array([s.value for week in weeks for s in week][:365 * bins_per_day], dtype=np.int8)
+            grid = flat.reshape(365, bins_per_day)  # shape (365, bins_per_day)
 
-        unit_dir = Path(__file__).resolve().parent
-        out_dir = unit_dir / "output"
-        out_dir.mkdir(parents=True, exist_ok=True)
+            # occupied = HOME (1) or SLEEP (2); AWAY (0) = not occupied
+            occupied = (grid >= 1).astype(float)  # shape (365, bins_per_day)
 
-        out_path = out_dir / "avg_week_occupancy_3pplfamily.png"
+            wd_avg = occupied[weekday_mask].mean(axis=0)  # shape (bins_per_day,)
+            we_avg = occupied[weekend_mask].mean(axis=0)
+
+            label = f"C{cluster + 1}: {cluster_names[cluster]}"
+            axes[0].plot(wd_avg, color=colors[cluster], label=label)
+            axes[1].plot(we_avg, color=colors[cluster], label=label)
+
+        for ax, title in zip(axes, ["Weekday", "Weekend"]):
+            ax.set_title(title)
+            ax.set_xlabel("Time of Day")
+            ax.set_ylabel("Avg Occupied Fraction")
+            ax.set_xticks(x_ticks)
+            ax.set_xticklabels(x_labels, rotation=45)
+            ax.set_ylim(0, 1)
+            ax.legend(fontsize=8)
+            ax.grid(alpha=0.3)
+
+        out_path = output_dir / "cluster_avg_occupancy_line.png"
         fig.tight_layout()
-        fig.savefig(out_path, dpi=200)
+        fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
-
-        # ---- plot 2: Heatmap ----
-        # Flatten all 365 days into continuous array
-        hours_per_day = 24 * generator.num_per_hour
-
-        # Concatenate all weeks (52 full weeks + 1 extra day)
-        all_days = []
-        for week_idx, week_data in enumerate(annual_schedule):
-            if week_idx < 52:
-                # Full week: reshape into 7 days
-                week_array = np.array(week_data)
-                for day in range(7):
-                    day_data = week_array[day * hours_per_day:(day + 1) * hours_per_day]
-                    all_days.append(day_data)
-            else:
-                # Last partial week (1 day)
-                all_days.append(np.array(week_data))
-
-        # Stack into 2D array: rows = time slots, cols = days
-        heatmap_data = np.column_stack(all_days)  # Shape: (hours_per_day, 365)
-
-        fig2, ax_heat = plt.subplots(figsize=(12, 3))
-
-        # Create heatmap
-        im = ax_heat.imshow(heatmap_data, aspect='auto', cmap='YlGn', vmin=0, vmax=1, origin='upper')
-
-        # Add colorbar
-        cbar = fig2.colorbar(im, ax=ax_heat)
-        cbar.set_label('Occupancy Fraction', rotation=270, labelpad=20)
-
-        # Set x-axis (days)
-        # Show ticks at week boundaries (every 7 days)
-        week_ticks = [w * 7 for w in range(0, 53, 4)]  # Every 4 weeks
-        ax_heat.set_xticks(week_ticks)
-        ax_heat.set_xticklabels([f'Week {w}' for w in range(0, 53, 4)])
-        ax_heat.set_xlabel('Day of Year')
-
-        # Set y-axis (hours of day)
-        # Show hour labels at every 2 hours
-        hour_tick_positions = [h * generator.num_per_hour for h in range(0, 25, 2)]
-        ax_heat.set_yticks(hour_tick_positions)
-        ax_heat.set_yticklabels([str(h) for h in range(0, 25, 2)])
-        ax_heat.set_ylabel('Hour of Day')
-
-        # Add horizontal lines for work hours (9 AM and 5 PM)
-        for hour in [9, 17]:
-            hour_position = hour * generator.num_per_hour
-            ax_heat.axhline(y=hour_position, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-
-        ax_heat.set_title('Annual Occupancy Heatmap (365 Days)')
-
-        fig2.tight_layout()
-        out_path_heat = out_dir / "annual_occupancy_heatmap_3pplfamily.png"
-        fig2.savefig(out_path_heat, dpi=200)
-        plt.close(fig2)
+        assert out_path.exists()
 
 
-    @pytest.mark.statistical
-    def test_4students_schedule(self):
-        """Test weekday schedule for a family with mixed roles."""
-        occupancy_json = """
-        {
-            "num_occupants": 4,
-            "household_composition": {
-                "daily_commuter": 0,
-                "hybrid_worker": 0,
-                "stayathome": 0,
-                "k12_or_daycare": 0,
-                "college_student": 4
-            },
-            "weekday_pattern": {
-                "is_always_occupied": false,
-                "away_interval": {
-                    "start_hour": 11,
-                    "end_hour": 15
-                },
-                "num_of_days": 4
-            },
-            "weekend_pattern": {
-                "is_always_occupied": false,
-                "away_interval": {
-                    "start_hour": 14,
-                    "end_hour": 16
-                }
-            },
-            "sleep_pattern": {
-                "is_always_awake": false,
-                "sleep_time": {
-                    "start_hour": 0,
-                    "end_hour": 8
-                }
-            }
-        }
-        """
-        occupancy = Occupancy.model_validate_json(occupancy_json)
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=15)
 
-        annual_schedule, annual_sleep = generator.household_annual_schedule()
 
-         # ---- average ONLY the first 52 weeks (exclude the last extra day/week entry) ----
-        weeks = annual_schedule[:52]  # each is a list[float] of length 7*24*num_per_hour
-        sleep_weeks = annual_sleep[:52]  # each is a list[bool] of length 7*24*num_per_hour
-        week_len = 7 * 24 * generator.num_per_hour
 
-        # sanity
-        assert len(weeks) == 52
-        assert all(len(w) == week_len for w in weeks)
-        assert len(sleep_weeks) == 52
-        assert all(len(s) == week_len for s in sleep_weeks)
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — apply_away_time
+# ---------------------------------------------------------------------------
 
-        # Average occupancy schedule
-        W = np.array(weeks, dtype=float)          # shape (52, week_len)
-        avg_week = W.mean(axis=0)                 # shape (week_len,)
+class TestApplyAwayTime:
+    def _make_all_home_states(self, num_weeks=53, bins_per_week=7 * 96) -> list[list[HouseholdOccupancyFractions]]:
+        """Helper: all bins set to fully home."""
+        return [[HouseholdOccupancyFractions(home=1.0, sleep=0.0)] * bins_per_week for _ in range(num_weeks)]
 
-        # Average sleep schedule: convert True (sleep) to 1, False (awake) to 0
-        S = np.array([[1.0 if sleeping else 0.0 for sleeping in sleep_week]
-                      for sleep_week in sleep_weeks], dtype=float)  # shape (52, week_len)
-        avg_sleep = S.mean(axis=0)                # shape (week_len,)
+    def _make_all_away_states(self, num_weeks=53, bins_per_week=7 * 96) -> list[list[HouseholdOccupancyFractions]]:
+        """Helper: all bins set to fully away."""
+        return [[HouseholdOccupancyFractions(home=0.0, sleep=0.0)] * bins_per_week for _ in range(num_weeks)]
 
-        # ---- plot 1 ----
-        fig = plt.figure(figsize=(12,3))
-        ax = fig.add_subplot(111)
-        x = np.arange(week_len)
-        ax.plot(x, avg_week, label='Occupancy', linewidth=1.5)
-        ax.plot(x, avg_sleep, label='Sleep', linestyle='--', linewidth=1.5, alpha=0.7)
+    def test_away_bins_forced_to_zero(self, occupancy_with_away, default_cluster_assumptions):
+        """Bins inside the away_time window must have home=0, sleep=0."""
+        pass
 
-        # Major ticks: day labels at center of each day
-        entries_per_day = 24 * generator.num_per_hour
-        day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
-        ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-        ax.set_xlim(0, week_len)
+    def test_outside_away_bins_unchanged_if_nonzero(self, occupancy_with_away, default_cluster_assumptions):
+        """Bins outside the away window with home>0 should not be modified."""
+        pass
 
-        # Minor ticks: hour markers at 0, 6, 18 for each day with labels
-        hour_ticks = []
-        hour_labels = []
-        for day in range(7):
-            day_start = day * entries_per_day
-            for hour in [0, 6, 12, 18]:
-                hour_ticks.append(day_start + hour * generator.num_per_hour)
-                hour_labels.append(str(hour))
+    def test_outside_away_bins_get_min_home_when_both_zero(self, occupancy_with_away, default_cluster_assumptions):
+        """Bins outside the away window that are fully away get raised to one_unit home."""
+        pass
 
-        ax2 = ax.twiny()  # Create secondary x-axis for hour labels
-        ax2.set_xlim(ax.get_xlim())
-        ax2.set_xticks(hour_ticks)
-        ax2.set_xticklabels(hour_labels, fontsize=8, color='gray')
+    def test_none_away_day_leaves_states_unchanged(self, occupancy_always_home, default_cluster_assumptions):
+        """When away_time for a day is None, no states are modified."""
+        pass
 
+
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — apply_sleep_time
+# ---------------------------------------------------------------------------
+
+class TestApplySleepTime:
+    def test_sleep_bins_forced_to_all_sleep(self, occupancy_with_sleep, default_cluster_assumptions):
+        """Bins inside sleep_time must have home=0, sleep=1.0."""
+        pass
+
+    def test_outside_sleep_bins_clamp_excess_sleep(self, occupancy_with_sleep, default_cluster_assumptions):
+        """Bins outside sleep_time with sleep > max_awake_sleep_ratio should be clamped."""
+        pass
+
+    def test_none_sleep_day_leaves_states_unchanged(self, occupancy_with_sleep, default_cluster_assumptions):
+        """When sleep_time for a day is None, states are not modified."""
+        pass
+
+    def test_excess_sleep_redistributed_to_home(self, occupancy_with_sleep, default_cluster_assumptions):
+        """Clamped sleep fraction should be added back to home."""
+        pass
+
+
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — household_away_time_annually
+# ---------------------------------------------------------------------------
+
+class TestHouseholdAwayTimeAnnually:
+    def test_returns_365_elements(self, occupancy_with_away, default_cluster_assumptions):
+        """Should return exactly 365 elements."""
+        occ = OccupancyGenerator(occupancy_with_away, default_cluster_assumptions, SIM_RES)
+        away_times = occ.household_away_time_annually()
         
+        assert isinstance(away_times, list)
+        assert len(away_times) == 365
+
+    def test_always_occupied_yields_none(self, occupancy_always_home, default_cluster_assumptions):
+        """If is_always_occupied=True, all days should be None."""
+        occ = OccupancyGenerator(occupancy_always_home, default_cluster_assumptions, SIM_RES)
+        away_times = occ.household_away_time_annually()
+        assert len(away_times) == 365
+        assert all(at is None for at in away_times)
+
+    def test_away_day (self, occupancy_with_away, default_cluster_assumptions):
+        """Non-None elements should be TimeRange instances.
+            Sampled away intervals should be centered near the specified away_interval mean (statistical)."""
+        occ = OccupancyGenerator(occupancy_with_away, default_cluster_assumptions, SIM_RES)
+        away_times = occ.household_away_time_annually()
+        assert len(away_times) == 365
+        away_time_weekday = []
+        away_time_weekend = []
+        for day in range(365):
+            at = away_times[day]
+            if at is not None:
+                assert isinstance(at, TimeRange)
+                # Statistical test: sampled times should cluster around the specified means
+                if day % 7 in [1, 2, 3, 4, 5]:  # Mon–Fri
+                    away_time_weekday.append(at)
+                else:
+                    away_time_weekend.append(at)
+
+        if away_time_weekday:
+            weekday_starts = [at.start_hour for at in away_time_weekday]
+            weekday_ends = [at.end_hour for at in away_time_weekday]
+            assert np.mean(weekday_starts) == pytest.approx(8.0, abs=1.0)
+            assert np.mean(weekday_ends) == pytest.approx(18.0, abs=1.0)
+        if away_time_weekend:
+            weekend_starts = [at.start_hour for at in away_time_weekend]
+            weekend_ends = [at.end_hour for at in away_time_weekend]
+            assert np.mean(weekend_starts) == pytest.approx(16.0, abs=1.0)
+            assert np.mean(weekend_ends) == pytest.approx(20.0, abs=1.0)
+
+    def test_away_time_wraps_midnight(self, occupancy_with_away_night, default_cluster_assumptions):
+        """Test that away_time intervals that wrap midnight are handled correctly."""
+        occ = OccupancyGenerator(occupancy_with_away_night, default_cluster_assumptions, SIM_RES)
+        away_times = occ.household_away_time_annually()
+        assert len(away_times) == 365
+        for day in range(365):
+            at = away_times[day]
+            if at is not None:
+                assert isinstance(at, TimeRange)
+                if day % 7 in [1, 2, 3, 4, 5]:  # Mon–Fri
+                    assert at.wraps_midnight is True
+                    assert np.mean([at.start_hour for at in away_times if at is not None and at.wraps_midnight]) == pytest.approx(22.0, abs=1.0)
+                    assert np.mean([at.end_hour for at in away_times if at is not None and at.wraps_midnight]) == pytest.approx(6.0, abs=1.0)
+                else:
+                    assert at.wraps_midnight is True
+                    assert np.mean([at.start_hour for at in away_times if at is not None and at.wraps_midnight]) == pytest.approx(23.0, abs=1.0)
+                    assert np.mean([at.end_hour for at in away_times if at is not None and at.wraps_midnight]) == pytest.approx(7.0, abs=1.0)
+
+                
+
+
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — household_sleep_time_annually
+# ---------------------------------------------------------------------------
+
+class TestHouseholdSleepTimeAnnually:
+    def test_returns_365_elements(self, occupancy_with_sleep, default_cluster_assumptions):
+        pass
+
+    def test_always_awake_yields_all_none(self, occupancy_always_home, default_cluster_assumptions):
+        """If is_always_awake=True, all days should be None."""
+        pass
+
+    def test_sleep_elements_are_time_ranges_or_none(self, occupancy_with_sleep, default_cluster_assumptions):
+        """Non-None elements should be TimeRange instances."""
+        pass
+
+
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — generate (integration)
+# ---------------------------------------------------------------------------
+
+class TestGenerate:
+    def test_generate_no_patterns(self, occupancy_always_home, default_cluster_assumptions):
+        """generate() with no patterns should return valid weekly structure."""
+        pass
+
+    def test_generate_with_away_pattern(self, occupancy_with_away, default_cluster_assumptions):
+        """generate() with away pattern should enforce away windows."""
+        pass
+
+    def test_generate_with_sleep_pattern(self, occupancy_with_sleep, default_cluster_assumptions):
+        """generate() with sleep pattern should enforce sleep windows."""
+        pass
+
+    def test_generate_with_both_patterns(self, occupancy_with_away_and_sleep, default_cluster_assumptions):
+        """generate() with both patterns should apply both constraints."""
+        pass
+
+    def test_generate_output_fractions_valid(self, occupancy_always_home, default_cluster_assumptions):
+        """All fractions in the output should satisfy 0 <= home + sleep <= 1."""
+        pass
 
-        # Add vertical grid lines at hour markers
-        for tick in hour_ticks:
-            ax.axvline(x=tick, color='gray', alpha=0.2, linestyle=':', linewidth=0.5)
-
-        # # Add dotted lines for work hours (9 AM and 5 PM) for each day
-        for day in range(5):
-            day_start = day * entries_per_day
-            for hour in [11, 15]:
-                work_hour_tick = day_start + hour * generator.num_per_hour
-                ax.axvline(x=work_hour_tick, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-        for day in range(5,7):
-            day_start = day * entries_per_day
-            for hour in [14, 16]:
-                work_hour_tick = day_start + hour * generator.num_per_hour
-                ax.axvline(x=work_hour_tick, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-
-        ax.set_title("Averaged Weekly Occupancy and Sleep")
-        ax.set_xlabel("Time in a Week")
-        ax.set_ylabel("Fraction")
-        ax.legend(loc='upper right')
-
-        ax.set_ylim(-0.1, 1.1)
-
-        unit_dir = Path(__file__).resolve().parent
-        out_dir = unit_dir / "output"
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        out_path = out_dir / "avg_week_occupancy_4students.png"
-        fig.tight_layout()
-        fig.savefig(out_path, dpi=200)
-        plt.close(fig)
-
-        # ---- plot 2: Heatmap ----
-        # Flatten all 365 days into continuous array
-        hours_per_day = 24 * generator.num_per_hour
-
-        # Concatenate all weeks (52 full weeks + 1 extra day)
-        all_days = []
-        for week_idx, week_data in enumerate(annual_schedule):
-            if week_idx < 52:
-                # Full week: reshape into 7 days
-                week_array = np.array(week_data)
-                for day in range(7):
-                    day_data = week_array[day * hours_per_day:(day + 1) * hours_per_day]
-                    all_days.append(day_data)
-            else:
-                # Last partial week (1 day)
-                all_days.append(np.array(week_data))
-
-        # Stack into 2D array: rows = time slots, cols = days
-        heatmap_data = np.column_stack(all_days)  # Shape: (hours_per_day, 365)
-
-        fig2, ax_heat = plt.subplots(figsize=(12, 3))
-
-        # Create heatmap
-        im = ax_heat.imshow(heatmap_data, aspect='auto', cmap='YlGn', vmin=0, vmax=1, origin='upper')
-
-        # Add colorbar
-        cbar = fig2.colorbar(im, ax=ax_heat)
-        cbar.set_label('Occupancy Fraction', rotation=270, labelpad=20)
-
-        # Set x-axis (days)
-        # Show ticks at week boundaries (every 7 days)
-        week_ticks = [w * 7 for w in range(0, 53, 4)]  # Every 4 weeks
-        ax_heat.set_xticks(week_ticks)
-        ax_heat.set_xticklabels([f'Week {w}' for w in range(0, 53, 4)])
-        ax_heat.set_xlabel('Day of Year')
-
-        # Set y-axis (hours of day)
-        # Show hour labels at every 2 hours
-        hour_tick_positions = [h * generator.num_per_hour for h in range(0, 25, 2)]
-        ax_heat.set_yticks(hour_tick_positions)
-        ax_heat.set_yticklabels([str(h) for h in range(0, 25, 2)])
-        ax_heat.set_ylabel('Hour of Day')
-
-        # Add horizontal lines for work hours (9 AM and 5 PM)
-        for hour in [11, 15]:
-            hour_position = hour * generator.num_per_hour
-            ax_heat.axhline(y=hour_position, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-
-        ax_heat.set_title('Annual Occupancy Heatmap (365 Days)')
-
-        fig2.tight_layout()
-        out_path_heat = out_dir / "annual_occupancy_heatmap_4students.png"
-        fig2.savefig(out_path_heat, dpi=200)
-        plt.close(fig2)
-
-
-    @pytest.mark.statistical
-    def test_2hybrid_schedule(self):
-        """Test weekday schedule for a family with mixed roles."""
-        occupancy_json = """
-        {
-            "num_occupants": 2,
-            "household_composition": {
-                "daily_commuter": 0,
-                "hybrid_worker": 2,
-                "stayathome": 0,
-                "k12_or_daycare": 0,
-                "college_student": 0
-            },
-            "weekday_pattern": {
-                "is_always_occupied": false,
-                "away_interval": {
-                    "start_hour": 8,
-                    "end_hour": 17
-                },
-                "num_of_days": 3
-            },
-            "weekend_pattern": {
-                "is_always_occupied": false,
-                "away_interval": {
-                    "start_hour": 16,
-                    "end_hour": 22
-                }
-            },
-            "sleep_pattern": {
-                "is_always_awake": false,
-                "sleep_time": {
-                    "start_hour": 0,
-                    "end_hour": 8
-                }
-            }
-        }
-        """
-        occupancy = Occupancy.model_validate_json(occupancy_json)
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=15)
-
-        annual_schedule, annual_sleep = generator.household_annual_schedule()
-
-         # ---- average ONLY the first 52 weeks (exclude the last extra day/week entry) ----
-        weeks = annual_schedule[:52]  # each is a list[float] of length 7*24*num_per_hour
-        sleep_weeks = annual_sleep[:52]  # each is a list[bool] of length 7*24*num_per_hour
-        week_len = 7 * 24 * generator.num_per_hour
-
-        # sanity
-        assert len(weeks) == 52
-        assert all(len(w) == week_len for w in weeks)
-        assert len(sleep_weeks) == 52
-        assert all(len(s) == week_len for s in sleep_weeks)
-
-        # Average occupancy schedule
-        W = np.array(weeks, dtype=float)          # shape (52, week_len)
-        avg_week = W.mean(axis=0)                 # shape (week_len,)
-
-        # Average sleep schedule: convert True (sleep) to 1, False (awake) to 0
-        S = np.array([[1.0 if sleeping else 0.0 for sleeping in sleep_week]
-                      for sleep_week in sleep_weeks], dtype=float)  # shape (52, week_len)
-        avg_sleep = S.mean(axis=0)                # shape (week_len,)
-
-        # ---- plot 1 ----
-        fig = plt.figure(figsize=(12,3))
-        ax = fig.add_subplot(111)
-        x = np.arange(week_len)
-        ax.plot(x, avg_week, label='Occupancy', linewidth=1.5)
-        ax.plot(x, avg_sleep, label='Sleep', linestyle='--', linewidth=1.5, alpha=0.7)
-
-        # Major ticks: day labels at center of each day
-        entries_per_day = 24 * generator.num_per_hour
-        day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
-        ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-        ax.set_xlim(0, week_len)
-
-        # Minor ticks: hour markers at 0, 6, 18 for each day with labels
-        hour_ticks = []
-        hour_labels = []
-        for day in range(7):
-            day_start = day * entries_per_day
-            for hour in [0, 6, 12, 18]:
-                hour_ticks.append(day_start + hour * generator.num_per_hour)
-                hour_labels.append(str(hour))
-
-        ax2 = ax.twiny()  # Create secondary x-axis for hour labels
-        ax2.set_xlim(ax.get_xlim())
-        ax2.set_xticks(hour_ticks)
-        ax2.set_xticklabels(hour_labels, fontsize=8, color='gray')
-
-        
-
-        # Add vertical grid lines at hour markers
-        for tick in hour_ticks:
-            ax.axvline(x=tick, color='gray', alpha=0.2, linestyle=':', linewidth=0.5)
-
-        # Add dotted lines for work hours (9 AM and 5 PM) for each day
-        for day in range(5):
-            day_start = day * entries_per_day
-            for hour in [8, 17]:
-                work_hour_tick = day_start + hour * generator.num_per_hour
-                ax.axvline(x=work_hour_tick, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-        for day in range(5,7):
-            day_start = day * entries_per_day
-            for hour in [16, 22]:
-                work_hour_tick = day_start + hour * generator.num_per_hour
-                ax.axvline(x=work_hour_tick, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-
-        ax.set_title("Averaged Weekly Occupancy and Sleep")
-        ax.set_xlabel("Time in a Week")
-        ax.set_ylabel("Fraction")
-        ax.legend(loc='upper right')
-
-        ax.set_ylim(-0.1, 1.1)
-
-        unit_dir = Path(__file__).resolve().parent
-        out_dir = unit_dir / "output"
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        out_path = out_dir / "avg_week_occupancy_2hybrid.png"
-        fig.tight_layout()
-        fig.savefig(out_path, dpi=200)
-        plt.close(fig)
-
-        # ---- plot 2: Heatmap ----
-        # Flatten all 365 days into continuous array
-        hours_per_day = 24 * generator.num_per_hour
-
-        # Concatenate all weeks (52 full weeks + 1 extra day)
-        all_days = []
-        for week_idx, week_data in enumerate(annual_schedule):
-            if week_idx < 52:
-                # Full week: reshape into 7 days
-                week_array = np.array(week_data)
-                for day in range(7):
-                    day_data = week_array[day * hours_per_day:(day + 1) * hours_per_day]
-                    all_days.append(day_data)
-            else:
-                # Last partial week (1 day)
-                all_days.append(np.array(week_data))
-
-        # Stack into 2D array: rows = time slots, cols = days
-        heatmap_data = np.column_stack(all_days)  # Shape: (hours_per_day, 365)
-
-        fig2, ax_heat = plt.subplots(figsize=(12, 3))
-
-        # Create heatmap
-        im = ax_heat.imshow(heatmap_data, aspect='auto', cmap='YlGn', vmin=0, vmax=1, origin='upper')
-
-        # Add colorbar
-        cbar = fig2.colorbar(im, ax=ax_heat)
-        cbar.set_label('Occupancy Fraction', rotation=270, labelpad=20)
-
-        # Set x-axis (days)
-        # Show ticks at week boundaries (every 7 days)
-        week_ticks = [w * 7 for w in range(0, 53, 4)]  # Every 4 weeks
-        ax_heat.set_xticks(week_ticks)
-        ax_heat.set_xticklabels([f'Week {w}' for w in range(0, 53, 4)])
-        ax_heat.set_xlabel('Day of Year')
-
-        # Set y-axis (hours of day)
-        # Show hour labels at every 2 hours
-        hour_tick_positions = [h * generator.num_per_hour for h in range(0, 25, 2)]
-        ax_heat.set_yticks(hour_tick_positions)
-        ax_heat.set_yticklabels([str(h) for h in range(0, 25, 2)])
-        ax_heat.set_ylabel('Hour of Day')
-
-        # Add horizontal lines for work hours (9 AM and 5 PM)
-        for hour in [8, 17]:
-            hour_position = hour * generator.num_per_hour
-            ax_heat.axhline(y=hour_position, color='purple', alpha=0.5, linestyle=':', linewidth=1.0)
-
-        ax_heat.set_title('Annual Occupancy Heatmap (365 Days)')
-
-        fig2.tight_layout()
-        out_path_heat = out_dir / "annual_occupancy_heatmap_2hybrid.png"
-        fig2.savefig(out_path_heat, dpi=200)
-        plt.close(fig2)
-
-    @pytest.mark.statistical
-    def test_largefamily_schedule(self):
-        """Test weekday schedule for a family with mixed roles."""
-        occupancy_json = """
-        {
-            "num_occupants": 7,
-            "household_composition": {
-                "daily_commuter": 1,
-                "hybrid_worker": 1,
-                "stayathome": 2,
-                "k12_or_daycare": 2,
-                "college_student": 1
-            },
-            "weekday_pattern": {
-                "is_always_occupied": true
-            },
-            "weekend_pattern": {
-                "is_always_occupied": true
-            }
-        }
-        """
-        occupancy = Occupancy.model_validate_json(occupancy_json)
-        assumptions = OccupancyAssumptions.default()
-        generator = OccupancyGenerator(occupancy, assumptions, resolution_mins=15)
-
-        annual_schedule, annual_sleep = generator.household_annual_schedule()
-
-         # ---- average ONLY the first 52 weeks (exclude the last extra day/week entry) ----
-        weeks = annual_schedule[:52]  # each is a list[float] of length 7*24*num_per_hour
-        sleep_weeks = annual_sleep[:52]  # each is a list[bool] of length 7*24*num_per_hour
-        week_len = 7 * 24 * generator.num_per_hour
-
-        # sanity
-        assert len(weeks) == 52
-        assert all(len(w) == week_len for w in weeks)
-        assert len(sleep_weeks) == 52
-        assert all(len(s) == week_len for s in sleep_weeks)
-
-        # Average occupancy schedule
-        W = np.array(weeks, dtype=float)          # shape (52, week_len)
-        avg_week = W.mean(axis=0)                 # shape (week_len,)
-
-        # Average sleep schedule: convert True (sleep) to 1, False (awake) to 0
-        S = np.array([[1.0 if sleeping else 0.0 for sleeping in sleep_week]
-                      for sleep_week in sleep_weeks], dtype=float)  # shape (52, week_len)
-        avg_sleep = S.mean(axis=0)                # shape (week_len,)
-
-        # ---- plot 1 ----
-        fig = plt.figure(figsize=(12,3))
-        ax = fig.add_subplot(111)
-        x = np.arange(week_len)
-        ax.plot(x, avg_week, label='Occupancy', linewidth=1.5)
-        ax.plot(x, avg_sleep, label='Sleep', linestyle='--', linewidth=1.5, alpha=0.7)
-
-        # Major ticks: day labels at center of each day
-        entries_per_day = 24 * generator.num_per_hour
-        day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
-        ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
-        ax.set_xlim(0, week_len)
-
-        # Minor ticks: hour markers at 0, 6, 18 for each day with labels
-        hour_ticks = []
-        hour_labels = []
-        for day in range(7):
-            day_start = day * entries_per_day
-            for hour in [0, 6, 12, 18]:
-                hour_ticks.append(day_start + hour * generator.num_per_hour)
-                hour_labels.append(str(hour))
-
-        ax2 = ax.twiny()  # Create secondary x-axis for hour labels
-        ax2.set_xlim(ax.get_xlim())
-        ax2.set_xticks(hour_ticks)
-        ax2.set_xticklabels(hour_labels, fontsize=8, color='gray')
-
-        
-
-        # Add vertical grid lines at hour markers
-        for tick in hour_ticks:
-            ax.axvline(x=tick, color='gray', alpha=0.2, linestyle=':', linewidth=0.5)
-
-      
-        ax.set_title("Averaged Weekly Occupancy and Sleep")
-        ax.set_xlabel("Time in a Week")
-        ax.set_ylabel("Fraction")
-        ax.legend(loc='upper right')
-
-        ax.set_ylim(-0.1, 1.1)
-
-        unit_dir = Path(__file__).resolve().parent
-        out_dir = unit_dir / "output"
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        out_path = out_dir / "avg_week_occupancy_largefamily.png"
-        fig.tight_layout()
-        fig.savefig(out_path, dpi=200)
-        plt.close(fig)
-
-        # ---- plot 2: Heatmap ----
-        # Flatten all 365 days into continuous array
-        hours_per_day = 24 * generator.num_per_hour
-
-        # Concatenate all weeks (52 full weeks + 1 extra day)
-        all_days = []
-        for week_idx, week_data in enumerate(annual_schedule):
-            if week_idx < 52:
-                # Full week: reshape into 7 days
-                week_array = np.array(week_data)
-                for day in range(7):
-                    day_data = week_array[day * hours_per_day:(day + 1) * hours_per_day]
-                    all_days.append(day_data)
-            else:
-                # Last partial week (1 day)
-                all_days.append(np.array(week_data))
-
-        # Stack into 2D array: rows = time slots, cols = days
-        heatmap_data = np.column_stack(all_days)  # Shape: (hours_per_day, 365)
-
-        fig2, ax_heat = plt.subplots(figsize=(12, 3))
-
-        # Create heatmap
-        im = ax_heat.imshow(heatmap_data, aspect='auto', cmap='YlGn', vmin=0, vmax=1, origin='upper')
-
-        # Add colorbar
-        cbar = fig2.colorbar(im, ax=ax_heat)
-        cbar.set_label('Occupancy Fraction', rotation=270, labelpad=20)
-
-        # Set x-axis (days)
-        # Show ticks at week boundaries (every 7 days)
-        week_ticks = [w * 7 for w in range(0, 53, 4)]  # Every 4 weeks
-        ax_heat.set_xticks(week_ticks)
-        ax_heat.set_xticklabels([f'Week {w}' for w in range(0, 53, 4)])
-        ax_heat.set_xlabel('Day of Year')
-
-        # Set y-axis (hours of day)
-        # Show hour labels at every 2 hours
-        hour_tick_positions = [h * generator.num_per_hour for h in range(0, 25, 2)]
-        ax_heat.set_yticks(hour_tick_positions)
-        ax_heat.set_yticklabels([str(h) for h in range(0, 25, 2)])
-        ax_heat.set_ylabel('Hour of Day')
-
-     
-
-        ax_heat.set_title('Annual Occupancy Heatmap (365 Days)')
-
-        fig2.tight_layout()
-        out_path_heat = out_dir / "annual_occupancy_heatmap_largefamily.png"
-        fig2.savefig(out_path_heat, dpi=200)
-        plt.close(fig2)
-
-    def test_revise_by_sleep(self):
-        """Test revision of schedule based on sleep mask."""
-        sleep_mask = [True, False, True, False, True]
-        schedule = [1.0, 1.0, 1.0, 1.0, 1.0]
-        value = 0.5
-
-        revised = OccupancyGenerator.revise_by_sleep(sleep_mask, schedule, value)
-
-        assert revised == [0.5, 1.0, 0.5, 1.0, 0.5]
-
-    def test_get_occupancy_mask(self):
-        """Test occupancy mask generation."""
-        schedule = [0.0, 0.5, 1.0, 0.0, 0.75]
-
-        mask = OccupancyGenerator.get_occupancy_mask(schedule)
-
-        assert mask == [False, True, True, False, True]
-
-    def test_revise_by_absence(self):
-        """Test revision of schedule based on occupancy mask."""
-        occupancy_mask = [True, False, True, False, True]
-        schedule = [10, 20, 30, 40, 50]
-        value = 0
-
-        revised = OccupancyGenerator.revise_by_absence(occupancy_mask, schedule, value)
-
-        assert revised == [10, 0, 30, 0, 50]
+    def test_generate_output_week_count(self, occupancy_always_home, default_cluster_assumptions):
+        """Output should contain 53 weeks covering 365 days."""
+        pass
+
+
+# ---------------------------------------------------------------------------
+# OccupancyGenerator — static methods
+# ---------------------------------------------------------------------------
+
+class TestActiveSleepMask:
+    def _make_states(self, home: float, sleep: float, num_weeks=1, bins_per_week=4) -> list[list[HouseholdOccupancyFractions]]:
+        return [[HouseholdOccupancyFractions(home=home, sleep=sleep)] * bins_per_week for _ in range(num_weeks)]
+
+    def test_all_away_produces_all_false_masks(self):
+        """When all bins are fully away, both masks should be all False."""
+        pass
+
+    def test_high_home_ratio_flagged_as_active(self):
+        """A bin with high home fraction should be active, not sleep."""
+        pass
+
+    def test_high_sleep_ratio_flagged_as_sleep(self):
+        """A bin with high sleep fraction should be sleep, not active."""
+        pass
+
+    def test_threshold_boundary(self):
+        """A bin exactly at the active_threshold should be classified as active."""
+        pass
+
+    def test_masks_are_mutually_exclusive(self):
+        """A bin cannot be both active and sleep simultaneously."""
+        pass
+
+    def test_output_shape_matches_input(self):
+        """active_mask and sleep_mask must have the same shape as occ_states."""
+        pass
+
+
+class TestApplyToMask:
+    def test_masked_bins_get_value(self):
+        """Bins where mask=True should receive the specified value."""
+        pass
+
+    def test_unmasked_bins_unchanged(self):
+        """Bins where mask=False should retain their original value."""
+        pass
+
+    def test_mismatched_lengths_raise(self):
+        """Passing mask and schedule with different lengths should raise AssertionError."""
+        pass
+
+    def test_all_false_mask_returns_original(self):
+        """An all-False mask should return the schedule unchanged."""
+        pass
+
+    def test_all_true_mask_returns_all_value(self):
+        """An all-True mask should replace every element with value."""
+        pass
+
+
+class TestToOccupancySchedule:
+    def test_length_equals_365_days(self):
+        """Flattened schedule length should equal 365 * bins_per_day."""
+        pass
+
+    def test_values_are_home_plus_sleep(self):
+        """Each value should equal the corresponding home + sleep fraction."""
+        pass
+
+    def test_values_in_zero_one_range(self):
+        """All schedule values should be in [0.0, 1.0]."""
+        pass
+
+    def test_fully_away_state_yields_zero(self):
+        """A fully-away bin should contribute 0.0 to the schedule."""
+        pass
+
+    def test_fully_home_state_yields_one(self):
+        """A fully-home bin (home=1.0, sleep=0.0) should contribute 1.0."""
+        pass

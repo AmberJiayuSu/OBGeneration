@@ -68,6 +68,14 @@ class TimeRangeDistribution:
         # Fallback: if bounds make it impossible to satisfy end > start,
         # allow end >= start to avoid infinite loop
         return TimeRange(start_hour=start_time, end_hour=end_time)
+    
+    def overlaps(self, other: TimeRange) -> bool:
+        """Check if this distribution's time range overlaps with another TimeRange."""
+        if other.contains_hour(self.start_dist.mean()) or other.contains_hour(self.end_dist.mean()):
+            return True
+        if self.time_range.contains_hour(other.start_hour) and self.time_range.contains_hour(other.end_hour):
+            return True
+        return False
  
 
     def sample_with_away_bounds( self,away_time: Optional[TimeRange]) -> Optional[TimeRange]:
@@ -81,22 +89,20 @@ class TimeRangeDistribution:
         if away_time is None:
             return self.sample()
         else:
-            if away_time.contains_hour(self.start_dist.mean) or away_time.contains_hour(self.end_dist.mean):
-                return None  # start or end time mean falls within away time, no valid sample
-            if self.time_range.contains_hour(away_time.start_hour) and self.time_range.contains_hour(away_time.end_hour):
-                return None  # Away time fully contained within the time range, no valid sample
+            if self.overlaps(away_time):
+                return None  # No valid time range can be sampled outside the away_time
             
             if not away_time.wraps_midnight:
                 if self.wraps_midnight:
-                    updated_start_dist = self.start_dist.with_bounds(lower=away_time.end_hour, upper=24.0 - self.resolution_hours)
-                    updated_end_dist = self.end_dist.with_bounds(lower=0.0, upper=away_time.start_hour)
+                    updated_start_dist = self.start_dist.with_bounds(lower=away_time.end_hour + self.resolution_hours, upper=24.0 - self.resolution_hours)
+                    updated_end_dist = self.end_dist.with_bounds(lower=0.0, upper=away_time.start_hour - self.resolution_hours)
                 else:
-                    updated_start_dist = self.start_dist.with_bounds(lower=0.0, upper=away_time.start_hour)
-                    updated_end_dist = self.end_dist.with_bounds(lower=0.0, upper=away_time.start_hour)
+                    updated_start_dist = self.start_dist.with_bounds(lower=0.0, upper=away_time.start_hour - self.resolution_hours)
+                    updated_end_dist = self.end_dist.with_bounds(lower=0.0, upper=away_time.start_hour - self.resolution_hours)
             else:
                 # Away time wraps midnight, so at this branch the self time range cannot wrap midnight
-                updated_start_dist = self.start_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
-                updated_end_dist = self.end_dist.with_bounds(lower=away_time.end_hour, upper=away_time.start_hour)
+                updated_start_dist = self.start_dist.with_bounds(lower=away_time.end_hour + self.resolution_hours, upper=away_time.start_hour - self.resolution_hours)
+                updated_end_dist = self.end_dist.with_bounds(lower=away_time.end_hour + self.resolution_hours, upper=away_time.start_hour - self.resolution_hours)
 
         MAX_ATTEMPTS = 1000
         INNER_ATTEMPTS = 20
@@ -249,7 +255,7 @@ class ClusterAssumptions:
 
         else:
             # Downsample: compose consecutive transition matrices into coarser steps
-            step = self.assumption_resolution_min // resolution_min
+            step = resolution_min // self.assumption_resolution_min
             num_coarse_bins = len(transition_matrices) // step
             matrices = np.empty((num_coarse_bins, transition_matrices.shape[1], transition_matrices.shape[2]))
             for b in range(num_coarse_bins):
@@ -328,20 +334,6 @@ class OccupancyGenerator:
         self.sim_resolution_min = sim_resolution_min
 
 
-
-    def apply_away_time(self) -> None:
-        """
-        Has away_interval?
-        │
-        ├── NO  → run MC freely → household schedule
-        │
-        └── YES → run MC → post-process hard clip 
-                            during away window: force all Away
-                            outside away window: ensure at least one Home-Active
-                            → household schedule
-        """
-        # Implementation would go here, modifying self.occupancy based on away_time and rigidness.
-        pass
 
 
     def household_mc_state_annually(self) -> list[list[HouseholdOccupancyFractions]]:
@@ -432,7 +424,6 @@ class OccupancyGenerator:
             If specified in the occupancy patterns, the away_time will be forced to be away during the sampled away_interval given the rigidness. 
             This should only be called if the household has a specified away_interval in either weekday or weekend pattern. 
         """
-        num_bins = 1440 // self.sim_resolution_min
         no_weekday_away = self.occupancy.weekday_pattern.is_always_occupied
 
         if not no_weekday_away:
@@ -454,7 +445,7 @@ class OccupancyGenerator:
                 resolution_mins=self.sim_resolution_min
             )
         #355 length list of daily away_time (None if no away time that day, else the TimeRange for that day)
-        states = np.empty(365 * num_bins, dtype=object)  # Will hold TimeRange or None for each day
+        states = np.empty(365 , dtype=object)  # Will hold TimeRange or None for each day
         for day in range(365):
             if (day % 7) in [0, 6]:  # Weekend
                 if no_weekend_away:
@@ -462,6 +453,7 @@ class OccupancyGenerator:
                 else:
                     away_time_interval = weekend_away_time_distribution.sample()
                     states[day] = away_time_interval
+            else:  # Weekday
                 if no_weekday_away:
                     states[day] = None
                 else:
@@ -516,7 +508,7 @@ class OccupancyGenerator:
         return occ_states
     
     @staticmethod
-    def active_sleep_mask(occ_states:list[list[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> Tuple(list[list[bool]], list[list[bool]]):
+    def active_sleep_mask(occ_states:list[list[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> tuple[list[list[bool]], list[list[bool]]]:
         """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
 
         A bin is considered "active" if the home fraction >= active_threshold.

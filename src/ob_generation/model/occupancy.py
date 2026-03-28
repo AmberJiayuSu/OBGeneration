@@ -49,6 +49,12 @@ class TimeRange(BaseModel):
             return self.start_hour <= hour < self.end_hour
         else:
             return hour >= self.start_hour or hour < self.end_hour
+        
+    def overlaps(self, other: 'TimeRange') -> bool:
+        """Check if this time range overlaps with another time range."""
+        # Check if either start or end hour of one range is contained in the other
+        return (self.contains_hour(other.start_hour) or self.contains_hour(other.end_hour) or
+                other.contains_hour(self.start_hour) or other.contains_hour(self.end_hour))
 
 
 class MobilityCluster(str, Enum):
