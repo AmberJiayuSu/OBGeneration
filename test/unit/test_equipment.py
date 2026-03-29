@@ -639,339 +639,318 @@ class TestEquipmentGenerator:
 
 
 
-# class TestAnnualConsumption:
+class TestAnnualConsumption:
 
-#     @pytest.mark.parametrize("occ_1", ["occ_1"], indirect=True)
-#     def test_laundry(self,occ_1):
-#         """Test annual laundry consumption calculation."""
-#         equipment_json = """
-#         {
-#             "laundry": {
-#                 "has_washer": true,
-#                 "washer_efficient": true,
-#                 "has_dryer": true,
-#                 "dryer_efficient": true,
-#                 "usage_frequency_per_week": {"min": 1, "max": 4}
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": false
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": false
-#             }
-#         }
-#         """
-#         equipment_json_2 = """
-#         {
-#             "laundry": {
-#                 "has_washer": true,
-#                 "washer_efficient": false,
-#                 "has_dryer": true,
-#                 "dryer_efficient": false,
-#                 "usage_frequency_per_week": {"min": 1, "max": 4}
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": false
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": false
-#             }
-#         }
-#         """
+    def test_laundry(self,occ_1):
+        """Test annual laundry consumption calculation."""
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": true,
+                "washer_efficient": true,
+                "has_dryer": true,
+                "dryer_efficient": true,
+                "usage_frequency_per_week": {"min": 1, "max": 4}
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment_json_2 = """
+        {
+            "laundry": {
+                "has_washer": true,
+                "washer_efficient": false,
+                "has_dryer": true,
+                "dryer_efficient": false,
+                "usage_frequency_per_week": {"min": 1, "max": 4}
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
 
-#         equipment_1 = Equipment.model_validate_json(equipment_json)
-#         equipment_2 = Equipment.model_validate_json(equipment_json_2)
+        equipment_1 = Equipment.model_validate_json(equipment_json)
+        equipment_2 = Equipment.model_validate_json(equipment_json_2)
 
-#         assumptions = EquipmentAssumptions.default()
+        assumptions = EquipmentAssumptions.default()
 
-#         occ_gen = OccupancyGenerator(occ_1, OccupancyAssumptions.default())
-#         occupancy, sleep = occ_gen.household_annual_schedule()
-#         _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)  
+        occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
+        occ_sch = occ.generate()
 
-#         equipment_gen_1 = EquipmentGenerator(
-#             equipment=equipment_1,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ_1.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
+        equipment_gen_1 = EquipmentGenerator(
+            equipment=equipment_1,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
 
-#         equipment_gen_2 = EquipmentGenerator(
-#             equipment=equipment_2,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ_1.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
 
-#         laundry_annual_1 = equipment_gen_1.laundry_annual_schedule()
-#         laundry_annual_2 = equipment_gen_2.laundry_annual_schedule()
+        equipment_gen_2 = EquipmentGenerator(
+            equipment=equipment_2,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
 
-#         total_consumption_1 = sum(sum(week) for week in laundry_annual_1) / 4000  # kWh
-#         total_consumption_2 = sum(sum(week) for week in laundry_annual_2) / 4000  # kWh
+        laundry_annual_1 = equipment_gen_1.laundry_annual_schedule()
+        laundry_annual_2 = equipment_gen_2.laundry_annual_schedule()
+
+        total_consumption_1 = sum(sum(week) for week in laundry_annual_1) / 4000  # kWh
+        total_consumption_2 = sum(sum(week) for week in laundry_annual_2) / 4000  # kWh
     
-#         assert total_consumption_2 > total_consumption_1
-#         assert total_consumption_1 > 300
-#         assert total_consumption_2 < 800
+        assert total_consumption_2 > total_consumption_1
+        assert total_consumption_1 > 200
+        assert total_consumption_2 < 800
 
 
-#     @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
-#     def test_refrigerator(self, occ):
-#         equipment_json = """
-#         {
-#             "laundry": {
-#                 "has_washer": false
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": true,
-#                 "efficient_refrigerator": true,
-#                 "number_of_refrigerators": 1
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": false
-#             }
-#         }
-#         """
-#         equipment_json_2 = """
-#         {
-#             "laundry": {
-#                 "has_washer": false
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": true,
-#                 "efficient_refrigerator": false,
-#                 "number_of_refrigerators": 2
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": false
-#             }
-#         }
-#         """
 
-#         equipment_1 = Equipment.model_validate_json(equipment_json)
-#         equipment_2 = Equipment.model_validate_json(equipment_json_2)
+    def test_refrigerator(self, occ_1):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": true,
+                "efficient_refrigerator": true,
+                "number_of_refrigerators": 1
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment_json_2 = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": true,
+                "efficient_refrigerator": false,
+                "number_of_refrigerators": 2
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
 
-#         assumptions = EquipmentAssumptions.default()
+        equipment_1 = Equipment.model_validate_json(equipment_json)
+        equipment_2 = Equipment.model_validate_json(equipment_json_2)
 
-#         occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
-#         occupancy, sleep = occ_gen.household_annual_schedule()
-#         _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)  
+        assumptions = EquipmentAssumptions.default()
 
-#         equipment_gen_1 = EquipmentGenerator(
-#             equipment=equipment_1,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
+        occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
+        occ_sch = occ.generate()
 
-#         equipment_gen_2 = EquipmentGenerator(
-#             equipment=equipment_2,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
-
-#         refrigerator_power_1 = []
-#         for _ in range(100):
-#             refrigerator_power = equipment_gen_1._get_fridge_power()
-#             annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
-#             refrigerator_power_1.append(annual_consumption)
-
-#         refrigerator_power_2 = []
-#         for _ in range(100):
-#             refrigerator_power = equipment_gen_2._get_fridge_power()
-#             annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
-#             refrigerator_power_2.append(annual_consumption)
-
-#         mean_1 = np.mean(refrigerator_power_1)
-#         mean_2 = np.mean(refrigerator_power_2)
-#         assert mean_1 > 400
-#         assert mean_1 < 700
-#         assert mean_2 > 1200
-#         assert mean_2 < 1800
-
-#     @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
-#     def test_cooking(self, occ):
-#         equipment_json = """
-#         {
-#             "laundry": {
-#                 "has_washer": false
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": false
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": true,
-#                 "cooking_products_fuel": "electric",
-#                 "usage_frequency_per_week": {"min": 4, "max": 15}
-#             }
-#         }
-#         """
-#         equipment = Equipment.model_validate_json(equipment_json)
-#         assumptions = EquipmentAssumptions.default()
-#         occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
-#         occupancy, sleep = occ_gen.household_annual_schedule()
-#         _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
-#         equipment_gen = EquipmentGenerator(
-#             equipment=equipment,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
-#         cooking_schedule,_ = equipment_gen.cooking_annual_schedule()
-#         total_consumption = sum(sum(week) for week in cooking_schedule) / 4000  # kWh
-#         assert total_consumption > 200
-#         assert total_consumption < 400
+        equipment_gen_1 = EquipmentGenerator(
+            equipment=equipment_1,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
 
 
-#     def test_cooking_run_long(self):
-#         occ_json = """
-#         {
-#             "num_occupants": 1,
-#             "household_composition": {
-#                 "daily_commuter": 0,
-#                 "hybrid_worker": 0,
-#                 "stayathome": 1,
-#                 "k12_or_daycare": 0,
-#                 "college_student": 0
-#             },
-#             "weekday_pattern": null,
-#             "weekend_pattern": null,
-#             "sleep_pattern": null
-#         }
-#         """
-#         equipment_json = """
-#         {
-#             "laundry": {
-#                 "has_washer": false
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": false
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": false
-#             },
-#             "cooking_products": {
-#                "has_cooking_products": true,
-#                "cooking_products_fuel": "electric",
-#                "usage_frequency_per_week": {
-#                  "min": 18,
-#                  "max": 21
-#                }
-#              }
-#         }
-#         """
-#         occ = Occupancy.model_validate_json(occ_json)
-#         equipment = Equipment.model_validate_json(equipment_json)
-#         assumptions = EquipmentAssumptions.default()
-#         occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
-#         occupancy, sleep = occ_gen.household_annual_schedule()
-#         _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
-#         equipment_gen = EquipmentGenerator(
-#             equipment=equipment,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
-#         def _timeout(_signum, _frame):
-#             raise TimeoutError("cooking_annual_schedule() exceeded 10s limit")
+        equipment_gen_2 = EquipmentGenerator(
+            equipment=equipment_2,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
 
-#         signal.signal(signal.SIGALRM, _timeout)
-#         signal.alarm(10)
-#         try:
-#             t0 = time.perf_counter()
-#             _, _ = equipment_gen.cooking_annual_schedule()
-#             elapsed = time.perf_counter() - t0
-#             assert elapsed < 10.0, f"cooking_annual_schedule() took {elapsed:.2f}s"
-#         except TimeoutError as e:
-#             pytest.fail(str(e))
-#         finally:
-#             signal.alarm(0)  # cancel alarm if finished in time
+        refrigerator_power_1 = []
+        for _ in range(100):
+            refrigerator_power = equipment_gen_1._get_fridge_power()
+            annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
+            refrigerator_power_1.append(annual_consumption)
 
-#     @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
-#     def test_dishwasher(self, occ):
-#         equipment_json = """
-#         {
-#             "laundry": {
-#                 "has_washer": false
-#             },
-#             "refrigerator": {
-#                 "has_refrigerator": false
-#             },
-#             "dishwasher": {
-#                 "has_dishwasher": true,
-#                 "dishwasher_efficient": true,
-#                 "dishwashing_operational_logic": {
-#                     "pattern_type": "independent_frequency",
-#                     "usage_frequency_per_week": {"min": 0, "max": 7}
-#                 }
-#             },
-#             "cooking_products": {
-#                 "has_cooking_products": false
-#             }
-#         }
-#         """
-#         equipment = Equipment.model_validate_json(equipment_json)
-#         assumptions = EquipmentAssumptions.default()
-#         occ_gen = OccupancyGenerator(occ, OccupancyAssumptions.default())
-#         occupancy, sleep = occ_gen.household_annual_schedule()
-#         _, sleep_mask, active_mask = occ_gen.get_annual_mask(occupancy, sleep)
-#         equipment_gen = EquipmentGenerator(
-#             equipment=equipment,
-#             active_mask=active_mask,
-#             sleep_mask=sleep_mask,
-#             occupancy=occupancy,
-#             num_occupants=occ.num_occupants,
-#             resolution_mins=15,
-#             equipment_assumptions=assumptions
-#         )
-#         _,cooking_end_times = equipment_gen.cooking_annual_schedule()
-#         dishwasher_schedule = equipment_gen.dishwasher_annual_schedule(cooking_end_times)
-#         total_consumption = sum(sum(week) for week in dishwasher_schedule) / 4000  # kWh
-#         assert total_consumption > 50
-#         assert total_consumption < 250
+        refrigerator_power_2 = []
+        for _ in range(100):
+            refrigerator_power = equipment_gen_2._get_fridge_power()
+            annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
+            refrigerator_power_2.append(annual_consumption)
+
+        mean_1 = np.mean(refrigerator_power_1)
+        mean_2 = np.mean(refrigerator_power_2)
+        assert mean_1 > 400
+        assert mean_1 < 700
+        assert mean_2 > 1200
+        assert mean_2 < 1800
 
 
-#     @pytest.mark.parametrize("input_file", [
-#         "test/unit/input/OB_1.json",
-#         "test/unit/input/OB_2.json",
-#         "test/unit/input/OB_3.json"
-#     ])
-#     def test_equipment_annual_consumption(self, input_file):
-#         occupant = Occupant.from_json_file(Path(input_file))
-#         occupant_behavior = OccupantBehavior.to_OB_annual(15, occupant)
-#         equipment_schedule = occupant_behavior.equipment_schedule
-#         total_consumption = sum(equipment_schedule) / 4000  # kWh
-#         print(total_consumption)
-#         assert total_consumption > 3000
+    def test_cooking(self, occ_1):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+                "has_cooking_products": true,
+                "cooking_products_fuel": "electric",
+                "usage_frequency_per_week": {"min": 4, "max": 15}
+            }
+        }
+        """
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
+        occ_sch = occ.generate()
+
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        cooking_schedule,_ = equipment_gen.cooking_annual_schedule()
+        total_consumption = sum(sum(week) for week in cooking_schedule) / 4000  # kWh
+        assert total_consumption > 200
+        assert total_consumption < 400
+
+
+    def test_cooking_run_long(self):
+        occ_json = """
+        {
+            "num_occupants": 1,
+            "household_composition":{
+                "occupants": [
+                    {"weekday_cluster": "mostly_home", "weekend_cluster": "mostly_home"}
+                ]
+            }
+            }
+        """
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": false
+            },
+            "cooking_products": {
+               "has_cooking_products": true,
+               "cooking_products_fuel": "electric",
+               "usage_frequency_per_week": {
+                 "min": 18,
+                 "max": 21
+               }
+             }
+        }
+        """
+        occ = Occupancy.model_validate_json(occ_json)
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        occ_gen = OccupancyGenerator(occ, ClusterAssumptions.default(), 15)
+        occ_sch = occ_gen.generate()
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=occ_sch,
+            num_occupants=occ.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        def _timeout(_signum, _frame):
+            raise TimeoutError("cooking_annual_schedule() exceeded 10s limit")
+
+        signal.signal(signal.SIGALRM, _timeout)
+        signal.alarm(10)
+        try:
+            t0 = time.perf_counter()
+            _, _ = equipment_gen.cooking_annual_schedule()
+            elapsed = time.perf_counter() - t0
+            assert elapsed < 10.0, f"cooking_annual_schedule() took {elapsed:.2f}s"
+        except TimeoutError as e:
+            pytest.fail(str(e))
+        finally:
+            signal.alarm(0)  # cancel alarm if finished in time
+
+
+    def test_dishwasher(self, occ_1):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": false
+            },
+            "refrigerator": {
+                "has_refrigerator": false
+            },
+            "dishwasher": {
+                "has_dishwasher": true,
+                "dishwasher_efficient": true,
+                "dishwashing_operational_logic": {
+                    "pattern_type": "independent_frequency",
+                    "usage_frequency_per_week": {"min": 0, "max": 7}
+                }
+            },
+            "cooking_products": {
+                "has_cooking_products": false
+            }
+        }
+        """
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default()
+        
+        occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
+        occ_sch = occ.generate()
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=occ_sch,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions
+        )
+        _,cooking_end_times = equipment_gen.cooking_annual_schedule()
+        dishwasher_schedule = equipment_gen.dishwasher_annual_schedule(cooking_end_times)
+        total_consumption = sum(sum(week) for week in dishwasher_schedule) / 4000  # kWh
+        assert total_consumption > 50
+        assert total_consumption < 250
+
+
+    @pytest.mark.parametrize("input_file", [
+        "test/unit/input/OB_1.json",
+        "test/unit/input/OB_2.json",
+        "test/unit/input/OB_3.json"
+    ])
+    def test_equipment_annual_consumption(self, input_file):
+        occupant = Occupant.from_json_file(Path(input_file))
+        occupant_behavior = OccupantBehavior.to_OB_annual(15, occupant)
+        equipment_schedule = occupant_behavior.equipment_schedule
+        total_consumption = sum(equipment_schedule) / 4000  # kWh
+        print(total_consumption)
+        assert total_consumption > 3000

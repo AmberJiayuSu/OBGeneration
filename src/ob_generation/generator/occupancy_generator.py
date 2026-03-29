@@ -374,19 +374,25 @@ class OccupancyGenerator:
         one_unit = 1.0 / self.occupancy.num_occupants
 
         for day, away_range in enumerate(away_time[:365]):
-            if away_range is None:
-                continue
             week = day // 7
             day_start = (day % 7) * bins_per_day
-            for b in range(bins_per_day):
-                bin_hour = b * resolution_hours
-                idx = day_start + b
-                if away_range.contains_hour(bin_hour):
-                    occupancy_states[week][idx] = away
-                else:
+
+            if away_range is None:
+                for b in range(bins_per_day):
+                    idx = day_start + b
                     f = occupancy_states[week][idx]
                     if f.home + f.sleep == 0.0:
                         occupancy_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
+            else:
+                for b in range(bins_per_day):
+                    bin_hour = b * resolution_hours
+                    idx = day_start + b
+                    if away_range.contains_hour(bin_hour):
+                        occupancy_states[week][idx] = away
+                    else:
+                        f = occupancy_states[week][idx]
+                        if f.home + f.sleep == 0.0:
+                            occupancy_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
 
         return occupancy_states
     
@@ -427,16 +433,6 @@ class OccupancyGenerator:
         no_weekday_away = self.occupancy.weekday_pattern.is_always_occupied
 
         if not no_weekday_away:
-            weekend_var = self.occupancy.weekend_pattern.away_time_rigidness.to_std_dev_hours() if self.occupancy.weekend_pattern.away_time_rigidness else 1.0
-            weekend_away_time_distribution = TimeRangeDistribution(
-                time_range=self.occupancy.weekend_pattern.away_interval,
-                start_variance= weekend_var,
-                end_variance= weekend_var,
-                resolution_mins=self.sim_resolution_min
-            )
-
-        no_weekend_away = self.occupancy.weekend_pattern.is_always_occupied
-        if not no_weekend_away:
             weekday_var = self.occupancy.weekday_pattern.away_time_rigidness.to_std_dev_hours() if self.occupancy.weekday_pattern.away_time_rigidness else 1.0
             weekday_away_time_distribution = TimeRangeDistribution(
                 time_range=self.occupancy.weekday_pattern.away_interval,
@@ -444,6 +440,17 @@ class OccupancyGenerator:
                 end_variance= weekday_var,
                 resolution_mins=self.sim_resolution_min
             )
+
+        no_weekend_away = self.occupancy.weekend_pattern.is_always_occupied
+        if not no_weekend_away:
+            weekend_var = self.occupancy.weekend_pattern.away_time_rigidness.to_std_dev_hours() if self.occupancy.weekend_pattern.away_time_rigidness else 1.0
+            weekend_away_time_distribution = TimeRangeDistribution(
+                time_range=self.occupancy.weekend_pattern.away_interval,
+                start_variance= weekend_var,
+                end_variance= weekend_var,
+                resolution_mins=self.sim_resolution_min
+            )
+            
         #355 length list of daily away_time (None if no away time that day, else the TimeRange for that day)
         states = np.empty(365 , dtype=object)  # Will hold TimeRange or None for each day
         for day in range(365):

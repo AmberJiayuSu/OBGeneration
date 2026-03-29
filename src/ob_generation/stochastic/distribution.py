@@ -83,6 +83,8 @@ class NormalDistribution(Distribution):
 
 
     def sample(self):
+        """Sample a value from the distribution, respecting bounds and integer settings.
+           Inclusive of both lower and upper bounds."""
         if self._lower == self._upper:
             return int(self._lower) if self._int else self._lower
         x = self._dist.rvs()

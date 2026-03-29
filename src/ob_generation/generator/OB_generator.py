@@ -66,7 +66,7 @@ class OccupantBehavior(BaseModel):
         occ_gen = OccupancyGenerator( occupant_profile.occupancy, ClusterAssumptions.default(), resolution_mins)
         occupancy_states = occ_gen.generate()
         occ_schedule = OccupancyGenerator.to_occupancy_schedule(occupancy_states)
-        active_mask,sleep_mask = OccupancyGenerator.active_sleep_mask(occ_schedule)
+        active_mask,sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
         lighting_gen = LightingGenerator(occupant_profile.lighting)
         if_dimming = lighting_gen.get_dimming()
         lighting_schedule = lighting_gen.lighting_annual_schedule( sleep_mask)

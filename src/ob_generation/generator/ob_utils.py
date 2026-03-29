@@ -216,7 +216,7 @@ class ScheduleUtils:
         entries_per_day = timesteps_per_day
         day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
         ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+        ax.set_xticklabels(["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
         ax.set_xlim(0, week_len)
 
         # Minor ticks: hour markers at 0, 6, 12, 18 for each day with labels
@@ -280,7 +280,7 @@ class ScheduleUtils:
         entries_per_day = timesteps_per_day
         day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
         ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+        ax.set_xticklabels(["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
         ax.set_xlim(0, week_len)
 
         hour_ticks = []
@@ -377,7 +377,7 @@ class ScheduleUtils:
         entries_per_day = timesteps_per_day
         day_centers = [(d * entries_per_day + entries_per_day / 2) for d in range(7)]
         ax.set_xticks(day_centers)
-        ax.set_xticklabels(["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+        ax.set_xticklabels(["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
         ax.set_xlim(0, week_len)
 
         # Minor ticks: hour markers at 0, 6, 12, 18 for each day with labels
