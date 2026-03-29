@@ -13,7 +13,6 @@ from pathlib import Path
 from ob_generation.generator.occupancy_generator import (
     ClusterAssumptions,
     HouseholdOccupancyFractions,
-    OccupancyState,
     TimeRangeDistribution,
     OccupancyGenerator,
 )

@@ -46,42 +46,42 @@ class EventAssumptions(BaseModel):
 
         self.start_time_probabilities = aggregated
 
-    def get_masked_probabilities(self, active_mask: list[bool], not_match_length=False) -> list[float]:
-        """Apply active occupancy mask and return renormalized probabilities.
-        Does not mutate the original probabilities.
+    # def get_masked_probabilities(self, active_mask: list[bool], not_match_length=False) -> list[float]:
+    #     """Apply active occupancy mask and return renormalized probabilities.
+    #     Does not mutate the original probabilities.
 
-        Args:
-            active_mask: Boolean mask indicating active time bins (same length as probabilities)
-        Returns:
-            List of masked and renormalized probabilities
-        """
-        if not not_match_length:
-            if len(active_mask) != len(self.start_time_probabilities):
-                raise ValueError(f"Active mask length {len(active_mask)} does not match probabilities length {len(self.start_time_probabilities)}")
+    #     Args:
+    #         active_mask: Boolean mask indicating active time bins (same length as probabilities)
+    #     Returns:
+    #         List of masked and renormalized probabilities
+    #     """
+    #     if not not_match_length:
+    #         if len(active_mask) != len(self.start_time_probabilities):
+    #             raise ValueError(f"Active mask length {len(active_mask)} does not match probabilities length {len(self.start_time_probabilities)}")
         
-            masked_probs = [prob if active_mask[i] else 0.0 for i, prob in enumerate(self.start_time_probabilities)]
-        else:
-            masked_probs = [self.start_time_probabilities[i] if active_mask[i] else 0.0 for i in range(len(active_mask))]
+    #         masked_probs = [prob if active_mask[i] else 0.0 for i, prob in enumerate(self.start_time_probabilities)]
+    #     else:
+    #         masked_probs = [self.start_time_probabilities[i] if active_mask[i] else 0.0 for i in range(len(active_mask))]
 
-        total = sum(masked_probs)
-        if total > 0:
-            return [p / total for p in masked_probs]
-        else:
-            # Masking makes all probabilities zero
-            num_active = sum(active_mask)
-            if num_active > 0:
-                # Assume sometime occupied, then assume uniform distribution over active times
-                return [1.0 / num_active if active_mask[i] else 0.0 for i in range(len(active_mask))]
-            else:
-                # If never occupied, return all zeros
-                return masked_probs  
+    #     total = sum(masked_probs)
+    #     if total > 0:
+    #         return [p / total for p in masked_probs]
+    #     else:
+    #         # Masking makes all probabilities zero
+    #         num_active = sum(active_mask)
+    #         if num_active > 0:
+    #             # Assume sometime occupied, then assume uniform distribution over active times
+    #             return [1.0 / num_active if active_mask[i] else 0.0 for i in range(len(active_mask))]
+    #         else:
+    #             # If never occupied, return all zeros
+    #             return masked_probs  
     
-    def get_updated_probabilities(self, occupancy_fraction: list[HouseholdOccupancyFractions], not_match_length=False) -> list[float]:
+    def get_updated_probabilities(self, occupancy_fraction: list[HouseholdOccupancyFractions], last_week=False) -> list[float]:
         """ Apply occupancy fraction mask and return renormalized probabilities.
             Assume the probability of event occurrence is proportional to the occupancy fraction of the time bin and the time-based probability for that bin.
             If masking results all zero, if there is occupied time then assume the event occur relative to the occupancy fraction distribution, otherwise return all zeros.
         """
-        if not not_match_length:
+        if not last_week:
             if len(occupancy_fraction) != len(self.start_time_probabilities):
                 raise ValueError(f"Occupancy fraction length {len(occupancy_fraction)} does not match probabilities length {len(self.start_time_probabilities)}")
         
@@ -101,6 +101,8 @@ class EventAssumptions(BaseModel):
             else:
                 # If never occupied, return all zeros
                 return masked_probs  
+            
+
 
 class LaundryAssumptions(BaseModel):
     """Power, Duration assumptions for laundry equipment in Watts."""
@@ -308,9 +310,9 @@ class EquipmentGenerator:
         assumptions = self.equipment_assumptions
         baseload_schedule = [assumptions.baseload] * len(weekly_occupancy_state)
         for i in range(len(weekly_occupancy_state)):
-            if weekly_occupancy_state[i].active:
+            if weekly_occupancy_state[i].home:
                 baseload_schedule[i] += weekly_occupancy_state[i].home * assumptions.watts_per_person_active * self.num_occupants
-            elif weekly_occupancy_state[i].sleep:
+            if weekly_occupancy_state[i].sleep:
                 baseload_schedule[i] += weekly_occupancy_state[i].sleep * assumptions.watts_per_person_sleep * self.num_occupants
         return baseload_schedule
     
