@@ -75,11 +75,11 @@ class MobilityCluster(str, Enum):
     def to_cluster_index(self) -> int:
         """Convert mobility cluster to a corresponding index."""
         mapping = {
-            MobilityCluster.MOSTLY_HOME: 0,
-            MobilityCluster.LONG_DAY_AWAY: 1,
-            MobilityCluster.MORNING_AWAY: 2,
-            MobilityCluster.AFTERNOON_AWAY: 3,
-            MobilityCluster.EVENING_NIGHT_AWAY: 4
+            MobilityCluster.MOSTLY_HOME: 1,
+            MobilityCluster.LONG_DAY_AWAY: 2,
+            MobilityCluster.MORNING_AWAY: 3,
+            MobilityCluster.AFTERNOON_AWAY: 4,
+            MobilityCluster.EVENING_NIGHT_AWAY: 5
         }
         return mapping[self]
 

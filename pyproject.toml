@@ -26,3 +26,4 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ob_generation"]
+include = ["src/ob_generation/data/**"]

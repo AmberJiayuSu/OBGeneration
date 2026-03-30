@@ -1,5 +1,6 @@
 from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from ob_generation.generator.ob_utils import ScheduleUtils, get_project_root
+from ob_generation.generator.ob_utils import ScheduleUtils
+from importlib.resources import files
 from ob_generation.generator.occupancy_generator import HouseholdOccupancyFractions
 import ob_generation.model.equipment as Equipment
 
@@ -198,8 +199,7 @@ class EquipmentAssumptions(BaseModel):
     def default(cls, resolution_mins: int = 15) -> "EquipmentAssumptions":
         """Returns the standard/default assumptions for equipment power."""
         # Get project root directory using robust path resolution
-        project_root = get_project_root()
-        data_dir = project_root / "data" / "activity_initial_probability"
+        data_dir = files("ob_generation.data.activity_initial_probability")
         return cls(
             baseload=250.0,
             watts_per_person_active=120.0,
@@ -261,19 +261,19 @@ class EquipmentGenerator:
             self.laundry_frequency_dist = UniformDistribution(
                 lower=self.equipment.laundry.usage_frequency_per_week.min,
                 upper=self.equipment.laundry.usage_frequency_per_week.max,
-                int=True
+                as_int=True
             )
         if self.equipment.cooking_products.usage_frequency_per_week is not None:
             self.cooking_frequency_dist = UniformDistribution(
                 lower=self.equipment.cooking_products.usage_frequency_per_week.min,
                 upper=self.equipment.cooking_products.usage_frequency_per_week.max,
-                int=True
+                as_int=True
             )
         if self.equipment.dishwasher.dishwashing_operational_logic.usage_frequency_per_week is not None:
             self.dishwasher_frequency_dist = UniformDistribution(
                 lower=self.equipment.dishwasher.dishwashing_operational_logic.usage_frequency_per_week.min,
                 upper=self.equipment.dishwasher.dishwashing_operational_logic.usage_frequency_per_week.max,
-                int=True
+                as_int=True
             )
 
     def equipment_annual_schedule(self) -> tuple[list[list[float]], list[list[int]], list[list[int]]]:

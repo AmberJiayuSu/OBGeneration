@@ -34,8 +34,8 @@ class NormalDistribution(Distribution):
     """
     SciPy truncated normal with optional integer sampling.
     """
-    def __init__(self, mean, stddev, lower=-math.inf, upper=math.inf,int: bool = True):
-        self._int = int
+    def __init__(self, mean, stddev, lower=-math.inf, upper=math.inf,as_int: bool = True):
+        self._int = as_int
         if stddev <= 0:
             raise ValueError("stddev must be positive")
         if lower > upper:
@@ -74,7 +74,7 @@ class NormalDistribution(Distribution):
             stddev=self._stddev,
             lower=new_lower,
             upper=new_upper,
-            int=self._int
+            as_int=self._int
         )
 
     def update_mean(self, mean: float):
@@ -105,12 +105,12 @@ class NormalDistribution(Distribution):
     
 
 class UniformDistribution(Distribution):
-    def __init__(self, lower: float, upper: float,int: bool = True):
+    def __init__(self, lower: float, upper: float, as_int: bool = True):
         if lower > upper:
             raise ValueError("lower must be <= upper")
         self._lower = float(lower)
         self._upper = float(upper)
-        self._int = int
+        self._int = as_int
 
     def sample(self) -> float:
         x = random.uniform(self._lower, self._upper)

@@ -82,7 +82,7 @@ class TestNormalDistribution:
     ])
     def test_equal_bounds(self, mean, stddev, lower, upper):
         '''Test that equal bounds returns that value.'''
-        dist = NormalDistribution(mean=mean, stddev=stddev, lower=lower, upper=upper, int=False)
+        dist = NormalDistribution(mean=mean, stddev=stddev, lower=lower, upper=upper, as_int=False)
         assert dist.sample() == lower
         
     @pytest.mark.parametrize("mean,stddev,lower,upper", [
@@ -91,7 +91,7 @@ class TestNormalDistribution:
     ])
     def test_int(self, mean, stddev, lower, upper):
         '''Test if always returns integer when int=True.'''
-        dist = NormalDistribution(mean=mean, stddev=stddev, lower=lower, upper=upper, int=True)
+        dist = NormalDistribution(mean=mean, stddev=stddev, lower=lower, upper=upper, as_int=True)
         assert isinstance(dist.sample(), int)
 
     @pytest.mark.statistical
@@ -103,7 +103,7 @@ class TestNormalDistribution:
     ])
     def test_statistical_properties(self, mean, stddev):
         '''Test statistical properties of samples.'''
-        dist = NormalDistribution(mean=mean, stddev=stddev, int=False)
+        dist = NormalDistribution(mean=mean, stddev=stddev, as_int=False)
         samples = [dist.sample() for _ in range(10000)]
 
         sample_mean = np.mean(samples)
@@ -123,7 +123,7 @@ class TestUniformDistribution:
     ])
     def test_basic_bounds(self, lower, upper):
         '''Test basic sampling works.'''
-        dist = UniformDistribution(lower=lower, upper=upper, int=False)
+        dist = UniformDistribution(lower=lower, upper=upper, as_int=False)
         sample = dist.sample()
         assert lower <= sample <= upper
 
@@ -133,7 +133,7 @@ class TestUniformDistribution:
     ])
     def test_equal_bounds(self, lower, upper):
         '''Test that equal bounds returns that value.'''
-        dist = UniformDistribution(lower=lower, upper=upper, int=False)
+        dist = UniformDistribution(lower=lower, upper=upper, as_int=False)
         assert dist.sample() == lower
 
     @pytest.mark.statistical
@@ -145,7 +145,7 @@ class TestUniformDistribution:
     ])
     def test_statistical_properties(self, lower, upper):
         '''Test statistical properties of samples.'''
-        dist = UniformDistribution(lower=lower, upper=upper, int=False)
+        dist = UniformDistribution(lower=lower, upper=upper, as_int=False)
         samples = [dist.sample() for _ in range(10000)]
 
         sample_mean = np.mean(samples)

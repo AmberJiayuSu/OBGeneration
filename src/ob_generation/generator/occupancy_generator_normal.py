@@ -137,14 +137,14 @@ class TimeRangeDistribution:
             stddev=start_variance,
             lower=0.0,
             upper=upper_bound,
-            int=False
+            as_int=False
         )
         self.end_dist = NormalDistribution(
             mean= time_range.end_hour ,
             stddev=end_variance,
             lower=0.0,
             upper=upper_bound,
-            int=False
+            as_int=False
         )
         self.wraps_midnight = time_range.wraps_midnight
 

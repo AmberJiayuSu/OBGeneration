@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "source": "test_input",
+    "date": "2026-03-29"
+  },
+  "occupancy": {
+    "num_occupants": 1,
+    "household_composition": {
+      "occupants": [
+        {
+          "weekday_cluster": "long_day_away",
+          "weekend_cluster": "mostly_home"
+        }
+      ]
+    },
+    "weekday_pattern": {
+      "is_always_occupied": false,
+      "away_interval": {
+        "start_hour": 8.5,
+        "end_hour": 18.0
+      },
+      "num_of_days": 5,
+      "away_time_rigidness": "strict"
+    },
+    "weekend_pattern": {
+      "is_always_occupied": true
+    },
+    "sleep_pattern": {
+      "is_always_awake": false,
+      "sleep_time": {
+        "start_hour": 23.5,
+        "end_hour": 7.0
+      },
+      "sleep_time_rigidness": "mostly_consistent"
+    }
+  },
+  "lighting": {
+    "when_daylight_bright": true
+  },
+  "hvac": {
+    "heating": {
+      "type": "thermostat",
+      "active_setpoint": 21,
+      "sleep_setpoint": 18,
+      "absent_setpoint": 16
+    },
+    "cooling": {
+      "type": "thermostat",
+      "active_setpoint": 25,
+      "sleep_setpoint": 27,
+      "absent_setpoint": null
+    }
+  },
+  "window": {
+    "heating_season": "always_closed",
+    "cooling_season": "occasionally_open",
+    "shoulder_season": "frequently_open"
+  },
+  "equipment": {
+    "laundry": {
+      "has_washer": true,
+      "washer_efficient": true,
+      "has_dryer": true,
+      "dryer_efficient": true,
+      "usage_frequency_per_week": { "min": 1, "max": 2 }
+    },
+    "refrigerator": {
+      "has_refrigerator": true,
+      "efficient_refrigerator": true,
+      "number_of_refrigerators": 1
+    },
+    "dishwasher": {
+      "has_dishwasher": true,
+      "efficient_dishwasher": true,
+      "dishwashing_operational_logic": {
+        "pattern_type": "whenever_full"
+      }
+    },
+    "cooking_products": {
+      "has_cooking_products": true,
+      "cooking_products_fuel": "electric",
+      "usage_frequency_per_week": { "min": 5, "max": 7 }
+    }
+  }
+}

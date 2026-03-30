@@ -7,7 +7,8 @@ from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path
 from typing import Optional, NamedTuple, Tuple
-from ob_generation.generator.ob_utils import ScheduleUtils, get_project_root
+from ob_generation.generator.ob_utils import ScheduleUtils
+from importlib.resources import files
 import pandas as pd
 
 
@@ -23,14 +24,14 @@ class TimeRangeDistribution:
             stddev=start_variance,
             lower=0.0,
             upper=upper_bound,
-            int=False
+            as_int=False
         )
         self.end_dist = NormalDistribution(
             mean= time_range.end_hour ,
             stddev=end_variance,
             lower=0.0,
             upper=upper_bound,
-            int=False
+            as_int=False
         )
         self.wraps_midnight = time_range.wraps_midnight
 
@@ -219,8 +220,7 @@ class ClusterAssumptions:
 
     @classmethod
     def default(cls) -> "ClusterAssumptions":
-        project_root = get_project_root()
-        data_dir = project_root / "data" / "occupancy_probability"
+        data_dir = files("ob_generation.data.occupancy_probability")
         num_clusters = 5
 
         df = pd.read_csv(data_dir / "weekday" / "weekday_pi0.csv").sort_values("raw_cluster")

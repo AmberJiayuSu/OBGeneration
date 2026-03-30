@@ -40,7 +40,7 @@ class DistributionConfig(BaseModel):
             lo = float(context.get("lower", lo))
             hi = float(context.get("upper", hi))
             as_int = bool(p.get("int", True))
-            return UniformDistribution(lower=lo, upper=hi, int=as_int)
+            return UniformDistribution(lower=lo, upper=hi, as_int=as_int)
 
         if self.dist_type == "normal":
             mu = float(p.get("mean", 0.0))
@@ -53,7 +53,7 @@ class DistributionConfig(BaseModel):
             ub = float(context.get("upper", ub))
 
             as_int = bool(p.get("int", True))
-            return NormalDistribution(mean=mu, stddev=sigma, lower=lb, upper=ub, int=as_int)
+            return NormalDistribution(mean=mu, stddev=sigma, lower=lb, upper=ub, as_int=as_int)
 
         if self.dist_type == "categorical":
             weights = p.get("weights", [])

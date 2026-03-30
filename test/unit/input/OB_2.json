@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "source": "test_input",
+    "date": "2026-03-29"
+  },
+  "occupancy": {
+    "num_occupants": 4,
+    "household_composition": {
+      "occupants": [
+        { "weekday_cluster": "long_day_away", "weekend_cluster": "mostly_home" },
+        { "weekday_cluster": "morning_away", "weekend_cluster": "mostly_home" },
+        { "weekday_cluster": "afternoon_away", "weekend_cluster": "afternoon_away" },
+        { "weekday_cluster": "mostly_home", "weekend_cluster": "mostly_home" }
+      ]
+    },
+    "weekday_pattern": {
+      "is_always_occupied": false,
+      "away_interval": {
+        "start_hour": 14.0,
+        "end_hour": 16.0
+      },
+      "num_of_days": 3,
+      "away_time_rigidness": "highly_variable"
+    },
+    "weekend_pattern": {
+      "is_always_occupied": false,
+      "away_interval": {
+        "start_hour": 12.0,
+        "end_hour": 16.0
+      },
+      "away_time_rigidness": "somewhat_variable"
+    },
+    "sleep_pattern": {
+      "is_always_awake": false,
+      "sleep_time": {
+        "start_hour": 22.5,
+        "end_hour": 6.5
+      },
+      "sleep_time_rigidness": "somewhat_variable"
+    }
+  },
+  "lighting": {
+    "when_daylight_bright": false
+  },
+  "hvac": {
+    "heating": {
+      "type": "thermostat",
+      "active_setpoint": 22,
+      "sleep_setpoint": 19,
+      "absent_setpoint": 20
+    },
+    "cooling": {
+      "type": "binary",
+      "active_state": true,
+      "sleep_state": false,
+      "absent_state": false
+    }
+  },
+  "window": {
+    "heating_season": "occasionally_open",
+    "cooling_season": "frequently_open",
+    "shoulder_season": "frequently_open"
+  },
+  "equipment": {
+    "laundry": {
+      "has_washer": true,
+      "washer_efficient": false,
+      "has_dryer": true,
+      "dryer_efficient": false,
+      "usage_frequency_per_week": { "min": 4, "max": 7 }
+    },
+    "refrigerator": {
+      "has_refrigerator": true,
+      "efficient_refrigerator": false,
+      "number_of_refrigerators": 2
+    },
+    "dishwasher": {
+      "has_dishwasher": true,
+      "efficient_dishwasher": false,
+      "dishwashing_operational_logic": {
+        "pattern_type": "daily_batch_if_cooked"
+      }
+    },
+    "cooking_products": {
+      "has_cooking_products": true,
+      "cooking_products_fuel": "electric",
+      "usage_frequency_per_week": { "min": 10, "max": 18 }
+    }
+  }
+}

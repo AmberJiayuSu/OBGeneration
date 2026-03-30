@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "source": "test_input",
+    "date": "2026-03-29"
+  },
+  "occupancy": {
+    "num_occupants": 2,
+    "household_composition": {
+      "occupants": [
+        {
+          "weekday_cluster": "mostly_home",
+          "weekend_cluster": "evening_night_away"
+        },
+        {
+          "weekday_cluster": "afternoon_away",
+          "weekend_cluster": "evening_night_away"
+        }
+      ]
+    },
+    "weekday_pattern": {
+      "is_always_occupied": false,
+      "away_interval": {
+        "start_hour": 13.0,
+        "end_hour": 17.0
+      },
+      "num_of_days": 3,
+      "away_time_rigidness": "highly_variable"
+    },
+    "weekend_pattern": {
+      "is_always_occupied": false,
+      "away_interval": {
+        "start_hour": 18.0,
+        "end_hour": 1.5
+      },
+      "away_time_rigidness": "highly_variable"
+    },
+    "sleep_pattern": {
+      "is_always_awake": false,
+      "sleep_time": {
+        "start_hour": 1.0,
+        "end_hour": 9.5
+      },
+      "sleep_time_rigidness": "highly_variable"
+    }
+  },
+  "lighting": {
+    "when_daylight_bright": true
+  },
+  "hvac": {
+    "heating": {
+      "type": "valve",
+      "active_level": "medium",
+      "sleep_level": "low",
+      "absent_level": "minimum"
+    },
+    "cooling": null
+  },
+  "window": {
+    "heating_season": "occasionally_open",
+    "cooling_season": "frequently_open",
+    "shoulder_season": "frequently_open"
+  },
+  "equipment": {
+    "laundry": {
+      "has_washer": true,
+      "has_dryer": false,
+      "usage_frequency_per_week": { "min": 2, "max": 4 }
+    },
+    "refrigerator": {
+      "has_refrigerator": true,
+      "efficient_refrigerator": true,
+      "number_of_refrigerators": 1
+    },
+    "dishwasher": {
+      "has_dishwasher": false
+    },
+    "cooking_products": {
+      "has_cooking_products": true,
+      "cooking_products_fuel": "electric",
+      "usage_frequency_per_week": { "min": 3, "max": 10 }
+    }
+  }
+}

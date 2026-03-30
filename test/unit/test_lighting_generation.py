@@ -56,13 +56,13 @@ class TestLightingGeneration:
         generator2 = LightingGenerator(lighting2)
         assert generator2.get_dimming() == False
 
-    @pytest.mark.parametrize("occ", ["occ_1"], indirect=True)
-    def test_lighting_house_empty_1(self, occ):
+
+    def test_lighting_house(self, occ_1):
         lighting_json = """{
             "when_daylight_bright": true
         }"""
         assumption = ClusterAssumptions.default()
-        occ1 = OccupancyGenerator(occ, assumption, 30)
+        occ1 = OccupancyGenerator(occ_1, assumption, 30)
         lighting = Lighting.model_validate_json(lighting_json)
         lighting_gen = LightingGenerator(lighting)
         household_occ_sch = occ1.generate()
