@@ -24,6 +24,9 @@ dev = [
     "pytest-xdist>=3.3.0",
 ]
 
+[tool.uv.workspace]
+members = ["validation"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ob_generation"]
 include = ["src/ob_generation/data/**"]
