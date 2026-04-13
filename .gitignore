@@ -215,4 +215,7 @@ __marimo__/
 *.png
 *.jpg
 *.jpeg
+*.csv
+*.xlsx
+*.parquet
 
