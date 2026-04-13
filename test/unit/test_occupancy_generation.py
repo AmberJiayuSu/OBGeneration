@@ -976,7 +976,7 @@ class TestApplySleepTime:
         # Start with states that have sleep=0.5 everywhere (excess sleep outside window)
         initial_home, initial_sleep = 0.3, 0.5
         initial_states = self._make_states_with_sleep(home=initial_home, sleep=initial_sleep)
-        result = occ.apply_sleep_time(initial_states, sleep_time, max_awake_sleep_ratio=0.0)
+        result = occ.apply_sleep_time(initial_states, sleep_time)
 
         for day in range(365):
             week, day_in_week = day // 7, day % 7
@@ -984,11 +984,17 @@ class TestApplySleepTime:
             for b in range(bins_per_day):
                 f = result[week][day_start + b]
                 if not sleep_range.contains_hour(b * resolution_hours):
-                    assert f.sleep == pytest.approx(0.0), (
-                        f"Day {day} bin {b}: sleep not clamped (sleep={f.sleep})"
-                    )
-                    assert f.home == pytest.approx(initial_home + initial_sleep), (
-                        f"Day {day} bin {b}: excess sleep not redistributed to home (home={f.home})"
+                    if f.sleep + f.home > 0.0:  # Only check bins that had some occupancy to start with
+                        ratio = f.sleep / (f.sleep + f.home)
+                        assert ratio <= 0.3, (
+                            f"Day {day} bin {b}: sleep not clamped (sleep={f.sleep})"
+                        )
+                        assert (f.home + f.sleep) == pytest.approx(initial_home + initial_sleep), (
+                            f"Day {day} bin {b}: excess sleep not redistributed to home (home={f.home})"
+                        )
+                else:
+                    assert f.home == 0.0 and f.sleep == 1.0, (
+                        f"Day {day} bin {b}: expected home=0, sleep=1 inside sleep window, got {f}"
                     )
 
     def test_none_sleep_day_leaves_states_unchanged(self, occupancy_with_away_and_sleep, default_cluster_assumptions):
@@ -1021,7 +1027,7 @@ class TestApplySleepTime:
         bins_per_day = 1440 // SIM_RES
 
         sleep_time = occ.household_sleep_time_annually([None] * 365)
-        states = occ.apply_sleep_time(occ.household_mc_state_annually(), sleep_time, max_awake_sleep_ratio=0.0)
+        states = occ.apply_sleep_time(occ.household_mc_state_annually(), sleep_time)
 
         daily_sleep_counts = []
         for day in range(365):

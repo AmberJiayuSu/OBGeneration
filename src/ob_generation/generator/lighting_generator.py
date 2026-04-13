@@ -1,8 +1,6 @@
 import ob_generation.model.lighting as Lighting
-from ob_generation.generator.occupancy_generator import OccupancyGenerator
-from pydantic import BaseModel, Field
-from ob_generation.stochastic.distribution import Distribution
-from ob_generation.stochastic.distribution_config import DistributionConfig
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
+
 
 
 # class LightingAssumptions(BaseModel):
@@ -26,22 +24,26 @@ class LightingGenerator:
 
 
 
-    def lighting_annual_schedule(self, sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def lighting_annual_schedule(self, occupancy_annual_schedule:  list[list[HouseholdOccupancyFractions]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
         """ Translates lighting usage pattern into a full annual schedule based on occupancy and sleep times."""
         annual_schedule = []
         for week_index in range(len(sleep_mask_annual)):
             weekly_sleep_mask = sleep_mask_annual[week_index]
-            weekly_lighting_schedule = self.lighting_weekly_schedule(weekly_sleep_mask)
+            weekly_schedule = occupancy_annual_schedule[week_index]
+            weekly_lighting_schedule = self.lighting_weekly_schedule(weekly_schedule,weekly_sleep_mask)
             annual_schedule.append(weekly_lighting_schedule)
         return annual_schedule
        
     
-    def lighting_weekly_schedule(self, sleep_mask_weekly: list[bool]) -> list[float]:
+    def lighting_weekly_schedule(self, weekly_schedule: list[HouseholdOccupancyFractions], sleep_mask_weekly: list[bool]) -> list[float]:
         """ Translates lighting usage pattern into a full week schedule based on occupancy and sleep times."""
         schedule = []
         length = len(sleep_mask_weekly)
 
-        schedule = [1.0] * length
+        if self.lighting.when_away:
+            schedule = [occupancy.home for occupancy in weekly_schedule]
+        else:
+            schedule = [1.0] * length
 
         # Adjust for sleep times
         # Assumption: during sleep time, lighting usage is zero
