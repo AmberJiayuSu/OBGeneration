@@ -2,6 +2,7 @@ from ob_generation.stochastic.distribution import Distribution,NormalDistributio
 from ob_generation.model.occupancy import Occupancy, TimeRange, WeekendOccupancyPattern, WeekdayOccupancyPattern
 from ob_generation.stochastic.distribution_config import DistributionConfig
 from enum import Enum
+import math
 import numpy as np
 from pydantic import BaseModel, Field, ConfigDict
 import json
@@ -10,6 +11,7 @@ from typing import Optional, NamedTuple, Tuple
 from ob_generation.generator.ob_utils import ScheduleUtils
 from importlib.resources import files
 import pandas as pd
+import copy
 
 
 class TimeRangeDistribution:
@@ -373,6 +375,8 @@ class OccupancyGenerator:
         away = HouseholdOccupancyFractions(home=0.0, sleep=0.0)
         one_unit = 1.0 / self.occupancy.num_occupants
 
+        new_states = copy.deepcopy(occupancy_states)
+
         for day, away_range in enumerate(away_time[:365]):
             week = day // 7
             day_start = (day % 7) * bins_per_day
@@ -380,31 +384,35 @@ class OccupancyGenerator:
             if away_range is None:
                 for b in range(bins_per_day):
                     idx = day_start + b
-                    f = occupancy_states[week][idx]
+                    f = new_states[week][idx]
                     if f.home + f.sleep == 0.0:
-                        occupancy_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
+                        new_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
             else:
                 for b in range(bins_per_day):
                     bin_hour = b * resolution_hours
                     idx = day_start + b
                     if away_range.contains_hour(bin_hour):
-                        occupancy_states[week][idx] = away
+                        new_states[week][idx] = away
                     else:
-                        f = occupancy_states[week][idx]
+                        f = new_states[week][idx]
                         if f.home + f.sleep == 0.0:
-                            occupancy_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
+                            new_states[week][idx] = HouseholdOccupancyFractions(home=one_unit, sleep=0.0)
 
-        return occupancy_states
-    
-    def apply_sleep_time(self, occupancy_states: list[list[HouseholdOccupancyFractions]], sleep_time: list[None | TimeRange], max_awake_sleep_ratio: float = 0.0) -> list[list[HouseholdOccupancyFractions]]:
+        return new_states
+
+    def apply_sleep_time(self, occupancy_states: list[list[HouseholdOccupancyFractions]], sleep_time: list[None | TimeRange], active_threshold: float = 0.3) -> list[list[HouseholdOccupancyFractions]]:
         """Post-process the generated occupancy states to enforce sleep_time constraints.
 
         During sleep_time: force sleep=1, home=0 (all occupants asleep).
-        Outside sleep_time: clamp sleep ratio to max_awake_sleep_ratio.
+        Outside sleep_time: clamp sleep ratio to at least one person awake
         """
         bins_per_day = 1440 // self.sim_resolution_min
         resolution_hours = self.sim_resolution_min / 60.0
         asleep = HouseholdOccupancyFractions(home=0.0, sleep=1.0)
+        # round up to the nearest multiples of 1 / num_occupants
+        active_threshold = math.ceil(active_threshold * self.occupancy.num_occupants) / self.occupancy.num_occupants
+
+        new_states = copy.deepcopy(occupancy_states)
 
         for day, sleep_range in enumerate(sleep_time[:365]):
             if sleep_range is None:
@@ -414,14 +422,19 @@ class OccupancyGenerator:
             for b in range(bins_per_day):
                 idx = day_start + b
                 if sleep_range.contains_hour(b * resolution_hours):
-                    occupancy_states[week][idx] = asleep
+                    new_states[week][idx] = asleep
                 else:
-                    f = occupancy_states[week][idx]
-                    if f.sleep > max_awake_sleep_ratio:
-                        excess = f.sleep - max_awake_sleep_ratio
-                        occupancy_states[week][idx] = HouseholdOccupancyFractions(home=f.home + excess, sleep=max_awake_sleep_ratio)
+                    f = new_states[week][idx]
+                    #no one home
+                    if (f.home + f.sleep)== 0.0:
+                        continue
+                    else:
+                        active_ratio = f.home / (f.home + f.sleep) 
+                        if active_ratio < active_threshold:
+                            excess = active_threshold - active_ratio
+                            new_states[week][idx] = HouseholdOccupancyFractions(home=f.home + excess, sleep= f.sleep - excess)
 
-        return occupancy_states
+        return new_states
 
 
 
