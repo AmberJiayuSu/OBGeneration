@@ -1,0 +1,436 @@
+SiteID,RoomID,ApplianceID,Type,Make,Model,Vintage,Wifi_Enabled,Primary,Stove_Fuel,Stove_Type,Stove_Number_Burners,Oven_Fuel,Oven_Type,Oven_Single_Or_Double,Room_Type,RBSA Data Source,ee_site_id
+SITE_1023,ROOM_23428,APPL_136868,Stove / Oven combo,General Electric,JB910S L6SS,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,292998
+SITE_1036,ROOM_11885,APPL_15413,Stove / Oven combo,General Electric,JGS650SEF3SS,Unknown,No,Yes,Natural Gas,Combustion,4,Natural Gas,Convection,Single Oven,Kitchen,RBSA III,295578
+SITE_1049,ROOM_41375,APPL_142718,Stove / Oven combo,General Electric,JGBP28MEM1BS,2003,No,Yes,Natural Gas,Combustion,4,Natural Gas,Both,Single Oven,Kitchen,RBSA III,298259
+SITE_105,ROOM_32128,APPL_99988,Stovetop,DCS,Unknown,Unknown,No,Yes,Natural Gas,Combustion,6,Not Available,Not Available,Not Available,Kitchen,RBSA III,113763
+SITE_105,ROOM_32128,APPL_88761,Oven (standalone / wall),Unknown,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Natural Gas,Convection,Double Oven,Kitchen,RBSA III,113763
+SITE_1053,ROOM_17177,APPL_56178,Stove / Oven combo,Whirlpool,WFE525S0JZ0,Unknown,No,Yes,Electric,Glass Top,5,Electric,Radiant,Single Oven,Kitchen,RBSA III,299113
+SITE_107,ROOM_24984,APPL_123388,Stove / Oven combo,Kenmore,#79074133313,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,113900
+SITE_107,ROOM_24265,APPL_13594,Stovetop,Unknown,Unknown,Unknown,No,No,Electric,Glass Top,2,Not Available,Not Available,Not Available,Kitchen,RBSA III,113900
+SITE_1080,ROOM_24568,APPL_60663,Stove / Oven combo,General Electric,JB680S T2SS,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,303645
+SITE_1087,ROOM_27111,APPL_54459,Stove / Oven combo,Samsung,NE59M4320SS/AA,2017,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,306108
+SITE_1094,ROOM_5356,APPL_89124,Stove / Oven combo,Jenn-Air,Unknown,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,307473
+SITE_1096,ROOM_20429,APPL_90588,Stove / Oven combo,Frigidaire,FGIH3047VFB,Unknown,No,Yes,Electric,Induction,4,Electric,Convection,Single Oven,Kitchen,RBSA III,308069
+SITE_110,ROOM_8525,APPL_126808,Stove / Oven combo,Frigidaire,FGEF3032MFH,Unknown,No,Yes,Electric,Glass Top,4,Electric,Convection,Single Oven,Kitchen,RBSA III,114110
+SITE_1102,ROOM_43119,APPL_38465,Stovetop,General Electric,#9114262591,Unknown,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,308832
+SITE_1102,ROOM_43119,APPL_165601,Oven (standalone / wall),General Electric,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,308832
+SITE_1109,ROOM_22276,APPL_10360,Oven (standalone / wall),LG,LWC3063BD/00,2020,Yes,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,312138
+SITE_1109,ROOM_22276,APPL_88918,Stove / Oven combo,General Electric,CGS980SEM7SS,Unknown,No,Yes,Propane,Combustion,5,Propane,Both,Single Oven,Kitchen,RBSA III,312138
+SITE_1127,ROOM_39196,APPL_122295,Stove / Oven combo,General Electric,JBP66S0K1SS,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,315991
+SITE_1136,ROOM_18916,APPL_174023,Stove / Oven combo,General Electric,Unknown,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,317951
+SITE_1141,ROOM_9869,APPL_89760,Stove / Oven combo,Whirlpool,RF378PX6Q1,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,320726
+SITE_1146,ROOM_26716,APPL_93098,Oven (standalone / wall),KitchenAid,KEBS107DWH9,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,322328
+SITE_1146,ROOM_26716,APPL_5635,Stovetop,Jenn-Air,Unknown,1980,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,322328
+SITE_1194,ROOM_10641,APPL_72121,Stove / Oven combo,Frigidaire,FFEF3024RSA,Unknown,No,No,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,339735
+SITE_121,ROOM_44585,APPL_13696,Stove / Oven combo,Kenmore,Unknown,Unknown,No,Yes,Natural Gas,Combustion,4,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,15472
+SITE_1258,ROOM_44389,APPL_725,Stove / Oven combo,Spectra,J BP79A0B2AA,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,363743
+SITE_1285,ROOM_41201,APPL_120495,Oven (standalone / wall),Kenmore,#79047763400,2004,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Double Oven,Kitchen,RBSA III,374781
+SITE_1285,ROOM_41201,APPL_32910,Stove / Oven combo,Kenmore,#79099123403,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,374781
+SITE_130,ROOM_5989,APPL_157013,Stove / Oven combo,General Electric,JS760SL3SS,Unknown,No,Yes,Electric,Glass Top,4,Electric,Convection,Single Oven,Kitchen,RBSA III,116404
+SITE_1317,ROOM_27342,APPL_89001,Stove / Oven combo,Samsung,NE58K9430SS/AA,2017,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,388653
+SITE_1321,ROOM_44782,APPL_47448,Stove / Oven combo,General Electric,JB645DK6WW,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,390223
+SITE_1323,ROOM_13694,APPL_113358,Stove / Oven combo,Frigidaire,FFEF3016TSD,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,390591
+SITE_1325,ROOM_18051,APPL_56574,Stove / Oven combo,General Electric,J BP82W0F2WW,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,391469
+SITE_1327,ROOM_15417,APPL_152689,Stovetop,KitchenAid,Unknown,Unknown,No,Yes,Propane,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,391945
+SITE_1327,ROOM_15417,APPL_97777,Oven (standalone / wall),KitchenAid,KEBK101BSS00,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,391945
+SITE_1351,ROOM_823,APPL_145983,Stove / Oven combo,American Range,Unknown,Unknown,No,Yes,Natural Gas,Combustion,4,Electric,Convection,Single Oven,Kitchen,RBSA III,395998
+SITE_1354,ROOM_4025,APPL_2992,Stove / Oven combo,Samsung,Unknown,Unknown,Yes,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,397168
+SITE_1355,ROOM_10937,APPL_5733,Stove / Oven combo,Samsung,FX710BGS,2013,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,397295
+SITE_1357,ROOM_41010,APPL_15340,Stove / Oven combo,Kenmore,#79096182713,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,397758
+SITE_1367,ROOM_19457,APPL_79015,Stovetop,Kenmore,#79044182601,2008,No,Yes,Electric,Glass Top,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,665
+SITE_1367,ROOM_19457,APPL_104001,Oven (standalone / wall),Jenn-Air,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,665
+SITE_138,ROOM_18001,APPL_170869,Stove / Oven combo,Whirlpool,RF263LXTB,2006,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,117592
+SITE_1404,ROOM_38959,APPL_153017,Stove / Oven combo,General Electric,JB860DJ6WW,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,11380
+SITE_1410,ROOM_44147,APPL_75012,Stovetop,Kenmore,Unknown,Unknown,No,Yes,Unknown,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,613745
+SITE_1410,ROOM_44147,APPL_6666,Oven (standalone / wall),Kenmore,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,613745
+SITE_1455,ROOM_29582,APPL_134848,Stove / Oven combo,General Electric,JB250DF4BB,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,26709
+SITE_1457,ROOM_18774,APPL_56356,Stove / Oven combo,Frigidaire,FEFL79DSK,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,626813
+SITE_1458,ROOM_16969,APPL_94256,Stovetop,KitchenAid,Unknown,Unknown,No,Yes,Electric,Coils,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,627821
+SITE_1458,ROOM_16969,APPL_10914,Oven (standalone / wall),White-Westinghouse,KB251T0M,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,627821
+SITE_1464,ROOM_34920,APPL_120757,Stove / Oven combo,Kenmore,#66595775890,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,628895
+SITE_1464,ROOM_37714,APPL_129266,Stove / Oven combo,TrueTemp,J BP66BOB1WH,Unknown,No,No,Electric,Glass Top,4,Electric,Radiant,Single Oven,Other,RBSA III,628895
+SITE_1467,ROOM_38863,APPL_4468,Stove / Oven combo,Unknown,Unknown,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,30128
+SITE_1487,ROOM_24380,APPL_105142,Oven (standalone / wall),Whirlpool,Unknown,Unknown,Yes,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Double Oven,Kitchen,RBSA III,634231
+SITE_1487,ROOM_24380,APPL_33694,Stovetop,Kenmore,Unknown,Unknown,No,Yes,Electric,Glass Top,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,634231
+SITE_1499,ROOM_36558,APPL_154286,Stove / Oven combo,General Electric,JS760SP1SS,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,636536
+SITE_1513,ROOM_11192,APPL_142603,Stove / Oven combo,Sears,Unknown,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,639673
+SITE_1531,ROOM_33965,APPL_68189,Stove / Oven combo,Kenmore,#79096029401,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,645656
+SITE_1534,ROOM_10480,APPL_65573,Stove / Oven combo,Whirlpool,GFE461LVS0,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,46691
+SITE_154,ROOM_15707,APPL_45992,Stovetop,Whirlpool,WFG361LVS,Unknown,No,Yes,Natural Gas,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,120111
+SITE_1546,ROOM_12864,APPL_76432,Stovetop,General Electric,Unknown,Unknown,No,Yes,Electric,Coils,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,650217
+SITE_1546,ROOM_12864,APPL_39538,Oven (standalone / wall),General Electric,JK1000DF3BB,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,650217
+SITE_155,ROOM_608,APPL_50223,Stove / Oven combo,Whirlpool,WFE540H0ES0,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,120179
+SITE_1553,ROOM_36822,APPL_49897,Stove / Oven combo,General Electric,JB700SJ4SS,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,651751
+SITE_1562,ROOM_201,APPL_47697,Stove / Oven combo,Frigidaire,GCRG3038AFA,Unknown,No,Yes,Propane,Combustion,5,Propane,Both,Single Oven,Kitchen,RBSA III,654009
+SITE_158,ROOM_18566,APPL_141882,Stovetop,Viking,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,120622
+SITE_1584,ROOM_46167,APPL_166922,Stovetop,Samsung,Unknown,Unknown,No,Yes,Electric,Glass Top,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,88601
+SITE_1584,ROOM_46167,APPL_61665,Oven (standalone / wall),Samsung,NV51K6650SSAA,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,88601
+SITE_1596,ROOM_15632,APPL_45474,Stovetop,Kenmore,Unknown,Unknown,No,Yes,Natural Gas,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,67706
+SITE_1596,ROOM_15632,APPL_91588,Oven (standalone / wall),Kenmore,7904-9533312,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Double Oven,Kitchen,RBSA III,67706
+SITE_1599,ROOM_23657,APPL_10828,Stove / Oven combo,Bertazzoni,X36 5 GGV X/01,2009,No,Yes,Natural Gas,Combustion,5,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,74648
+SITE_160,ROOM_11925,APPL_89027,Stovetop,Maytag,MEC8836HS,Unknown,No,Yes,Electric,Glass Top,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,121058
+SITE_160,ROOM_11925,APPL_127739,Mini-oven (standalone / wall),KitchenAid,KEWS105SS03,Unknown,No,No,Not Available,Not Available,Not Available,Electric,Convection,Unknown,Kitchen,RBSA III,121058
+SITE_160,ROOM_11925,APPL_93013,Oven (standalone / wall),KitchenAid,KEBK206SS04,Unknown,No,Yes,Not Available,Not Available,Not Available,Unknown,Unknown,Unknown,Kitchen,RBSA III,121058
+SITE_1612,ROOM_29924,APPL_172036,Stove / Oven combo,Samsung,NX58K7850SG/AA,2018,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,77597
+SITE_1623,ROOM_20113,APPL_156619,Stove / Oven combo,Frigidaire,FGF355ASE,Unknown,No,Yes,Natural Gas,Combustion,4,Natural Gas,Convection,Single Oven,Kitchen,RBSA III,64314
+SITE_169,ROOM_1268,APPL_157374,Stove / Oven combo,White-Westinghouse,Unknown,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,122373
+SITE_176,ROOM_3012,APPL_54613,Stove / Oven combo,General Electric,PROFILE,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,122861
+SITE_177,ROOM_29411,APPL_9566,Stove / Oven combo,LG,LSG4513BD/00,2019,Unknown,Yes,Natural Gas,Combustion,5,Natural Gas,Convection,Single Oven,Kitchen,RBSA III,122989
+SITE_189,ROOM_43630,APPL_145957,Oven (standalone / wall),Jenn-Air,E150072SP,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Double Oven,Kitchen,RBSA III,124018
+SITE_189,ROOM_43630,APPL_28716,Stovetop,Jenn-Air,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,124018
+SITE_199,ROOM_40442,APPL_167800,Stove / Oven combo,Frigidaire,FFGF3054TSA,2017,No,Yes,Natural Gas,Combustion,5,Natural Gas,Convection,Single Oven,Kitchen,RBSA III,125791
+SITE_232,ROOM_11235,APPL_108373,Stove / Oven combo,General Electric,JB258DM1WW,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,130387
+SITE_235,ROOM_14365,APPL_67708,Stovetop,Whirlpool,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,31425
+SITE_235,ROOM_14365,APPL_48832,Oven (standalone / wall),Whirlpool,WOS51EC0AS0R,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,31425
+SITE_24,ROOM_9298,APPL_64436,Stove / Oven combo,Frigidaire,LFEF3054TFH,Unknown,No,Yes,Electric,Glass Top,4,Unknown,Radiant,Single Oven,Kitchen,RBSA III,38710
+SITE_246,ROOM_20136,APPL_134269,Stove / Oven combo,Maytag,CGR3765ADC,Unknown,No,No,Natural Gas,Combustion,4,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,132997
+SITE_255,ROOM_38001,APPL_35523,Stove / Oven combo,General Electric,JGSS66SEL1SS,Unknown,No,Yes,Propane,Combustion,5,Propane,Radiant,Single Oven,Kitchen,RBSA III,133904
+SITE_267,ROOM_27194,APPL_111510,Stovetop,General Electric,JGSS66SEL1SS,Unknown,No,Yes,Natural Gas,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,36063
+SITE_270,ROOM_46599,APPL_171032,Stove / Oven combo,Whirlpool,RF361PKB,2004,No,Yes,Electric,Glass Top,Unknown,Unknown,Unknown,Single Oven,Kitchen,RBSA III,136665
+SITE_28,ROOM_33307,APPL_44730,Stove / Oven combo,General Electric,JBP35DM1BB,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,104344
+SITE_284,ROOM_37848,APPL_1820,Stove / Oven combo,Kenmore,#79096599601,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,138004
+SITE_284,ROOM_6660,APPL_73354,Stove / Oven combo,Ikea,IES505DS0,Unknown,No,No,Electric,Glass Top,4,Electric,Both,Single Oven,Garage,RBSA III,138004
+SITE_311,ROOM_14321,APPL_128560,Stove / Oven combo,Thermador,PRD366GHU/11,Unknown,No,Yes,Propane,Combustion,6,Propane,Both,Single Oven,Kitchen,RBSA III,141373
+SITE_311,ROOM_14321,APPL_167208,Oven (standalone / wall),Viking,PROFESSIONAL,Unknown,No,No,Not Available,Not Available,Not Available,Propane,Both,Single Oven,Kitchen,RBSA III,141373
+SITE_312,ROOM_44500,APPL_26773,Stove / Oven combo,Thermador,#860800016,Unknown,No,Yes,Propane,Combustion,4,Propane,Both,Single Oven,Kitchen,RBSA III,141627
+SITE_314,ROOM_13500,APPL_46483,Oven (standalone / wall),General Electric,P 1916S R2SS,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,141880
+SITE_314,ROOM_13500,APPL_52078,Stovetop,General Electric,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,141880
+SITE_321,ROOM_6656,APPL_62374,Stove / Oven combo,Samsung,NE58K9430SS/AA,2020,No,Yes,Electric,Induction,4,Electric,Convection,Single Oven,Kitchen,RBSA III,42713
+SITE_337,ROOM_3013,APPL_86393,Stove / Oven combo,Bosch,Unknown,2020,Unknown,Yes,Electric,Induction,5,Electric,Both,Single Oven,Kitchen,RBSA III,144254
+SITE_340,ROOM_20011,APPL_9935,Stove / Oven combo,Whirlpool,XFE361LVB,Unknown,No,Yes,Electric,Glass Top,Unknown,Unknown,Unknown,Single Oven,Kitchen,RBSA III,144417
+SITE_353,ROOM_42197,APPL_164257,Stove / Oven combo,LG,Unknown,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,146524
+SITE_370,ROOM_41592,APPL_8735,Stovetop,General Electric,JGP933SEK2SS,Unknown,No,Yes,Propane,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,150409
+SITE_370,ROOM_41592,APPL_86336,Oven (standalone / wall),General Electric,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Unknown,Single Oven,Kitchen,RBSA III,150409
+SITE_372,ROOM_1433,APPL_52694,Stove / Oven combo,Frigidaire,FGES3065KFF,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,150896
+SITE_373,ROOM_1158,APPL_131484,Stove / Oven combo,Bosch,Unknown,Unknown,No,Yes,Electric,Induction,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,150973
+SITE_379,ROOM_28608,APPL_110864,Stove / Oven combo,KitchenAid,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,152143
+SITE_385,ROOM_13593,APPL_9995,Stovetop,Amana,AK2T35W,Unknown,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,152539
+SITE_385,ROOM_13593,APPL_107696,Oven (standalone / wall),Maytag,#CWE5800ACE28,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Double Oven,Kitchen,RBSA III,152539
+SITE_392,ROOM_38916,APPL_91316,Stovetop,Amana,AKS3040BWW,Unknown,No,Yes,Propane,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,153472
+SITE_392,ROOM_38916,APPL_75072,Oven (standalone / wall),Amana,AEW3630DDW,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Double Oven,Kitchen,RBSA III,153472
+SITE_4,ROOM_41729,APPL_160157,Stove / Oven combo,Electrolux,EW30ES65GSF,2011,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,100506
+SITE_408,ROOM_4609,APPL_141538,Stove / Oven combo,Frigidaire,LFEH3054UFD,2020,No,Yes,Electric,Glass Top,Unknown,Unknown,Unknown,Single Oven,Kitchen,RBSA III,155731
+SITE_411,ROOM_8233,APPL_161242,Stove / Oven combo,Whirlpool,WFE525S0JZ0,2021,No,No,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,157237
+SITE_418,ROOM_23401,APPL_4460,Stove / Oven combo,General Electric,JB750SJ6SS,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,158234
+SITE_420,ROOM_15294,APPL_152636,Stove / Oven combo,KitchenAid,KSEG700ESS0,2016,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,158600
+SITE_43,ROOM_12595,APPL_170381,Stove / Oven combo,Frigidaire,FEF366ECE,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,105665
+SITE_446,ROOM_40929,APPL_167922,Stove / Oven combo,Maytag,JGS8860BDP,2008,No,Yes,Propane,Combustion,4,Propane,Both,Single Oven,Kitchen,RBSA III,161948
+SITE_456,ROOM_24174,APPL_112172,Stove / Oven combo,General Electric,JGBS66DEK1WW,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,164432
+SITE_457,ROOM_40547,APPL_71603,Stove / Oven combo,General Electric,PGB916SEM4SS,2018,No,Yes,Natural Gas,Combustion,4,Natural Gas,Both,Single Oven,Kitchen,RBSA III,164642
+SITE_46,ROOM_20793,APPL_99931,Stove / Oven combo,Café,C2SN50M2N1S5,Unknown,Yes,Yes,Natural Gas,Combustion,6,Natural Gas,Both,Single Oven,Kitchen,RBSA III,63610
+SITE_465,ROOM_32389,APPL_76553,Stove / Oven combo,General Electric,JGSP28SEK2SS,Unknown,No,Yes,Natural Gas,Combustion,6,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,165840
+SITE_52,ROOM_2557,APPL_74187,Stove / Oven combo,Frigidaire,LFEF3018TWD,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,106986
+SITE_538,ROOM_1094,APPL_128884,Oven (standalone / wall),KitchenAid,KEBC107KSS05,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Convection,Single Oven,Kitchen,RBSA III,177845
+SITE_538,ROOM_1094,APPL_89704,Stovetop,Dacor,Unknown,Unknown,No,Yes,Natural Gas,Combustion,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,177845
+SITE_548,ROOM_45262,APPL_54083,Stove / Oven combo,Bosch,HDIP056U/03,Unknown,No,Yes,Propane,Combustion,5,Electric,Both,Single Oven,Kitchen,RBSA III,179433
+SITE_548,ROOM_43655,APPL_154639,Stove / Oven combo,General Electric,JB258DM1WW,Unknown,No,No,Electric,Coils,4,Electric,Radiant,Single Oven,Family Room,RBSA III,179433
+SITE_559,ROOM_11139,APPL_22248,Stovetop,Jenn-Air,JED3430WB00,Unknown,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,181472
+SITE_559,ROOM_11139,APPL_101515,Oven (standalone / wall),KitchenAid,KEBS277SWH04,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Double Oven,Kitchen,RBSA III,181472
+SITE_572,ROOM_28895,APPL_118983,Stovetop,Whirlpool,W5CE3024XB00,Unknown,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,183932
+SITE_572,ROOM_28895,APPL_15368,Oven (standalone / wall),General Electric,J KS06G0J3BG,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,183932
+SITE_598,ROOM_22828,APPL_120336,Stovetop,Jenn-Air,CVF4280W,Unknown,No,Yes,Propane,Combustion,3,Not Available,Not Available,Not Available,Kitchen,RBSA III,90218
+SITE_598,ROOM_22828,APPL_81926,Oven (standalone / wall),General Electric,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,90218
+SITE_604,ROOM_14662,APPL_88248,Stove / Oven combo,KitchenAid,KIR5608BSS,2013,No,Yes,Electric,Induction,4,Electric,Both,Single Oven,Kitchen,RBSA III,191005
+SITE_611,ROOM_15008,APPL_36985,Stove / Oven combo,Bertazzoni,HER486GGASNE/01,2014,No,Yes,Propane,Combustion,7,Propane,Both,Single Oven,Kitchen,RBSA III,192460
+SITE_625,ROOM_20010,APPL_154983,Stove / Oven combo,KitchenAid,KERC507HWH3,Unknown,No,Yes,Electric,Glass Top,4,Electric,Convection,Single Oven,Kitchen,RBSA III,194231
+SITE_643,ROOM_20880,APPL_160549,Stovetop,General Electric,Unknown,2003,No,Yes,Propane,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,197303
+SITE_643,ROOM_20880,APPL_93362,Oven (standalone / wall),General Electric,Unknown,2003,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Double Oven,Kitchen,RBSA III,197303
+SITE_650,ROOM_36766,APPL_96609,Stove / Oven combo,Amana,ACF4225AB,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,197783
+SITE_653,ROOM_39815,APPL_90313,Stove / Oven combo,General Electric,J B6550 T1WW,Unknown,No,Yes,Electric,Glass Top,5,Electric,Radiant,Single Oven,Kitchen,RBSA III,198269
+SITE_669,ROOM_14986,APPL_58283,Stovetop,Wolf,Unknown,Unknown,No,Yes,Unknown,Unknown,Unknown,Not Available,Not Available,Not Available,Kitchen,RBSA III,200286
+SITE_669,ROOM_14986,APPL_164838,Oven (standalone / wall),General Electric,Z EK938SM2SS,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,200286
+SITE_69,ROOM_23807,APPL_102252,Stove / Oven combo,Samsung,NE59J7850WG/AA,2018,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,109202
+SITE_7,ROOM_24547,APPL_119755,Stove / Oven combo,KitchenAid,KGST307HWH4,2001,No,Yes,Natural Gas,Combustion,4,Natural Gas,Both,Single Oven,Kitchen,RBSA III,101197
+SITE_707,ROOM_29120,APPL_133773,Stove / Oven combo,General Electric,JBP35DM2BB,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,210461
+SITE_710,ROOM_36041,APPL_34385,Stove / Oven combo,Whirlpool,WFE515S0ES2,2019,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,211242
+SITE_734,ROOM_4056,APPL_5508,Stove / Oven combo,Magic Chef,3510PRW,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,216927
+SITE_742,ROOM_7258,APPL_59475,Stove / Oven combo,Whirlpool,MER8700DS1,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Kitchen,RBSA III,219023
+SITE_768,ROOM_41643,APPL_170380,Stove / Oven combo,Samsung,NE59M4320SS/AA,Unknown,No,Yes,Electric,Glass Top,4,Electric,Both,Single Oven,Kitchen,RBSA III,225734
+SITE_805,ROOM_16959,APPL_142159,Stove / Oven combo,General Electric,JBS60DK4WW,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,236818
+SITE_807,ROOM_26428,APPL_90212,Stove / Oven combo,Whirlpool,WFC310S0AW0,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,238591
+SITE_815,ROOM_38065,APPL_147180,Stove / Oven combo,Whirlpool,WFE510S0AS0,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,240427
+SITE_818,ROOM_3983,APPL_36602,Stove / Oven combo,HotPoint,Unknown,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Bedroom,RBSA III,241484
+SITE_819,ROOM_24352,APPL_120908,Stovetop,Amana,AKS3030WW,Unknown,No,Yes,Natural Gas,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,241834
+SITE_819,ROOM_24352,APPL_83208,Oven (standalone / wall),Frigidaire,FEB398CESD,2001,No,Yes,Not Available,Not Available,Not Available,Electric,Convection,Double Oven,Kitchen,RBSA III,241834
+SITE_846,ROOM_33990,APPL_45858,Stovetop,General Electric,SURFACE,Unknown,No,Yes,Electric,Coils,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,248624
+SITE_846,ROOM_33990,APPL_135529,Oven (standalone / wall),General Electric,JT3000DF4BB,2017,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,248624
+SITE_867,ROOM_8497,APPL_146006,Stovetop,Frigidaire,FEC30S6ABE,2005,No,Yes,Electric,Glass Top,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,254366
+SITE_867,ROOM_8497,APPL_58309,Oven (standalone / wall),General Electric,J KS06G00SBG,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Radiant,Single Oven,Kitchen,RBSA III,254366
+SITE_883,ROOM_43806,APPL_97044,Stove / Oven combo,Frigidaire,FFEF3016TSD,Unknown,No,Yes,Electric,Coils,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,256399
+SITE_9,ROOM_23659,APPL_102168,Stove / Oven combo,General Electric,PGB9930SEJSS,2016,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,101222
+SITE_921,ROOM_12082,APPL_143852,Stovetop,Thermador,Unknown,Unknown,No,Yes,Natural Gas,Combustion,6,Not Available,Not Available,Not Available,Kitchen,RBSA III,268535
+SITE_926,ROOM_41837,APPL_462,Oven (standalone / wall),General Electric,JRP20W0J1WW,Unknown,No,Yes,Not Available,Not Available,Not Available,Electric,Both,Single Oven,Kitchen,RBSA III,269104
+SITE_926,ROOM_41837,APPL_92666,Stovetop,General Electric,Unknown,Unknown,No,Yes,Electric,Glass Top,5,Not Available,Not Available,Not Available,Kitchen,RBSA III,269104
+SITE_95,ROOM_14163,APPL_44498,Stove / Oven combo,Samsung,NX58M6630SS/AA,2018,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,112258
+SITE_955,ROOM_27529,APPL_68600,Stove / Oven combo,Frigidaire,DGGF3046RFA,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Kitchen,RBSA III,275917
+SITE_96,ROOM_21108,APPL_23559,Stovetop,General Electric,Unknown,Unknown,No,Yes,Natural Gas,Combustion,4,Not Available,Not Available,Not Available,Kitchen,RBSA III,12564
+SITE_96,ROOM_21108,APPL_38851,Oven (standalone / wall),General Electric,Unknown,Unknown,No,Yes,Not Available,Not Available,Not Available,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,12564
+SITE_974,ROOM_46323,APPL_35038,Stove / Oven combo,Amana,ARG7800WW,Unknown,No,Yes,Natural Gas,Combustion,4,Natural Gas,Radiant,Single Oven,Kitchen,RBSA III,281519
+SITE_984,ROOM_5602,APPL_96495,Stove / Oven combo,Café,Unknown,Unknown,Yes,Yes,Natural Gas,Combustion,6,Natural Gas,Both,Single Oven,Kitchen,RBSA III,282974
+SITE_993,ROOM_14087,APPL_56512,Stove / Oven combo,Frigidaire,FEF366EMC,Unknown,No,Yes,Electric,Glass Top,4,Electric,Radiant,Single Oven,Kitchen,RBSA III,285144
+SITE_00005,Room_00006424,Appliance_00013812,Stove/Oven,Whirlpool,Rf361pxkb,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,971
+SITE_00006,Room_00006441,Appliance_00013905,Stove/Oven,General Electric,Jk3500df2bb,2014.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,976
+SITE_00007,Room_00006455,Appliance_00013762,Stove/Oven,Sears,9114288816,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,981
+SITE_00011,Room_00006497,Appliance_00013907,Stove/Oven,Frigidaire,Fef366emd,2016.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1001
+SITE_00014,Room_00006521,Appliance_00013909,Stove/Oven,KitchenAid,KERS807SSS00,2006.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1016
+SITE_00020,Room_00006601,Appliance_00013912,Stove/Oven,Kenmore,790.95379802,2009.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1046
+SITE_00033,Room_00006739,Appliance_00022925,Stove/Oven,Electrolux,EI30IF40LSB,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1111
+SITE_00124,Room_00007504,Appliance_00014630,Stove/Oven,Whirlpool,SF368LEPB 1,2005.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Living Room,RBSA II,1566
+SITE_00141,Room_00007684,Appliance_00014219,Stove/Oven,KitchenAid,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1651
+SITE_00147,Room_00007775,Appliance_00013846,Stove/Oven,Jenn Air,Jes9800aas,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1681
+SITE_00152,Room_00007844,Appliance_00014649,Stove/Oven,Samsung,Ne594r0absr/aa,2012.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1706
+SITE_00156,Room_00007907,Appliance_00013834,Stove/Oven,Electrolux,EW30EF65GSH,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1726
+SITE_00168,Room_00008056,Appliance_00013929,Stove/Oven,General Electric,R B757W J4WW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1786
+SITE_00200,Room_00008293,Appliance_00014528,Stove/Oven,Maytag,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,1946
+SITE_00216,Room_00008455,Appliance_00014892,Stove/Oven,Frigidaire,Fef352ase,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2026
+SITE_00225,Room_00008591,Appliance_00014821,Stove/Oven,Kenmore,790.94203310,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2071
+SITE_00228,Room_00008639,Appliance_00014820,Stove/Oven,Frigidaire,Fef368gsa,2007.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2086
+SITE_00229,Room_00008651,Appliance_00014816,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,2091
+SITE_00239,Room_00000130,Appliance_00012785,Stove/Oven,General Electric,JKP13GOP3BG,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2141
+SITE_00252,Room_00000309,Appliance_00012798,Stove/Oven,General Electric,Jsp26b0d2ct,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2206
+SITE_00258,Room_00000385,Appliance_00012804,Stove/Oven,Kenmore,790.96002604,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2236
+SITE_00269,Room_00000558,Appliance_00012816,Stove/Oven,General Electric,Jb630rf1ss,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2291
+SITE_00273,Room_00000607,Appliance_00012820,Stove/Oven,Hotpoint,R b787w b1ww,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Dining Room,RBSA II,2311
+SITE_00277,Room_00000666,Appliance_00012824,Stove/Oven,General Electric,Jgb290men4bs,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,2331
+SITE_00301,Room_00008777,Appliance_00014594,Stove/Oven,Whirlpool,WCG51US0DS00,2017.0,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,2451
+SITE_00301,Room_00008777,Appliance_00014595,Stove/Oven,General Electric,JTP30SP1SS,2009.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2451
+SITE_00306,Room_00008831,Appliance_00014801,Stove/Oven,Hotpoint,R b757w h5ww,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2476
+SITE_00315,Room_00008914,Appliance_00014856,Stove/Oven,General Electric,Bds16007ad,2007.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2521
+SITE_00323,Room_00008980,Appliance_00014797,Stove/Oven,Amana,AER5712AAW,2005.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2561
+SITE_00327,Room_00009015,Appliance_00014798,Stove/Oven,General Electric,JBS16C001AD,2006.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2581
+SITE_00334,Room_00000951,Appliance_00012846,Stove/Oven,Estate,TES355MQ,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2616
+SITE_00337,Room_00001001,Appliance_00012849,Stove/Oven,General Electric,Kso60 o350,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2631
+SITE_00339,Room_00001033,Appliance_00012851,Stove/Oven,Whirlpool,Wfe515s0ew0,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2641
+SITE_00341,Room_00001063,Appliance_00012853,Stove/Oven,General Electric,Jt915s0f3ss,Not Available,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2651
+SITE_00350,Room_00001206,Appliance_00012862,Stove/Oven,Unknown,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2696
+SITE_00350,Room_00001202,Appliance_00012863,Stove/Oven,KitchenAid,Kerc507ywh1,Not Available,No,No,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Family Room,RBSA II,2696
+SITE_00354,Room_00001275,Appliance_00012868,Stove/Oven,Thermador,Unknown,Not Available,No,No,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,2716
+SITE_00354,Room_00001269,Appliance_00012869,Stove/Oven,Electrolux,Ew27ew55gb4,2010.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Closet,RBSA II,2716
+SITE_00380,Room_00001668,Appliance_00012895,Stove/Oven,Kenmore,790.90832601,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2846
+SITE_00394,Room_00009101,Appliance_00014564,Stove/Oven,Whirlpool,RF386PX60 2,2000.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Living Room,RBSA II,2916
+SITE_00402,Room_00009239,Appliance_00014516,Stove/Oven,Kenmore,665.95776890,1999.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,2956
+SITE_00411,Room_00009396,Appliance_00014605,Stove/Oven,Frigidaire,fefl79jsa,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3001
+SITE_00498,Room_00010335,Appliance_00014439,Stove/Oven,Kenmore,790.9641340j,2010.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3436
+SITE_00499,Room_00010354,Appliance_00013941,Stove/Oven,Frigidaire,LGEF3043KFN,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3441
+SITE_00500,Room_00010366,Appliance_00013942,Stove/Oven,Frigidaire,DGEF3041KFD,2011.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3446
+SITE_00503,Room_00010415,Appliance_00014498,Stove/Oven,Whirlpool,WFG540H0ES0,2016.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3461
+SITE_00512,Room_00010559,Appliance_00013949,Stove/Oven,Whirlpool,Wfe540hoeso,1986.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3506
+SITE_00516,Room_00010612,Appliance_00013952,Stove/Oven,General Electric,Jbp65mok4bs,2006.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3526
+SITE_00538,Room_00010862,Appliance_00013971,Stove/Oven,Frigidaire,FGF367BGWB,2008.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3636
+SITE_00546,Room_00010988,Appliance_00014239,Stove/Oven,KitchenAid,KEMC308KSS04,2007.0,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3676
+SITE_00548,Room_00011009,Appliance_00013979,Stove/Oven,Whirlpool,RS675PXGQ12,2005.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3686
+SITE_00558,Room_00011138,Appliance_00013989,Stove/Oven,Kenmore,790.92202018,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3736
+SITE_00559,Room_00011153,Appliance_00013990,Stove/Oven,General Electric,Jbs27wc2ww,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3741
+SITE_00561,Room_00011181,Appliance_00014278,Stove/Oven,Frigidaire,FGGF3054MFG,2014.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3751
+SITE_00569,Room_00011304,Appliance_00013999,Stove/Oven,Kenmore,790.94384700,2007.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3791
+SITE_00574,Room_00011407,Appliance_00014004,Stove/Oven,General Electric,Jb650ed1es,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3816
+SITE_00577,Room_00011458,Appliance_00014284,Stove/Oven,General Electric,Jgbp30wea2ww,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3831
+SITE_00587,Room_00011574,Appliance_00014233,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,No Stove,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,3881
+SITE_00587,Room_00011574,Appliance_00014234,Stove/Oven,Jenn Air,JMW3430WS02,2013.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3881
+SITE_00589,Room_00011601,Appliance_00014283,Stove/Oven,General Electric,Jsp34wow1ww,2009.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3891
+SITE_00591,Room_00011622,Appliance_00014228,Stove/Oven,KitchenAid,KGRS202BSS1,2015.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3901
+SITE_00595,Room_00011671,Appliance_00014248,Stove/Oven,General Electric,J bp81s0k1ss,2006.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,3921
+SITE_00600,Room_00011740,Appliance_00014010,Stove/Oven,General Electric,JGBP36SEM3SS,2009.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3946
+SITE_00601,Room_00011748,Appliance_00014011,Stove/Oven,General Electric,Pgb940sef2ss,2014.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3951
+SITE_00604,Room_00011796,Appliance_00014279,Stove/Oven,Wolf,Df364g,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,3966
+SITE_00612,Room_00011899,Appliance_00014311,Stove/Oven,General Electric,J BP64W0B5WW,2014.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4006
+SITE_00615,Room_00011935,Appliance_00014280,Stove/Oven,Frigidaire,Plefmz99ecc,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4021
+SITE_00619,Room_00011996,Appliance_00014309,Stove/Oven,Jenn Air,WM2750B,1993.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4041
+SITE_00619,Room_00011996,Appliance_00014310,Stove/Oven,Jenn Air,C206B,1993.0,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,4041
+SITE_00621,Room_00012023,Appliance_00014235,Stove/Oven,Jenn Air,S136,1992.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4051
+SITE_00629,Room_00012114,Appliance_00014272,Stove/Oven,Hotpoint,R J742G0T7BG,2009.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4091
+SITE_00630,Room_00012130,Appliance_00014260,Stove/Oven,Frigidaire,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4096
+SITE_00632,Room_00012147,Appliance_00014288,Stove/Oven,Kenmore,790.92803016,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4106
+SITE_00635,Room_00012187,Appliance_00014273,Stove/Oven,KitchenAid,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,4121
+SITE_00639,Room_00012244,Appliance_00014017,Stove/Oven,Samsung,NE594R0ABSR,2014.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4141
+SITE_00641,Room_00012268,Appliance_00014245,Stove/Oven,Kenmore,790.73771100,2001.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,4151
+SITE_00642,Room_00012276,Appliance_00014231,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,4156
+SITE_00642,Room_00012276,Appliance_00014232,Stove/Oven,Jenn Air,JMW3430WS02,2013.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4156
+SITE_00650,Room_00012379,Appliance_00014319,Stove/Oven,General Electric,JB250DF5WW,2016.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4196
+SITE_00651,Room_00012389,Appliance_00014317,Stove/Oven,Hotpoint,R B754 0N4AD,2016.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4201
+SITE_00661,Room_00012502,Appliance_00014384,Stove/Oven,LG,Lse3092st,2012.0,No,No,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4251
+SITE_00662,Room_00012509,Appliance_00014432,Stove/Oven,Frigidaire,FGES3045KWE,2012.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4256
+SITE_00696,Room_00012883,Appliance_00014368,Stove/Oven,Whirlpool,Rs696pxyo,1993.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4426
+SITE_00699,Room_00012920,Appliance_00014414,Stove/Oven,Kenmore,790.92409013,2011.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4441
+SITE_00703,Room_00012972,Appliance_00014378,Stove/Oven,Whirlpool,Wfe540h0aw0,2014.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4461
+SITE_00707,Room_00013026,Appliance_00014427,Stove/Oven,Frigidaire,GLEB30T9DBD,2016.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4481
+SITE_00710,Room_00013088,Appliance_00014497,Stove/Oven,Whirlpool,RS677PXV-1,1990.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4496
+SITE_00715,Room_00013181,Appliance_00014351,Stove/Oven,Kenmore,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4521
+SITE_00724,Room_00013297,Appliance_00014329,Stove/Oven,Five Star,TTN525 BGW,Not Available,No,Yes,Gas,Not Available,Not Available,Dual Gas/Electric,Not Available,Not Available,Kitchen,RBSA II,4566
+SITE_00724,Room_00013310,Appliance_00014330,Stove/Oven,Kenmore,790.95032503,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4566
+SITE_00726,Room_00013328,Appliance_00014383,Stove/Oven,General Electric,J bs16 003ad,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4576
+SITE_00734,Room_00013464,Appliance_00014355,Stove/Oven,General Electric,bs26006wh,2005.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4616
+SITE_00737,Room_00013497,Appliance_00014428,Stove/Oven,Amana,ART6510WW,1997.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4631
+SITE_00750,Room_00013675,Appliance_00014380,Stove/Oven,Whirlpool,Rf365px80,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4696
+SITE_00752,Room_00013711,Appliance_00014333,Stove/Oven,Jenn Air,W106B,1992.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4706
+SITE_00755,Room_00013766,Appliance_00014327,Stove/Oven,Kenmore,790.49522312,2015.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4721
+SITE_00755,Room_00013766,Appliance_00014328,Stove/Oven,Dacor,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,4721
+SITE_00756,Room_00013784,Appliance_00014468,Stove/Oven,General Electric,J2S968TEK3WW,2007.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,4726
+SITE_00759,Room_00013840,Appliance_00014444,Stove/Oven,Frigidaire,FEB30T5DCA,2014.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4741
+SITE_00759,Room_00013840,Appliance_00014445,Stove/Oven,Frigidaire,GLEC30S8CBC,2005.0,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,4741
+SITE_00760,Room_00013844,Appliance_00014489,Stove/Oven,Whirlpool,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,4746
+SITE_00764,Room_00013932,Appliance_00014318,Stove/Oven,Hotpoint,RB787WB1WW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4766
+SITE_00765,Room_00013944,Appliance_00014434,Stove/Oven,Whirlpool,Rf385pxeq 0,1997.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4771
+SITE_00768,Room_00013988,Appliance_00014315,Stove/Oven,Whirlpool,WEE730H0DS0,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4786
+SITE_00773,Room_00014063,Appliance_00014442,Stove/Oven,Wolf,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4811
+SITE_00779,Room_00014146,Appliance_00014462,Stove/Oven,Frigidaire,FEF366DCE,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4841
+SITE_00781,Room_00014190,Appliance_00014365,Stove/Oven,Whirlpool,Unknown,Not Available,No,No,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Living Room,RBSA II,4851
+SITE_00781,Room_00014198,Appliance_00014366,Stove/Oven,Wedgewood,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,4851
+SITE_00783,Room_00014214,Appliance_00014386,Stove/Oven,Sears,911.91188890,1998.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,4861
+SITE_00813,Room_00014522,Appliance_00013847,Stove/Oven,Frigidaire,Fes300ebb,2006.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,5011
+SITE_00829,Room_00014666,Appliance_00014578,Stove/Oven,General Electric,J bp82c0h2cc,2017.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,5091
+SITE_00836,Room_00014729,Appliance_00014557,Stove/Oven,General Electric,JGB900BEK1BB,2017.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,5126
+SITE_00857,Room_00014948,Appliance_00014930,Stove/Oven,Wolf,Unknown,Not Available,No,Yes,Propane,Not Available,Not Available,Propane,Not Available,Not Available,Kitchen,RBSA II,5231
+SITE_00908,Room_00002345,Appliance_00012948,Stove/Oven,General Electric,Jbs27by1wh,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,5486
+SITE_00969,Room_00002927,Appliance_00012996,Stove/Oven,Kenmore,911.93578891,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,5791
+SITE_00990,Room_00003240,Appliance_00013019,Stove/Oven,General Electric,Jb705st3ss,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,5896
+SITE_01044,Room_00015421,Appliance_00013416,Stove/Oven,General Electric,Ps950ef3es,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6166
+SITE_01046,Room_00003867,Appliance_00013065,Stove/Oven,General Electric,Js750ef2es,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6176
+SITE_01067,Room_00015610,Appliance_00013461,Stove/Oven,Frigidaire,Fef376asj,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6281
+SITE_01067,Room_00015616,Appliance_00013465,Stove/Oven,White-Westinghouse,Unknown,Not Available,No,No,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Other,RBSA II,6281
+SITE_01081,Room_00015782,Appliance_00013587,Stove/Oven,Whirlpool,Rbs305pdz8,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6351
+SITE_01082,Room_00015796,Appliance_00013530,Stove/Oven,Frigidaire,Fef366csa,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6356
+SITE_01092,Room_00015965,Appliance_00013512,Stove/Oven,Whirlpool,SF362LXSQ,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,6406
+SITE_01099,Room_00016086,Appliance_00013318,Stove/Oven,Whirlpool,WFG361LVS 1,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,6441
+SITE_01105,Room_00016180,Appliance_00013789,Stove/Oven,General Electric,JB250DF1WW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6471
+SITE_01196,Room_00017036,Appliance_00014221,Stove/Oven,General Electric,Jgbp85cej1cc,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,6926
+SITE_01204,Room_00017141,Appliance_00013803,Stove/Oven,Kenmore,790.96344504,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6966
+SITE_01208,Room_00017201,Appliance_00014825,Stove/Oven,Maytag,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6986
+SITE_01209,Room_00017222,Appliance_00013752,Stove/Oven,Dacor,Unknown,Not Available,Unknown,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,6991
+SITE_01209,Room_00017222,Appliance_00013753,Stove/Oven,Dacor,Pgm365-1s/ng,2007.0,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,6991
+SITE_01227,Room_00017490,Appliance_00014780,Stove/Oven,Royal Chef,Unknown,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7081
+SITE_01274,Room_00017864,Appliance_00014946,Stove/Oven,Amana,ARRS6550LL,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7316
+SITE_01293,Room_00018024,Appliance_00014759,Stove/Oven,Whirlpool,RS6700XKN 4,1978.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7411
+SITE_01305,Room_00018171,Appliance_00014774,Stove/Oven,Hotpoint,r b526d h2bb,2016.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7471
+SITE_01307,Room_00018198,Appliance_00014716,Stove/Oven,General Electric,J MS27 001AD,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7481
+SITE_01311,Room_00018247,Appliance_00014702,Stove/Oven,Dacor,Unknown,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Living Room,RBSA II,7501
+SITE_01311,Room_00018247,Appliance_00014703,Stove/Oven,Unknown,Unknown,Not Available,No,Yes,Propane,Not Available,Not Available,No oven,Not Available,Not Available,Living Room,RBSA II,7501
+SITE_01312,Room_00018273,Appliance_00014706,Stove/Oven,General Electric,j bp23d,2010.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7506
+SITE_01313,Room_00018283,Appliance_00014766,Stove/Oven,Frigidaire,FFES3025PSC,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7511
+SITE_01316,Room_00018329,Appliance_00014719,Stove/Oven,General Electric,ZET 1S0M1SS,2007.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7526
+SITE_01317,Room_00018336,Appliance_00014763,Stove/Oven,Thermador,MEMCW301EP/09,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7531
+SITE_01317,Room_00018336,Appliance_00014764,Stove/Oven,LG,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,7531
+SITE_01332,Room_00018529,Appliance_00014742,Stove/Oven,Maytag,Chg9800bae,1997.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,7606
+SITE_01334,Room_00018563,Appliance_00014686,Stove/Oven,Maytag,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7616
+SITE_01336,Room_00018593,Appliance_00014867,Stove/Oven,General Electric,JBP26G0P1AD,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7626
+SITE_01340,Room_00018648,Appliance_00014721,Stove/Oven,Kenmore,790.78303014,2013.0,No,Yes,Propane,Not Available,Not Available,Propane,Not Available,Not Available,Kitchen,RBSA II,7646
+SITE_01344,Room_00018703,Appliance_00014765,Stove/Oven,Frigidaire,FEF355AWA,2011.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7666
+SITE_01360,Room_00018901,Appliance_00014753,Stove/Oven,Kenmore,790.47153401,2004.0,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7746
+SITE_01385,Room_00004327,Appliance_00013102,Stove/Oven,General Electric,JKS05G0T1BB,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,7871
+SITE_01415,Room_00004686,Appliance_00013131,Stove/Oven,Kenmore,911.9354591,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8021
+SITE_01428,Room_00004894,Appliance_00013145,Stove/Oven,Kenmore,790.9641940C,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8086
+SITE_01435,Room_00005013,Appliance_00013154,Stove/Oven,KitchenAid,Kebs277wwh-1,Not Available,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8121
+SITE_01436,Room_00005028,Appliance_00013155,Stove/Oven,General Electric,Profile,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Dining Room,RBSA II,8126
+SITE_01437,Room_00005058,Appliance_00013156,Stove/Oven,Thermador,Unknown,Not Available,Unknown,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8131
+SITE_01438,Room_00005075,Appliance_00013157,Stove/Oven,Frigidaire,FED365EBC,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8136
+SITE_01443,Room_00005150,Appliance_00013162,Stove/Oven,Dacor,Unknown,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8161
+SITE_01443,Room_00005150,Appliance_00013163,Stove/Oven,Dacor,Unknown,1999.0,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,8161
+SITE_01444,Room_00005168,Appliance_00013164,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8166
+SITE_01445,Room_00005191,Appliance_00013165,Stove/Oven,Jenn Air,Unknown,Not Available,Unknown,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8171
+SITE_01455,Room_00005341,Appliance_00013176,Stove/Oven,Frigidaire,Ffef3043lsk,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8221
+SITE_01457,Room_00005367,Appliance_00013178,Stove/Oven,Frigidaire,Fef366ese,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8231
+SITE_01458,Room_00005392,Appliance_00013179,Stove/Oven,Electrolux,E30EW75ESS3,2008.0,No,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8236
+SITE_01465,Room_00005512,Appliance_00013186,Stove/Oven,Frigidaire,FES355CCS-B,1995.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8271
+SITE_01467,Room_00005548,Appliance_00013189,Stove/Oven,Kenmore,790.410 93100,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,8281
+SITE_01475,Room_00005659,Appliance_00013197,Stove/Oven,Kenmore,790.74133311,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,8321
+SITE_01479,Room_00005732,Appliance_00013201,Stove/Oven,Maytag,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8341
+SITE_01480,Room_00005748,Appliance_00013202,Stove/Oven,Jenn Air,JGD3430WB00,Not Available,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,8346
+SITE_01480,Room_00005748,Appliance_00013203,Stove/Oven,KitchenAid,KEBS179BBL00,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8346
+SITE_01485,Room_00005817,Appliance_00013208,Stove/Oven,Maytag,JDS9860AAW,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,8371
+SITE_01486,Room_00005829,Appliance_00013209,Stove/Oven,General Electric,Jgbs21hed3ww,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,8376
+SITE_01497,Room_00006004,Appliance_00013222,Stove/Oven,Kenmore,Unknown,Not Available,Unknown,Yes,Gas,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8431
+SITE_01512,Room_00006240,Appliance_00013240,Stove/Oven,Kenmore,790.95300102,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8506
+SITE_01539,Room_00018929,Appliance_00013477,Stove/Oven,Kenmore,790.91312013,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8641
+SITE_01543,Room_00018982,Appliance_00013371,Stove/Oven,General Electric,J b650e d1es,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8661
+SITE_01544,Room_00018987,Appliance_00013633,Stove/Oven,General Electric,J B64OS P1SS,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8666
+SITE_01550,Room_00019076,Appliance_00013550,Stove/Oven,General Electric,Jb750dj1cc,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8696
+SITE_01554,Room_00020713,Appliance_00023157,Stove/Oven,Maytag,Wer5751aaw,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8716
+SITE_01557,Room_00019162,Appliance_00013489,Stove/Oven,Samsung,NE58H9970WS,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8731
+SITE_01560,Room_00019206,Appliance_00013499,Stove/Oven,Magic Chef,38HA-6TVW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8746
+SITE_01563,Room_00019247,Appliance_00013301,Stove/Oven,Roper,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8761
+SITE_01574,Room_00019420,Appliance_00013298,Stove/Oven,General Electric,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8816
+SITE_01589,Room_00019641,Appliance_00013253,Stove/Oven,General Electric,J bp67b0h3wh,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8891
+SITE_01606,Room_00019886,Appliance_00013348,Stove/Oven,Kenmore,790.94332700,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,8976
+SITE_01612,Room_00019990,Appliance_00013711,Stove/Oven,Whirlpool,Xfe381lvs,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9006
+SITE_01618,Room_00020085,Appliance_00013484,Stove/Oven,Frigidaire,PLGF389ACC,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,9036
+SITE_01619,Room_00020101,Appliance_00014213,Stove/Oven,Samsung,NE59J7630SS,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9041
+SITE_01635,Room_00020288,Appliance_00013662,Stove/Oven,Hotpoint,R b734 0j7wh,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9121
+SITE_01661,Room_00020566,Appliance_00013563,Stove/Oven,General Electric,JP23D R1WW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9251
+SITE_01669,Room_00020668,Appliance_00013639,Stove/Oven,Kenmore,911.93378690,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9291
+SITE_01679,Room_00020798,Appliance_00013589,Stove/Oven,General Electric,J bp35d0k4ww,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9341
+SITE_01695,Room_00020965,Appliance_00014214,Stove/Oven,Unknown,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9421
+SITE_01705,Room_00021079,Appliance_00013277,Stove/Oven,General Electric,J KP 26002AD,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9471
+SITE_01727,Room_00021272,Appliance_00013394,Stove/Oven,Whirlpool,TES355M0,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9581
+SITE_01790,Room_00021808,Appliance_00014037,Stove/Oven,Whirlpool,Wfe530c0es0,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9896
+SITE_01794,Room_00021857,Appliance_00013372,Stove/Oven,General Electric,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,9916
+SITE_01820,Room_00022079,Appliance_00014041,Stove/Oven,General Electric,Jb620dr1bb,2010.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10046
+SITE_01821,Room_00022095,Appliance_00014042,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10051
+SITE_01821,Room_00022095,Appliance_00014043,Stove/Oven,Maytag,Cwe6200acb,1993.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10051
+SITE_01824,Room_00022134,Appliance_00014047,Stove/Oven,Kenmore,790.94001400,2005.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10066
+SITE_01826,Room_00022154,Appliance_00014049,Stove/Oven,Frigidaire,FEFL79DBA,2014.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10076
+SITE_01838,Room_00022306,Appliance_00014063,Stove/Oven,Maytag,Mer5765raw,2009.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10136
+SITE_01840,Room_00022335,Appliance_00014065,Stove/Oven,Frigidaire,FEF336ASB,2012.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10146
+SITE_01848,Room_00022440,Appliance_00014073,Stove/Oven,General Electric,Jb23dr2ww,2012.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10186
+SITE_01849,Room_00022456,Appliance_00014074,Stove/Oven,Whirlpool,Rf364pxmq,2004.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10191
+SITE_01852,Room_00022496,Appliance_00014077,Stove/Oven,Frigidaire,FEF365BGWE,2011.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10206
+SITE_01855,Room_00022533,Appliance_00014080,Stove/Oven,Magic Chef,3510prw,1997.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10221
+SITE_01856,Room_00022544,Appliance_00014081,Stove/Oven,Whirlpool,RCS3014RQ04,2010.0,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10226
+SITE_01856,Room_00022544,Appliance_00014082,Stove/Oven,Whirlpool,W0S51EC7AB01,2013.0,No,No,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10226
+SITE_01857,Room_00022558,Appliance_00014083,Stove/Oven,Kenmore,790.9611241,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10231
+SITE_01858,Room_00022583,Appliance_00014084,Stove/Oven,Whirlpool,Rf315pxyw 2,1994.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10236
+SITE_01863,Room_00022627,Appliance_00014728,Stove/Oven,Whirlpool,RF111PXSQ 3,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10261
+SITE_01868,Room_00022692,Appliance_00014750,Stove/Oven,RCA,Le83276071ww,1995.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10286
+SITE_01870,Room_00022710,Appliance_00014690,Stove/Oven,Hotpoint,Rb536dp1ww,2011.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10296
+SITE_01871,Room_00022720,Appliance_00014725,Stove/Oven,Frigidaire,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10301
+SITE_01892,Room_00022912,Appliance_00013421,Stove/Oven,Frigidaire,FEF326ASA,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10406
+SITE_01893,Room_00022943,Appliance_00013408,Stove/Oven,Bosch,Unknown,Not Available,Unknown,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10411
+SITE_01894,Room_00022950,Appliance_00013650,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10416
+SITE_01894,Room_00022950,Appliance_00013651,Stove/Oven,Whirlpool,Ree1600p-2,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10416
+SITE_01895,Room_00022970,Appliance_00013661,Stove/Oven,Amana,ARTSC86506,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10421
+SITE_01904,Room_00023091,Appliance_00013715,Stove/Oven,KitchenAid,KEDS100VWH1,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10466
+SITE_01907,Room_00023145,Appliance_00013660,Stove/Oven,Maytag,MER7775XS1,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10481
+SITE_01918,Room_00023299,Appliance_00013435,Stove/Oven,Kenmore,03. 9368011,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10536
+SITE_01931,Room_00023491,Appliance_00014104,Stove/Oven,Frigidaire,Fgew3045kfb,2012.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10601
+SITE_01931,Room_00023491,Appliance_00014105,Stove/Oven,Frigidaire,Fges3065kff,2012.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10601
+SITE_01940,Room_00023623,Appliance_00014113,Stove/Oven,General Electric,JSP34W0W1WW,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10646
+SITE_01944,Room_00023677,Appliance_00014116,Stove/Oven,Frigidaire,FEF336FMF,2009.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10666
+SITE_01952,Room_00023783,Appliance_00014123,Stove/Oven,Kenmore,790.40524400,2006.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10706
+SITE_01952,Room_00023783,Appliance_00014124,Stove/Oven,Kenmore,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10706
+SITE_01960,Room_00023881,Appliance_00014130,Stove/Oven,Kenmore,790.94152310,2016.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10746
+SITE_01972,Room_00024055,Appliance_00014145,Stove/Oven,General Electric,JGBP87MEL4BG,2006.0,No,Yes,Propane,Not Available,Not Available,Propane,Not Available,Not Available,Kitchen,RBSA II,10806
+SITE_01973,Room_00024063,Appliance_00014146,Stove/Oven,LG,Lre3083st/00,2015.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10811
+SITE_01984,Room_00024221,Appliance_00014155,Stove/Oven,General Electric,Eclipse,Not Available,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,10866
+SITE_01997,Room_00024423,Appliance_00013522,Stove/Oven,Whirlpool,Unknown,Not Available,Unknown,No,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10931
+SITE_01997,Room_00024423,Appliance_00013523,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10931
+SITE_01998,Room_00024433,Appliance_00014161,Stove/Oven,Frigidaire,Fpew3085kfb,2011.0,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10936
+SITE_01998,Room_00024433,Appliance_00014162,Stove/Oven,Maytag,Unknown,Not Available,No,Yes,Gas,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10936
+SITE_02008,Room_00024586,Appliance_00014168,Stove/Oven,Jenn Air,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,No oven,Not Available,Not Available,Kitchen,RBSA II,10986
+SITE_02008,Room_00024586,Appliance_00014169,Stove/Oven,Frigidaire,FEB386CCS-A,Not Available,No,Yes,No Stove,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,10986
+SITE_02023,Room_00024834,Appliance_00013359,Stove/Oven,Whirlpool,Rf361pxkq,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,11061
+SITE_02025,Room_00024847,Appliance_00014180,Stove/Oven,Frigidaire,Gles389fsd,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,11071
+SITE_02031,Room_00024955,Appliance_00014185,Stove/Oven,Kenmore,790.94193310,2013.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,11101
+SITE_02034,Room_00024977,Appliance_00014187,Stove/Oven,Whirlpool,Sf78pewq0,1995.0,No,Yes,Gas,Not Available,Not Available,Gas,Not Available,Not Available,Kitchen,RBSA II,11116
+SITE_02039,Room_00025077,Appliance_00014196,Stove/Oven,KitchenAid,Unknown,Not Available,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Kitchen,RBSA II,11141
+SITE_02056,Room_00025312,Appliance_00014624,Stove/Oven,Frigidaire,fef336ece,2008.0,No,Yes,Electric,Not Available,Not Available,Electric,Not Available,Not Available,Dining Room,RBSA II,11226
+SNOPUD_01534,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1534
+SNOPUD_01528,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1528
+SNOPUD_01577,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1577
+SNOPUD_01575,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1575
+SNOPUD_01576,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,15760
+AVISTA_10186,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,101860
+AVISTA_10118,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10118
+AVISTA_10125,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10125
+AVISTA_10100,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10100
+AVISTA_10037,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10037
+AVISTA_10239,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10239
+AVISTA_10023,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10023
+AVISTA_10310,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10310
+AVISTA_10039,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10039
+AVISTA_10021,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,100210
+AVISTA_10073,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10073
+AVISTA_10014,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10014
+AVISTA_10088,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10088
+AVISTA_10015,ROOM_46116,APPL_173237,Stove / Oven combo,Frigidaire,FPGF3077QFJ,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Unknown,HEMS RBSA,10015
+AVISTA_10076,ROOM_46249,APPL_162217,Stove / Oven combo,Whirlpool,WEGA25H0HZO,Unknown,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Unknown,HEMS RBSA,100760
+AVISTA_10099,ROOM_39169,APPL_173870,Stove / Oven combo,GE - General Electric,JB655YK6FS,Unknown,No,Yes,Electric,Glass Top,5,Electric,Both,Single Oven,Unknown,HEMS RBSA,10099
+AVISTA_10120,ROOM_39794,APPL_164928,Stove / Oven combo,Whirlpool,WEG750HOHZO,2021,No,Yes,Natural Gas,Combustion,5,Natural Gas,Both,Single Oven,Unknown,HEMS RBSA,10120

@@ -1,0 +1,551 @@
+SiteID,RoomID,ApplianceID,Type,Make,Model,Vintage,Energy_Star,Programmed,Thermostat_Wifi_Controls_Used,System_Controlled,Room_Type,RBSA Data Source,ee_site_id
+SITE_1023,ROOM_46043,APPL_63952,Programmable thermostat,Honeywell,CHRONOTHERM IV PLUS,Unknown,Yes,Yes,Not Available,Central System,Hallway,RBSA III,292998
+SITE_1023,ROOM_31121,APPL_47076,Manual thermostat - Analog,Electromode,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,292998
+SITE_1023,ROOM_7624,APPL_141509,Manual thermostat - Digital,Blueridge,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Outbuilding / Addition,RBSA III,292998
+SITE_1036,ROOM_27212,APPL_138318,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,295578
+SITE_1049,ROOM_24782,APPL_82711,Programmable thermostat,Aprilaire,BZ2204962B,2009,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,298259
+SITE_105,ROOM_44778,APPL_82693,Smart thermostat,Ecobee,ECOBEE3LITE,Unknown,No,Yes,No,Central System,Hallway,RBSA III,113763
+SITE_1053,ROOM_28588,APPL_55249,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,299113
+SITE_107,ROOM_1272,APPL_20799,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,113900
+SITE_1080,ROOM_23914,APPL_58735,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,303645
+SITE_1080,ROOM_23914,APPL_167811,Manual thermostat - Digital,Fujitsu,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,303645
+SITE_1080,ROOM_42515,APPL_166581,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Laundry,RBSA III,303645
+SITE_1080,ROOM_38673,APPL_56287,Manual thermostat - Analog,Are stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,303645
+SITE_1080,ROOM_8261,APPL_38110,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,303645
+SITE_1080,ROOM_45630,APPL_123988,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,303645
+SITE_1080,ROOM_18533,APPL_97900,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,303645
+SITE_1080,ROOM_16622,APPL_146298,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,303645
+SITE_1087,ROOM_9412,APPL_12519,Wi-Fi enabled thermostat,Emerson,UNKNOWN,Unknown,No,Yes,Yes,Central System,Hallway,RBSA III,306108
+SITE_1094,ROOM_23930,APPL_43261,Manual thermostat - Digital,Mitsubishi,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,307473
+SITE_1094,ROOM_23930,APPL_116153,Manual thermostat - Digital,Quadra-Life,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,307473
+SITE_1096,ROOM_22746,APPL_118397,Programmable thermostat,Honeywell,TH8320R1003,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,308069
+SITE_110,ROOM_24926,APPL_100579,Programmable thermostat,Mitsubishi,UNKNOWN,Unknown,No,Yes,Not Available,Zonal System,Living Room,RBSA III,114110
+SITE_1102,ROOM_3772,APPL_75456,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,308832
+SITE_1109,ROOM_32957,APPL_140195,Programmable thermostat,Emerson,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,312138
+SITE_1127,ROOM_43405,APPL_6115,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Central System,Entry/Entryway,RBSA III,315991
+SITE_1141,ROOM_4887,APPL_33007,Programmable thermostat,Aprilaire,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,320726
+SITE_1146,ROOM_2934,APPL_1172,Programmable thermostat,Energate,UNKNOWN,Unknown,Yes,Yes,Not Available,Central System,Family Room,RBSA III,322328
+SITE_1194,ROOM_1453,APPL_33256,Wi-Fi enabled thermostat,ADT,UNKNOWN,Unknown,Unknown,Yes,Yes,Central System,Living Room,RBSA III,339735
+SITE_1258,ROOM_1058,APPL_30694,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,363743
+SITE_1258,ROOM_21492,APPL_88957,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,363743
+SITE_1258,ROOM_14546,APPL_122221,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,363743
+SITE_1285,ROOM_7370,APPL_8227,Manual thermostat - Digital,Water Furnace,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,374781
+SITE_1285,ROOM_35186,APPL_163542,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,374781
+SITE_130,ROOM_16190,APPL_131585,Programmable thermostat,Fujitsu,AR-RY7,Unknown,No,Yes,Not Available,Zonal System,Bedroom,RBSA III,116404
+SITE_130,ROOM_16190,APPL_21286,Manual thermostat - Digital,INSIGNA,PSG INSIGNA LV,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,116404
+SITE_130,ROOM_21665,APPL_111064,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Closet,RBSA III,116404
+SITE_130,ROOM_39388,APPL_20013,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,116404
+SITE_130,ROOM_24553,APPL_87485,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,116404
+SITE_130,ROOM_15035,APPL_13359,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,116404
+SITE_130,ROOM_5989,APPL_44749,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Kitchen,RBSA III,116404
+SITE_130,ROOM_41998,APPL_135821,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,116404
+SITE_130,ROOM_3265,APPL_87794,Programmable thermostat,Fujitsu,AR-RY7,Unknown,No,Yes,Not Available,Zonal System,Family Room,RBSA III,116404
+SITE_130,ROOM_3265,APPL_174391,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Unknown,Family Room,RBSA III,116404
+SITE_130,ROOM_12397,APPL_65523,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Office,RBSA III,116404
+SITE_130,ROOM_20901,APPL_60728,Manual thermostat - Digital,PSG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Outbuilding / Addition,RBSA III,116404
+SITE_130,ROOM_3370,APPL_15667,On/off,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Outbuilding / Addition,RBSA III,116404
+SITE_1317,ROOM_24944,APPL_99402,Programmable thermostat,Honeywell,TH411OU2005,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,388653
+SITE_1321,ROOM_3689,APPL_37838,Programmable thermostat,Honeywell,TH8320U1008,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,390223
+SITE_1327,ROOM_22449,APPL_39860,Smart thermostat,Ecobee,SMARTTHERMOSTAT WITH VOICE CONTROL,2021,No,Yes,Yes,Zonal System,Entry/Entryway,RBSA III,391945
+SITE_1327,ROOM_14357,APPL_152210,Programmable thermostat,Robert Shaw,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Family Room,RBSA III,391945
+SITE_1351,ROOM_823,APPL_140051,Manual thermostat - Digital,SunTouch,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Kitchen,RBSA III,395998
+SITE_1351,ROOM_28647,APPL_160024,Wi-Fi enabled thermostat,Honeywell,TH8321WF1001,Unknown,No,Yes,Yes,Central System,Entry/Entryway,RBSA III,395998
+SITE_1354,ROOM_5450,APPL_131581,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Yes,Yes,Not Available,Central System,Entry/Entryway,RBSA III,397168
+SITE_1355,ROOM_24807,APPL_158627,Programmable thermostat,American Standard,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,397295
+SITE_1357,ROOM_2859,APPL_119847,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Unknown,Not Available,Central System,Hallway,RBSA III,397758
+SITE_1357,ROOM_2859,APPL_107108,Manual thermostat - Digital,General Electric,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,397758
+SITE_1367,ROOM_13573,APPL_25657,Manual thermostat - Digital,Carrier,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,665
+SITE_1367,ROOM_12343,APPL_128154,Manual thermostat - Analog,Electic Heat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Basement,RBSA III,665
+SITE_138,ROOM_9451,APPL_169229,Smart/Wi-Fi thermostat,American Standard,AZON1050AC522AC,2021,Yes,Yes,No,Central System,Entry/Entryway,RBSA III,117592
+SITE_1404,ROOM_3701,APPL_115236,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Zonal System,Office,RBSA III,11380
+SITE_1404,ROOM_38959,APPL_103376,Programmable thermostat,NuHeat,UNKNOWN,Unknown,No,Yes,Not Available,Unknown,Kitchen,RBSA III,11380
+SITE_1404,ROOM_7211,APPL_159180,Programmable thermostat,Master Stat,110423-2,Unknown,No,No,Not Available,Zonal System,Dining Room,RBSA III,11380
+SITE_1404,ROOM_22829,APPL_65474,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Zonal System,Living Room,RBSA III,11380
+SITE_1404,ROOM_16223,APPL_49969,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Zonal System,Bathroom,RBSA III,11380
+SITE_1404,ROOM_7531,APPL_171806,Manual thermostat - Digital,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Family Room,RBSA III,11380
+SITE_1404,ROOM_9807,APPL_144808,Programmable thermostat,Unknown,UNKNOWN,Unknown,No,Yes,Not Available,Zonal System,Bedroom,RBSA III,11380
+SITE_1404,ROOM_18580,APPL_112359,Programmable thermostat,Unknown,UNKNOWN,Unknown,Unknown,Yes,Not Available,Zonal System,Bathroom,RBSA III,11380
+SITE_1410,ROOM_32543,APPL_110207,Programmable thermostat,Honeywell,PROSERIES,Unknown,Unknown,No,Not Available,Central System,Hallway,RBSA III,613745
+SITE_1457,ROOM_18774,APPL_25167,Manual thermostat - Analog,Ritetemp,6004,Unknown,No,Not Available,Not Available,Zonal System,Kitchen,RBSA III,626813
+SITE_1457,ROOM_25827,APPL_162151,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Dining Room,RBSA III,626813
+SITE_1457,ROOM_10470,APPL_37764,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Other,RBSA III,626813
+SITE_1457,ROOM_34970,APPL_138512,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,626813
+SITE_1457,ROOM_3988,APPL_140983,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,626813
+SITE_1457,ROOM_27146,APPL_132687,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,626813
+SITE_1457,ROOM_8249,APPL_20556,Manual thermostat - Analog,Ritetemp,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Closet,RBSA III,626813
+SITE_1458,ROOM_26078,APPL_36372,Manual thermostat - Analog,Trane,BAVSTAT239,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,627821
+SITE_1458,ROOM_2036,APPL_130408,Manual thermostat - Analog,Maple Chase,120-520,Unknown,No,Not Available,Not Available,Zonal System,Other,RBSA III,627821
+SITE_1467,ROOM_1944,APPL_15103,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,No,Not Available,Zonal System,Bedroom,RBSA III,30128
+SITE_1467,ROOM_38863,APPL_90540,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,No,Not Available,Zonal System,Kitchen,RBSA III,30128
+SITE_1467,ROOM_26418,APPL_59206,Manual thermostat - Digital,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Basement,RBSA III,30128
+SITE_1487,ROOM_25357,APPL_55793,Programmable thermostat,Unknown,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Entry/Entryway,RBSA III,634231
+SITE_1514,ROOM_16343,APPL_60498,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,639698
+SITE_1531,ROOM_25648,APPL_50772,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,645656
+SITE_1531,ROOM_31120,APPL_113854,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,645656
+SITE_1531,ROOM_38168,APPL_34962,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,645656
+SITE_1531,ROOM_20769,APPL_61117,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,645656
+SITE_1531,ROOM_21600,APPL_47738,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,645656
+SITE_1531,ROOM_22578,APPL_116758,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,645656
+SITE_1534,ROOM_26945,APPL_23313,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,46691
+SITE_1534,ROOM_13856,APPL_146732,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,46691
+SITE_154,ROOM_23073,APPL_58706,Smart thermostat,Ecobee,ECOBEE 3 LITE,Unknown,Yes,Yes,Yes,Central System,Hallway,RBSA III,120111
+SITE_1546,ROOM_44632,APPL_152261,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,650217
+SITE_1546,ROOM_9346,APPL_169269,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,650217
+SITE_1546,ROOM_43065,APPL_172378,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,650217
+SITE_155,ROOM_29707,APPL_166654,Programmable thermostat,Honeywell,UNKNOWN,2005,No,Yes,Not Available,Central System,Dining Room,RBSA III,120179
+SITE_1553,ROOM_35012,APPL_139779,Manual thermostat - Digital,LG,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,651751
+SITE_1553,ROOM_19989,APPL_126857,Manual thermostat - Digital,LG,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,651751
+SITE_158,ROOM_36691,APPL_90127,Programmable thermostat,Honeywell,RTH8500D 1013,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,120622
+SITE_1584,ROOM_44708,APPL_41813,Programmable thermostat,White Rodgers,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,88601
+SITE_1596,ROOM_33456,APPL_56611,Programmable thermostat,American Standard,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,67706
+SITE_1599,ROOM_24449,APPL_81925,Smart thermostat,Google Nest,NEST,Unknown,No,Yes,Yes,Central System,Living Room,RBSA III,74648
+SITE_160,ROOM_35702,APPL_18962,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Living Room,RBSA III,121058
+SITE_1612,ROOM_19787,APPL_121339,Smart thermostat,Google Nest,5.4,Unknown,Yes,Yes,Yes,Central System,Living Room,RBSA III,77597
+SITE_1623,ROOM_2552,APPL_78429,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,64314
+SITE_169,ROOM_1982,APPL_103412,Smart thermostat,Google Nest,UNKNOWN,Unknown,Yes,Yes,Yes,Central System,Living Room,RBSA III,122373
+SITE_176,ROOM_16477,APPL_92245,Programmable thermostat,Honeywell,RTH7600D1030,Unknown,No,Yes,Not Available,Central System,Dining Room,RBSA III,122861
+SITE_176,ROOM_22290,APPL_21439,Manual thermostat - Digital,Thermosoft,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Family Room,RBSA III,122861
+SITE_176,ROOM_30794,APPL_81913,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Office,RBSA III,122861
+SITE_176,ROOM_6617,APPL_20551,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,122861
+SITE_177,ROOM_31862,APPL_122678,Smart/Wi-Fi thermostat,Carrier,UNKNOWN,Unknown,Unknown,Yes,No,Central System,Hallway,RBSA III,122989
+SITE_189,ROOM_20909,APPL_153086,Smart thermostat,Ecobee,ECOBEE3 LITE,Unknown,Yes,Yes,No,Zonal System,Entry/Entryway,RBSA III,124018
+SITE_189,ROOM_32875,APPL_79010,Programmable thermostat,Honeywell,TH8320R1003,Unknown,Unknown,Yes,Not Available,Zonal System,Hallway,RBSA III,124018
+SITE_199,ROOM_40442,APPL_155188,Smart/Wi-Fi thermostat,Honeywell,TH6320WF2003,2017,Yes,Yes,Yes,Central System,Kitchen,RBSA III,125791
+SITE_235,ROOM_17608,APPL_49221,Smart thermostat,Google Nest,NEST,Unknown,No,Yes,Yes,Central System,Hallway,RBSA III,31425
+SITE_24,ROOM_41759,APPL_25414,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,38710
+SITE_24,ROOM_37482,APPL_97169,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,38710
+SITE_24,ROOM_27138,APPL_148481,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,38710
+SITE_24,ROOM_46555,APPL_159398,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,38710
+SITE_246,ROOM_18741,APPL_67850,Smart thermostat,Google Nest,NEST 5.4,2020,Yes,Yes,Yes,Central System,Hallway,RBSA III,132997
+SITE_255,ROOM_43236,APPL_7307,Programmable thermostat,Honeywell,TH6210U2001,Unknown,Unknown,No,Not Available,Central System,Hallway,RBSA III,133904
+SITE_28,ROOM_6394,APPL_127984,Manual thermostat - Digital,Daikin,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,104344
+SITE_28,ROOM_6394,APPL_159847,Smart thermostat,Google Nest,5.4,Unknown,Yes,Yes,No,Central System,Living Room,RBSA III,104344
+SITE_284,ROOM_5724,APPL_116146,Smart thermostat,Google Nest,7.6,Unknown,Yes,Yes,Yes,Central System,Living Room,RBSA III,138004
+SITE_311,ROOM_5801,APPL_20584,Smart thermostat,Google Nest,BACKPLATE-5.4,Unknown,Unknown,Yes,Yes,Central System,Hallway,RBSA III,141373
+SITE_311,ROOM_34021,APPL_133348,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Garage,RBSA III,141373
+SITE_311,ROOM_34021,APPL_61893,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Garage,RBSA III,141373
+SITE_311,ROOM_34021,APPL_72403,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Garage,RBSA III,141373
+SITE_312,ROOM_36751,APPL_104938,Programmable thermostat,Honeywell,PROSERIES,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,141627
+SITE_314,ROOM_42826,APPL_88407,Smart thermostat,Ecobee,SMARTTHERMOSTAT WITH VOICE CONTROL,Unknown,Yes,Yes,Yes,Central System,Entry/Entryway,RBSA III,141880
+SITE_337,ROOM_11008,APPL_109077,Programmable thermostat,Honeywell,TH6110D1021,2011,Unknown,Yes,Not Available,Central System,Living Room,RBSA III,144254
+SITE_340,ROOM_20011,APPL_29692,Programmable thermostat,Honeywell,HOME,Unknown,Unknown,Unknown,Not Available,Central System,Kitchen,RBSA III,144417
+SITE_353,ROOM_7519,APPL_101425,Wi-Fi enabled thermostat,Lennox,UNKNOWN,Unknown,Unknown,Yes,No,Central System,Hallway,RBSA III,146524
+SITE_370,ROOM_41820,APPL_147373,Programmable thermostat,White Rodgers,UNKNOWN,Unknown,No,Unknown,Not Available,Zonal System,Living Room,RBSA III,150409
+SITE_370,ROOM_41820,APPL_112888,Smart/Wi-Fi thermostat,Mitsubishi,UNKNOWN,Unknown,No,Yes,No,Zonal System,Living Room,RBSA III,150409
+SITE_370,ROOM_11893,APPL_155834,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,150409
+SITE_372,ROOM_1433,APPL_106925,Programmable thermostat,Mitsubishi,UNKNOWN,Unknown,No,Yes,Not Available,Zonal System,Kitchen,RBSA III,150896
+SITE_372,ROOM_30869,APPL_61657,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Office,RBSA III,150896
+SITE_372,ROOM_32890,APPL_168749,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,150896
+SITE_372,ROOM_11591,APPL_96959,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,150896
+SITE_373,ROOM_15183,APPL_50590,Manual thermostat - Digital,Mitsubishi,SG14A 0645,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,150973
+SITE_373,ROOM_19109,APPL_68436,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,150973
+SITE_373,ROOM_26569,APPL_106785,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,150973
+SITE_379,ROOM_32057,APPL_165236,Smart thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Unknown,Central System,Hallway,RBSA III,152143
+SITE_379,ROOM_33096,APPL_126762,Manual thermostat - Digital,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Hallway,RBSA III,152143
+SITE_385,ROOM_39412,APPL_168776,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,152539
+SITE_385,ROOM_16799,APPL_80125,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,152539
+SITE_385,ROOM_7437,APPL_80886,Manual thermostat - Analog,Ra Stat,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,152539
+SITE_392,ROOM_30790,APPL_13211,Programmable thermostat,Hunter,44110,Unknown,Yes,Unknown,Not Available,Zonal System,Living Room,RBSA III,153472
+SITE_392,ROOM_11812,APPL_28657,Smart thermostat,Ecobee,UNKNOWN,Unknown,No,Yes,Yes,Central System,Hallway,RBSA III,153472
+SITE_4,ROOM_18610,APPL_125035,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,100506
+SITE_408,ROOM_20210,APPL_65030,Smart/Wi-Fi thermostat,Mr Cool,BP102WA,2021,Unknown,Unknown,Unknown,Zonal System,Bedroom,RBSA III,155731
+SITE_408,ROOM_37364,APPL_109816,Programmable thermostat,Aube,UNKNOWN,2020,Unknown,Unknown,Not Available,Zonal System,Bedroom,RBSA III,155731
+SITE_408,ROOM_17875,APPL_5120,Programmable thermostat,Aube,UNKNOWN,2020,Unknown,Unknown,Not Available,Zonal System,Bedroom,RBSA III,155731
+SITE_408,ROOM_23600,APPL_137901,Smart/Wi-Fi thermostat,Mr Cool,MS103WA,2021,Yes,Unknown,Unknown,Zonal System,Living Room,RBSA III,155731
+SITE_411,ROOM_21271,APPL_140591,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,157237
+SITE_411,ROOM_33328,APPL_38703,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,157237
+SITE_411,ROOM_5317,APPL_159734,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,157237
+SITE_411,ROOM_36894,APPL_159335,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,157237
+SITE_411,ROOM_38688,APPL_140818,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Family Room,RBSA III,157237
+SITE_411,ROOM_25426,APPL_76581,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,157237
+SITE_411,ROOM_4722,APPL_118849,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,157237
+SITE_418,ROOM_29228,APPL_11022,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,158234
+SITE_420,ROOM_39953,APPL_144632,Smart/Wi-Fi thermostat,Lennox,103445-04,2012,Yes,Yes,Yes,Central System,Dining Room,RBSA III,158600
+SITE_43,ROOM_12595,APPL_23172,Programmable thermostat,Honeywell,RTH7500D1031,Unknown,No,Yes,Not Available,Central System,Kitchen,RBSA III,105665
+SITE_446,ROOM_42263,APPL_152252,Manual thermostat - Analog,Honeywell,UNKNOWN,2008,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,161948
+SITE_446,ROOM_21327,APPL_66888,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Office,RBSA III,161948
+SITE_446,ROOM_19514,APPL_9325,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,161948
+SITE_446,ROOM_15594,APPL_173378,Manual thermostat - Analog,Unknown,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Family Room,RBSA III,161948
+SITE_446,ROOM_32275,APPL_72452,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bathroom,RBSA III,161948
+SITE_446,ROOM_10894,APPL_27685,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,161948
+SITE_446,ROOM_23813,APPL_139406,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Garage,RBSA III,161948
+SITE_456,ROOM_34841,APPL_13654,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,164432
+SITE_456,ROOM_15788,APPL_65145,Manual thermostat - Digital,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Family Room,RBSA III,164432
+SITE_457,ROOM_527,APPL_156982,Manual thermostat - Analog,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,164642
+SITE_46,ROOM_33738,APPL_113970,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,63610
+SITE_465,ROOM_17972,APPL_131410,Smart thermostat,Google Nest,NEST,Unknown,Unknown,Yes,Yes,Central System,Dining Room,RBSA III,165840
+SITE_52,ROOM_16102,APPL_104538,Wi-Fi enabled thermostat,Lennox,103445-04,2013,Unknown,Yes,Yes,Central System,Living Room,RBSA III,106986
+SITE_538,ROOM_21754,APPL_124575,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Central System,Living Room,RBSA III,177845
+SITE_548,ROOM_28041,APPL_83616,Smart/Wi-Fi thermostat,Daikin,UNKNOWN,Unknown,No,No,Yes,Central System,Hallway,RBSA III,179433
+SITE_559,ROOM_22548,APPL_141813,Programmable thermostat,Trane,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Hallway,RBSA III,181472
+SITE_559,ROOM_32504,APPL_131615,Programmable thermostat,SunTouch,UNKNOWN,Unknown,No,Yes,Not Available,Zonal System,Bathroom,RBSA III,181472
+SITE_572,ROOM_41369,APPL_63544,Manual thermostat - Analog,Lennox,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,183932
+SITE_598,ROOM_18140,APPL_252,Manual thermostat - Analog,White Rodgers,1036-316,Unknown,No,Not Available,Not Available,Central System,Living Room,RBSA III,90218
+SITE_604,ROOM_17755,APPL_114045,Programmable thermostat,Unknown,UNKNOWN,2013,Unknown,Unknown,Not Available,Zonal System,Bathroom,RBSA III,191005
+SITE_604,ROOM_35305,APPL_86856,Programmable thermostat,Unknown,UNKNOWN,2013,Yes,Yes,Not Available,Central System,Living Room,RBSA III,191005
+SITE_611,ROOM_24145,APPL_83203,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Closet,RBSA III,192460
+SITE_611,ROOM_36330,APPL_155383,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Hallway,RBSA III,192460
+SITE_611,ROOM_29012,APPL_83433,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Hallway,RBSA III,192460
+SITE_611,ROOM_4345,APPL_119219,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Closet,RBSA III,192460
+SITE_611,ROOM_4777,APPL_143757,Programmable thermostat,Mitsubishi,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Living Room,RBSA III,192460
+SITE_611,ROOM_4777,APPL_166466,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Living Room,RBSA III,192460
+SITE_611,ROOM_34686,APPL_23037,Programmable thermostat,Mitsubishi,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Bedroom,RBSA III,192460
+SITE_611,ROOM_9899,APPL_97687,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Family Room,RBSA III,192460
+SITE_611,ROOM_9899,APPL_174247,Programmable thermostat,Mitsubishi,UNKNOWN,Unknown,No,No,Not Available,Zonal System,Family Room,RBSA III,192460
+SITE_625,ROOM_1628,APPL_139550,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,194231
+SITE_643,ROOM_5046,APPL_89919,Programmable thermostat,Honeywell,UNKNOWN,2017,Yes,Yes,Not Available,Central System,Hallway,RBSA III,197303
+SITE_650,ROOM_36766,APPL_153917,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Kitchen,RBSA III,197783
+SITE_653,ROOM_24264,APPL_72916,Programmable thermostat,Carrier,UNKNOWN,Unknown,Unknown,No,Not Available,Central System,Hallway,RBSA III,198269
+SITE_669,ROOM_31530,APPL_78439,Smart thermostat,Bryant,SYSTXBBECC01-A,Unknown,Unknown,Yes,Unknown,Central System,Hallway,RBSA III,200286
+SITE_669,ROOM_7254,APPL_125344,Manual thermostat - Digital,Daikin,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Living Room,RBSA III,200286
+SITE_69,ROOM_13791,APPL_79379,Manual thermostat - Digital,Daikin,UNKNOWN,Unknown,No,Not Available,Not Available,Unknown,Living Room,RBSA III,109202
+SITE_7,ROOM_2189,APPL_8719,Smart thermostat,Ecobee,3 LITE,2021,Yes,Yes,Yes,Central System,Living Room,RBSA III,101197
+SITE_707,ROOM_14943,APPL_49235,Wi-Fi enabled thermostat,Honeywell,TH6220WF2006,Unknown,Yes,Yes,Yes,Central System,Living Room,RBSA III,210461
+SITE_710,ROOM_9651,APPL_27351,Smart thermostat,Google Nest,NEST 5.4,Unknown,Unknown,Yes,Yes,Central System,Hallway,RBSA III,211242
+SITE_710,ROOM_44786,APPL_56161,Manual thermostat - Analog,King,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Outbuilding / Addition,RBSA III,211242
+SITE_734,ROOM_14367,APPL_14925,Programmable thermostat,Lux,PSPH521L,Unknown,Yes,No,Not Available,Central System,Living Room,RBSA III,216927
+SITE_742,ROOM_7258,APPL_168028,Programmable thermostat,Lux,TX1500E,Unknown,No,Yes,Not Available,Central System,Kitchen,RBSA III,219023
+SITE_768,ROOM_37452,APPL_110472,Smart thermostat,Ecobee,UNKNOWN,Unknown,Unknown,Yes,No,Central System,Hallway,RBSA III,225734
+SITE_805,ROOM_7978,APPL_38630,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,No,Not Available,Central System,Living Room,RBSA III,236818
+SITE_807,ROOM_42930,APPL_110454,Programmable thermostat,Lux,1500,Unknown,Yes,Yes,Not Available,Central System,Hallway,RBSA III,238591
+SITE_815,ROOM_45084,APPL_60341,Smart thermostat,Ecobee,ECOBEE3LITE,Unknown,Yes,Yes,Yes,Central System,Hallway,RBSA III,240427
+SITE_818,ROOM_3983,APPL_155396,Manual thermostat - Analog,Cadet,UNKNOWN,Unknown,No,Not Available,Not Available,Zonal System,Bedroom,RBSA III,241484
+SITE_819,ROOM_30509,APPL_40726,Programmable thermostat,Honeywell,PRO SERIES,Unknown,No,Yes,Not Available,Central System,Family Room,RBSA III,241834
+SITE_846,ROOM_3040,APPL_23923,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Hallway,RBSA III,248624
+SITE_867,ROOM_23658,APPL_73591,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,Yes,Not Available,Central System,Living Room,RBSA III,254366
+SITE_883,ROOM_41737,APPL_129850,Smart thermostat,Ecobee,ECOBEE3,Unknown,Yes,Yes,Yes,Central System,Family Room,RBSA III,256399
+SITE_9,ROOM_17498,APPL_116283,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Yes,Yes,Not Available,Central System,Dining Room,RBSA III,101222
+SITE_921,ROOM_18613,APPL_165300,Smart/Wi-Fi thermostat,Honeywell,PRO SERIES,Unknown,Unknown,Yes,Yes,Central System,Entry/Entryway,RBSA III,268535
+SITE_926,ROOM_19493,APPL_11500,Smart thermostat,Google Nest,NEST 7.6,Unknown,Yes,Yes,Yes,Central System,Family Room,RBSA III,269104
+SITE_95,ROOM_8093,APPL_70932,Smart thermostat,Google Nest,BACKPLATE-5.4,Unknown,Unknown,Yes,Yes,Central System,Living Room,RBSA III,112258
+SITE_955,ROOM_25964,APPL_152786,Programmable thermostat,Honeywell,UNKNOWN,Unknown,Unknown,No,Not Available,Central System,Living Room,RBSA III,275917
+SITE_96,ROOM_43855,APPL_61614,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Living Room,RBSA III,12564
+SITE_974,ROOM_32176,APPL_77084,Manual thermostat - Digital,Honeywell,UNKNOWN,Unknown,No,Not Available,Not Available,Central System,Hallway,RBSA III,281519
+SITE_984,ROOM_5602,APPL_36010,Programmable thermostat,Aprilaire,UNKNOWN,Unknown,No,No,Not Available,Central System,Kitchen,RBSA III,282974
+SITE_993,ROOM_35944,APPL_61142,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,No,Not Available,Central System,Living Room,RBSA III,285144
+SITE_00005,Room_00006426,Appliance_00015894,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,971
+SITE_00006,Room_00006443,Appliance_00015971,Smart/Wi-Fi Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,976
+SITE_00007,Not Available,Appliance_00023450,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,981
+SITE_00011,Room_00006500,Appliance_00015973,Programmable Thermostat,Trane,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,1001
+SITE_00014,Room_00006522,Appliance_00015975,Not Available,Lennox,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1016
+SITE_00020,Room_00006599,Appliance_00015977,Programmable Thermostat,Smartway Solutions,VIP3000,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1046
+SITE_00033,Room_00006745,Appliance_00022972,Programmable Thermostat,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1111
+SITE_00124,Room_00007507,Appliance_00016687,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1566
+SITE_00141,Room_00007683,Appliance_00016286,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,1651
+SITE_00147,Room_00007774,Appliance_00015923,Programmable Thermostat,Trane,Xt500c,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,1681
+SITE_00152,Room_00007841,Appliance_00016709,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1706
+SITE_00152,Room_00007844,Appliance_00016710,Manual Thermostat - Analog,Robert Shaw,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1706
+SITE_00152,Room_00007847,Appliance_00016711,Manual Thermostat - Digital,King,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1706
+SITE_00156,Room_00007907,Appliance_00015914,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1726
+SITE_00156,Room_00007909,Appliance_00015915,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1726
+SITE_00156,Room_00007911,Appliance_00015916,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1726
+SITE_00156,Room_00007913,Appliance_00015917,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,1726
+SITE_00168,Not Available,Appliance_00023199,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,1786
+SITE_00200,Room_00008291,Appliance_00016555,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008294,Appliance_00016556,Manual Thermostat - Analog,Cadet,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008298,Appliance_00016557,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008297,Appliance_00016558,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008300,Appliance_00016559,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008295,Appliance_00016560,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008302,Appliance_00016561,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008304,Appliance_00016562,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008305,Appliance_00016563,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00200,Room_00008306,Appliance_00016564,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,1946
+SITE_00216,Room_00008456,Appliance_00016980,Programmable Thermostat,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2026
+SITE_00225,Room_00008591,Appliance_00016921,Programmable Thermostat,Honeywell,Rlv4305,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2071
+SITE_00225,Room_00008593,Appliance_00016922,Manual Thermostat - Analog,Rite Temp,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2071
+SITE_00225,Room_00008594,Appliance_00016923,Manual Thermostat - Analog,Rite Temp,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2071
+SITE_00225,Room_00008595,Appliance_00016924,Manual Thermostat - Analog,Rite Temp,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2071
+SITE_00228,Room_00008643,Appliance_00016920,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Unknown,No,Not Available,Not Available,RBSA II,2086
+SITE_00229,Room_00008656,Appliance_00016902,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Unknown,No,Not Available,Not Available,RBSA II,2091
+SITE_00229,Room_00008667,Appliance_00016903,Manual Thermostat - Analog,LuxPro,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2091
+SITE_00239,Not Available,Appliance_00023490,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,2141
+SITE_00252,Room_00000308,Appliance_00014983,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2206
+SITE_00269,Room_00000557,Appliance_00014997,Manual Thermostat - Digital,Aprilaire,8444,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,2291
+SITE_00273,Room_00000608,Appliance_00015001,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2311
+SITE_00277,Room_00000662,Appliance_00015005,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2331
+SITE_00301,Room_00008777,Appliance_00016649,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,2451
+SITE_00306,Room_00008831,Appliance_00016886,Manual Thermostat - Digital,LuxPro,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,2476
+SITE_00315,Room_00008916,Appliance_00016950,Manual Thermostat - Digital,Pro,621-2,Not Available,No,No,No,Not Available,Not Available,RBSA II,2521
+SITE_00323,Room_00008982,Appliance_00022982,Unknown,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,2561
+SITE_00327,Not Available,Appliance_00023501,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,2581
+SITE_00334,Not Available,Appliance_00023842,Manual Thermostat - Digital,Unknown,Unknown,2007,Unknown,No,Unknown,Not Available,Not Available,RBSA II,2616
+SITE_00337,Room_00000999,Appliance_00015032,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,2631
+SITE_00339,Room_00001029,Appliance_00015033,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,2641
+SITE_00341,Room_00001061,Appliance_00015034,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2651
+SITE_00350,Room_00001204,Appliance_00015042,Programmable Thermostat,Honeywell,Magicstat ct3300,Not Available,No,No,No,Not Available,Not Available,RBSA II,2696
+SITE_00354,Room_00001274,Appliance_00015046,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2716
+SITE_00380,Room_00001667,Appliance_00015069,Manual Thermostat - Digital,Lux Products,PSD111,Not Available,Yes,No,No,Not Available,Not Available,RBSA II,2846
+SITE_00394,Room_00009101,Appliance_00016624,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,2916
+SITE_00402,Room_00009240,Appliance_00016545,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,2956
+SITE_00411,Room_00009390,Appliance_00016657,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,3001
+SITE_00498,Room_00010343,Appliance_00016472,Programmable Thermostat,Trane,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,3436
+SITE_00499,Room_00010358,Appliance_00015996,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,3441
+SITE_00500,Not Available,Appliance_00023230,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,3446
+SITE_00503,Not Available,Appliance_00023704,Manual Remote,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,3461
+SITE_00512,Room_00010554,Appliance_00016001,Wi-Fi Enabled Thermostat,Lux Products,Unknown,Not Available,Unknown,No,Yes,Not Available,Not Available,RBSA II,3506
+SITE_00516,Room_00010612,Appliance_00016004,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,3526
+SITE_00538,Not Available,Appliance_00023233,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,3636
+SITE_00546,Room_00010981,Appliance_00016299,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,3676
+SITE_00548,Room_00011015,Appliance_00016035,Wi-Fi Enabled Thermostat,Insteon,Unknown,Not Available,No,Yes,Yes,Not Available,Not Available,RBSA II,3686
+SITE_00558,Room_00011140,Appliance_00016058,Manual Thermostat - Analog,Lux Products,T101141/psm30,Not Available,No,No,No,Not Available,Not Available,RBSA II,3736
+SITE_00559,Not Available,Appliance_00023523,Smart Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Yes,Not Available,Not Available,RBSA II,3741
+SITE_00561,Room_00011175,Appliance_00016330,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,3751
+SITE_00569,Room_00011305,Appliance_00016069,Programmable Thermostat,Honeywell,TH6220D1028,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,3791
+SITE_00574,Room_00011412,Appliance_00016073,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,3816
+SITE_00574,Room_00011417,Appliance_00016074,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,3816
+SITE_00577,Room_00011452,Appliance_00016333,Programmable Thermostat,Robert Shaw,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,3831
+SITE_00577,Room_00011459,Appliance_00016334,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,3831
+SITE_00577,Not Available,Appliance_00023847,Programmable Thermostat,Unknown,Unknown,2011,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,3831
+SITE_00587,Room_00011579,Appliance_00016296,Smart Thermostat,Nest,Unknown,Not Available,No,Yes,Yes,Not Available,Not Available,RBSA II,3881
+SITE_00589,Room_00011603,Appliance_00016332,Programmable Thermostat,Lennox,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,3891
+SITE_00591,Room_00011624,Appliance_00016292,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,3901
+SITE_00595,Room_00011674,Appliance_00016309,Programmable Thermostat,White Rodgers,1f80-361,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,3921
+SITE_00600,Room_00011742,Appliance_00016082,Programmable Thermostat,Honeywell,Unknown,2007,Unknown,Yes,No,Not Available,Not Available,RBSA II,3946
+SITE_00601,Room_00011749,Appliance_00016083,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,3951
+SITE_00604,Not Available,Appliance_00023242,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,3966
+SITE_00612,Room_00011896,Appliance_00016384,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00612,Room_00011897,Appliance_00016385,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00612,Room_00011898,Appliance_00016386,Manual Thermostat - Analog,Lux Products,T101141,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00612,Room_00011898,Appliance_00016387,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00612,Room_00011899,Appliance_00016388,Manual Thermostat - Analog,King,859M,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00612,Room_00011901,Appliance_00016389,Manual Thermostat - Analog,King,859M,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4006
+SITE_00619,Room_00011998,Appliance_00016383,Wi-Fi Enabled Thermostat,Carrier,Unknown,Not Available,Unknown,Unknown,Yes,Not Available,Not Available,RBSA II,4041
+SITE_00621,Room_00012026,Appliance_00016297,Programmable Thermostat,White Rodgers,1F82-261,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4051
+SITE_00629,Not Available,Appliance_00023245,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,4091
+SITE_00630,Room_00012129,Appliance_00016320,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4096
+SITE_00630,Room_00012134,Appliance_00016328,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4096
+SITE_00632,Room_00012146,Appliance_00016337,Manual Thermostat - Analog,Rite Temp,8046,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012145,Appliance_00016338,Manual Thermostat - Analog,Rite Temp,8046,Not Available,No,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012148,Appliance_00016339,Programmable Thermostat,Mitsubishi,KM07K,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012148,Appliance_00016340,Manual Thermostat - Analog,Rite Temp,8046,Not Available,No,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012147,Appliance_00016341,Manual Thermostat - Analog,Rite Temp,8046,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012151,Appliance_00016342,Manual Thermostat - Analog,Rite Temp,8046,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012152,Appliance_00016343,Manual Thermostat - Analog,Rite Temp,8046,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00632,Room_00012153,Appliance_00016344,Manual Thermostat - Analog,Rite Temp,8046,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4106
+SITE_00635,Room_00012181,Appliance_00016329,Programmable Thermostat,Lennox,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4121
+SITE_00639,Room_00012248,Appliance_00016094,Manual Thermostat - Digital,QJ Microline,UDG4999,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,4141
+SITE_00641,Not Available,Appliance_00023247,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4151
+SITE_00642,Room_00012282,Appliance_00016295,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4156
+SITE_00650,Room_00012378,Appliance_00016395,Manual Thermostat - Analog,Evcon,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,4196
+SITE_00651,Not Available,Appliance_00023526,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,4201
+SITE_00661,Room_00012502,Appliance_00016434,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4251
+SITE_00662,Room_00012511,Appliance_00016468,Programmable Thermostat,Honeywell,Th6110D1005,Not Available,Unknown,Unknown,No,Not Available,Not Available,RBSA II,4256
+SITE_00696,Room_00012880,Appliance_00016424,Programmable Thermostat,Rite Temp,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4426
+SITE_00699,Room_00012924,Appliance_00016460,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4441
+SITE_00703,Room_00012972,Appliance_00016429,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4461
+SITE_00707,Room_00013031,Appliance_00016464,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4481
+SITE_00715,Not Available,Appliance_00023255,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4521
+SITE_00724,Room_00013300,Appliance_00016398,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4566
+SITE_00724,Room_00013286,Appliance_00016396,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4566
+SITE_00724,Not Available,Appliance_00023848,Programmable Thermostat,Unknown,Unknown,2007,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4566
+SITE_00726,Not Available,Appliance_00023539,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4576
+SITE_00734,Not Available,Appliance_00023257,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,4616
+SITE_00737,Room_00013493,Appliance_00016465,Smart/Wi-Fi Thermostat,Nest,Unknown,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,4631
+SITE_00750,Room_00013671,Appliance_00016431,Programmable Thermostat,Robert Shaw,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4696
+SITE_00752,Room_00013712,Appliance_00016401,Smart/Wi-Fi Thermostat,Lennox,Unknown,Not Available,No,No,Yes,Not Available,Not Available,RBSA II,4706
+SITE_00755,Not Available,Appliance_00023265,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4721
+SITE_00756,Room_00013773,Appliance_00016404,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4726
+SITE_00759,Room_00013838,Appliance_00016476,Programmable Thermostat,Lux Products,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,4741
+SITE_00760,Room_00013846,Appliance_00016511,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,4746
+SITE_00764,Not Available,Appliance_00023267,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4766
+SITE_00765,Room_00013950,Appliance_00016469,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4771
+SITE_00768,Room_00013988,Appliance_00016394,Smart/Wi-Fi Thermostat,iComfort,103445-04,Not Available,No,Yes,Yes,Not Available,Not Available,RBSA II,4786
+SITE_00773,Room_00014062,Appliance_00016474,Programmable Thermostat,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,4811
+SITE_00779,Room_00014148,Appliance_00016482,Programmable Thermostat,Lux Products,PSP511La,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,4841
+SITE_00779,Room_00014147,Appliance_00016483,Manual Thermostat - Digital,Braeburn,1000,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,4841
+SITE_00781,Not Available,Appliance_00023271,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4851
+SITE_00783,Not Available,Appliance_00023272,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,4861
+SITE_00813,Not Available,Appliance_00023549,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,5011
+SITE_00829,Room_00014665,Appliance_00016637,Manual Thermostat - Digital,SunTouch,500670-sc,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,5091
+SITE_00829,Room_00014667,Appliance_00016638,Programmable Thermostat,Invensys,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,5091
+SITE_00829,Room_00014669,Appliance_00016639,Manual Thermostat - Digital,SunTouch,500670-sc,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,5091
+SITE_00836,Not Available,Appliance_00023551,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,5126
+SITE_00857,Room_00014936,Appliance_00017052,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,5231
+SITE_00857,Room_00014939,Appliance_00017053,Manual Thermostat - Analog,SunTouch,500710-CS,Not Available,No,No,No,Not Available,Not Available,RBSA II,5231
+SITE_00857,Room_00014940,Appliance_00017054,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,5231
+SITE_00857,Room_00014941,Appliance_00017055,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,5231
+SITE_00857,Room_00014949,Appliance_00017056,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,5231
+SITE_00908,Not Available,Appliance_00023560,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,5486
+SITE_00969,Room_00002929,Appliance_00015148,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,5791
+SITE_00990,Not Available,Appliance_00023287,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,5896
+SITE_01044,Room_00015426,Appliance_00015533,Programmable Thermostat,Carrier,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,6166
+SITE_01044,Room_00015428,Appliance_00015534,Manual Thermostat - Digital,GFCI,Suntouch,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,6166
+SITE_01046,Room_00003868,Appliance_00015216,Manual Thermostat - Digital,Robert Shaw,9500,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,6176
+SITE_01067,Room_00015609,Appliance_00015583,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,6281
+SITE_01081,Room_00015783,Appliance_00015687,Programmable Thermostat,Honeywell,Unknown,Not Available,Yes,No,No,Not Available,Not Available,RBSA II,6351
+SITE_01082,Room_00015789,Appliance_00015638,Manual Thermostat - Digital,Cadet,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,6356
+SITE_01082,Room_00015792,Appliance_00015639,Manual Thermostat - Digital,Cadet,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,6356
+SITE_01082,Room_00015794,Appliance_00015640,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,6356
+SITE_01092,Room_00015966,Appliance_00015623,Programmable Thermostat,Honeywell,Chronotherm  III,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,6406
+SITE_01099,Room_00016087,Appliance_00015426,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,6441
+SITE_01105,Room_00016167,Appliance_00015860,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,6471
+SITE_01105,Room_00016169,Appliance_00015861,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,6471
+SITE_01105,Room_00016177,Appliance_00015863,Programmable Thermostat,Trane,Unknown,2005,Unknown,Yes,No,Not Available,Not Available,RBSA II,6471
+SITE_01196,Room_00017047,Appliance_00016288,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,6926
+SITE_01204,Room_00017141,Appliance_00015875,Programmable Thermostat,Rite Temp,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,6966
+SITE_01208,Not Available,Appliance_00023312,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,6986
+SITE_01209,Room_00017224,Appliance_00015833,Smart Thermostat,Lennox,Unknown,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,6991
+SITE_01274,Room_00017860,Appliance_00017082,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7316
+SITE_01274,Room_00017861,Appliance_00017083,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7316
+SITE_01274,Room_00017864,Appliance_00017084,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7316
+SITE_01293,Room_00018028,Appliance_00016849,Programmable Thermostat,Trane,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7411
+SITE_01305,Room_00018166,Appliance_00016847,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01305,Room_00018171,Appliance_00016864,Manual Thermostat - Analog,Cadet,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01305,Room_00018172,Appliance_00016865,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01305,Room_00018175,Appliance_00016866,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01305,Room_00018174,Appliance_00016867,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01305,Room_00018173,Appliance_00016868,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7471
+SITE_01307,Room_00018196,Appliance_00016792,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7481
+SITE_01307,Room_00018194,Appliance_00016793,Manual Thermostat - Analog,King,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7481
+SITE_01307,Room_00018206,Appliance_00016794,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7481
+SITE_01307,Room_00018202,Appliance_00016795,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7481
+SITE_01311,Room_00018247,Appliance_00016757,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7501
+SITE_01311,Room_00018251,Appliance_00016758,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7501
+SITE_01312,Room_00018265,Appliance_00016762,Manual Thermostat - Analog,RA-Stat,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01312,Room_00018266,Appliance_00016763,Manual Thermostat - Digital,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01312,Room_00018267,Appliance_00016764,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01312,Room_00018270,Appliance_00016765,Manual Thermostat - Analog,RA-Stat,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01312,Room_00018271,Appliance_00016766,Manual Thermostat - Digital,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01312,Room_00018273,Appliance_00016767,Manual Thermostat - Digital,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7506
+SITE_01313,Not Available,Appliance_00023324,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,7511
+SITE_01316,Not Available,Appliance_00023325,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,7526
+SITE_01317,Not Available,Appliance_00023326,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,7531
+SITE_01332,Room_00018533,Appliance_00016827,Programmable Thermostat,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,7606
+SITE_01334,Room_00018561,Appliance_00016736,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,7616
+SITE_01336,Not Available,Appliance_00023332,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,7626
+SITE_01340,Room_00018642,Appliance_00016804,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,7646
+SITE_01344,Not Available,Appliance_00023335,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,7666
+SITE_01360,Room_00018900,Appliance_00016845,Programmable Thermostat,Carrier,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,7746
+SITE_01385,Not Available,Appliance_00023630,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,7871
+SITE_01415,Not Available,Appliance_00023337,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,8021
+SITE_01428,Not Available,Appliance_00023341,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,8086
+SITE_01435,Room_00005015,Appliance_00015281,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8121
+SITE_01435,Room_00005011,Appliance_00015282,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8121
+SITE_01435,Room_00005007,Appliance_00015283,Smart/Wi-Fi Thermostat,Lennox,Unknown,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,8121
+SITE_01436,Room_00005033,Appliance_00015284,Wi-Fi Enabled Thermostat,Trane,Unknown,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,8126
+SITE_01437,Room_00005053,Appliance_00015285,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8131
+SITE_01438,Room_00005074,Appliance_00015286,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8136
+SITE_01443,Room_00005151,Appliance_00015289,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,8161
+SITE_01444,Room_00005170,Appliance_00015290,Programmable Thermostat,Honeywell,Unknown,Not Available,Yes,Yes,No,Not Available,Not Available,RBSA II,8166
+SITE_01445,Room_00005193,Appliance_00015291,Programmable Thermostat,Luxaire,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8171
+SITE_01455,Not Available,Appliance_00023705,Manual Remote,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,8221
+SITE_01457,Room_00005365,Appliance_00015299,Manual Thermostat - Digital,Totaline,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,8231
+SITE_01458,Room_00005392,Appliance_00015300,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8236
+SITE_01458,Room_00005389,Appliance_00015301,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8236
+SITE_01467,Room_00005547,Appliance_00015309,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8281
+SITE_01475,Room_00005657,Appliance_00015318,Programmable Thermostat,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,8321
+SITE_01478,Room_00005719,Appliance_00015321,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8336
+SITE_01479,Room_00005730,Appliance_00015322,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8341
+SITE_01480,Room_00005745,Appliance_00015323,Manual Thermostat - Digital,Trane,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,8346
+SITE_01485,Room_00005816,Appliance_00015326,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8371
+SITE_01486,Room_00005827,Appliance_00015327,Wi-Fi Enabled Thermostat,American Standard,Unknown,Not Available,Unknown,No,Yes,Not Available,Not Available,RBSA II,8376
+SITE_01497,Not Available,Appliance_00023350,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,8431
+SITE_01512,Room_00006242,Appliance_00015355,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Unknown,No,Not Available,Not Available,RBSA II,8506
+SITE_01539,Room_00018930,Appliance_00015604,Manual Thermostat - Analog,King,K101,Not Available,No,No,No,Not Available,Not Available,RBSA II,8641
+SITE_01539,Room_00018931,Appliance_00015605,Manual Thermostat - Analog,Robert Shaw,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8641
+SITE_01539,Room_00018933,Appliance_00015606,Manual Thermostat - Analog,Robert Shaw,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8641
+SITE_01543,Room_00018977,Appliance_00015482,Manual Thermostat - Digital,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8661
+SITE_01543,Room_00018976,Appliance_00015483,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8661
+SITE_01543,Room_00018979,Appliance_00015484,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8661
+SITE_01543,Room_00018983,Appliance_00015485,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,8661
+SITE_01544,Not Available,Appliance_00023358,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,8666
+SITE_01550,Room_00019069,Appliance_00015657,Wi-Fi Enabled Thermostat,Lennox,Unknown,Not Available,Unknown,No,Yes,Not Available,Not Available,RBSA II,8696
+SITE_01554,Room_00020717,Appliance_00002020,Manual Thermostat - Analog,King,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8716
+SITE_01554,Room_00020714,Appliance_00005606,Programmable Thermostat,Mitsubishi,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,8716
+SITE_01554,Room_00020712,Appliance_00023166,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,8716
+SITE_01557,Not Available,Appliance_00023363,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,8731
+SITE_01560,Not Available,Appliance_00023365,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,8746
+SITE_01563,Not Available,Appliance_00023366,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,8761
+SITE_01574,Not Available,Appliance_00023368,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,8816
+SITE_01589,Room_00019638,Appliance_00015362,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,8891
+SITE_01606,Room_00019888,Appliance_00015457,Programmable Thermostat,Honeywell,RLV430,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,8976
+SITE_01612,Not Available,Appliance_00023706,Manual Remote,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,9006
+SITE_01618,Room_00020081,Appliance_00015614,Programmable Thermostat,American Standard,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,9036
+SITE_01619,Room_00020107,Appliance_00016283,Programmable Thermostat,Mitsubishi,mrch1,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,9041
+SITE_01635,Room_00020286,Appliance_00015744,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9121
+SITE_01661,Not Available,Appliance_00023393,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,9251
+SITE_01669,Room_00020669,Appliance_00015717,Programmable Thermostat,Honeywell,T8011R 1006,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,9291
+SITE_01679,Room_00020796,Appliance_00015688,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9341
+SITE_01679,Room_00020797,Appliance_00015689,Manual Thermostat - Analog,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9341
+SITE_01679,Room_00020801,Appliance_00015690,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9341
+SITE_01695,Not Available,Appliance_00023649,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,9421
+SITE_01705,Not Available,Appliance_00023652,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,9471
+SITE_01727,Room_00021269,Appliance_00015399,Manual Thermostat - Digital,White Rodgers,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9581
+SITE_01764,Room_00021612,Appliance_00015553,Manual Thermostat - Analog,Hunter,40135,Not Available,No,No,No,Not Available,Not Available,RBSA II,9766
+SITE_01790,Not Available,Appliance_00023402,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,9896
+SITE_01794,Room_00021851,Appliance_00015383,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9916
+SITE_01794,Room_00021853,Appliance_00015486,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9916
+SITE_01794,Room_00021854,Appliance_00015487,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,9916
+SITE_01820,Room_00022081,Appliance_00016121,Manual Thermostat - Analog,Coleman,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10046
+SITE_01821,Room_00022095,Appliance_00016122,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10051
+SITE_01824,Room_00022131,Appliance_00016125,Programmable Thermostat,White Rodgers,1f94-371,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10066
+SITE_01826,Room_00022156,Appliance_00016127,Programmable Thermostat,White Rodgers,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10076
+SITE_01838,Room_00022307,Appliance_00016137,Programmable Thermostat,Honeywell,Rth230b,Not Available,No,Unknown,No,Not Available,Not Available,RBSA II,10136
+SITE_01840,Room_00022334,Appliance_00016138,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,10146
+SITE_01848,Room_00022443,Appliance_00016145,Manual Thermostat - Analog,Coleman,Cm60a,Not Available,No,No,No,Not Available,Not Available,RBSA II,10186
+SITE_01848,Room_00022443,Appliance_00016146,Programmable Thermostat,Lennox,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10186
+SITE_01849,Room_00022461,Appliance_00016147,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10191
+SITE_01852,Room_00022497,Appliance_00016150,Programmable Thermostat,Honeywell,TH8320R1003,2014,Unknown,Yes,No,Not Available,Not Available,RBSA II,10206
+SITE_01855,Room_00022534,Appliance_00016153,Manual Thermostat - Analog,Evcon,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10221
+SITE_01856,Room_00022548,Appliance_00016154,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10226
+SITE_01857,Room_00022560,Appliance_00016155,Programmable Thermostat,Lux Products,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10231
+SITE_01858,Room_00022583,Appliance_00016156,Programmable Thermostat,White Rodgers,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10236
+SITE_01863,Room_00022630,Appliance_00016807,Manual Thermostat - Analog,Coleman,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10261
+SITE_01868,Room_00022691,Appliance_00016842,Programmable Thermostat,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10286
+SITE_01870,Not Available,Appliance_00023710,Manual Remote,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,10296
+SITE_01871,Room_00022726,Appliance_00016805,Manual Thermostat - Digital,Honeywell,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10301
+SITE_01892,Room_00022911,Appliance_00015538,Programmable Thermostat,Honeywell,TH6220D1028,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10406
+SITE_01893,Room_00022924,Appliance_00015527,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10411
+SITE_01894,Room_00022953,Appliance_00015736,Programmable Thermostat,Honeywell,97-4730,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10416
+SITE_01894,Room_00022958,Appliance_00015737,Manual Thermostat - Analog,Means,M7,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10416
+SITE_01895,Room_00022967,Appliance_00015611,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,10421
+SITE_01904,Not Available,Appliance_00023407,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,10466
+SITE_01907,Not Available,Appliance_00023408,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,10481
+SITE_01918,Room_00023297,Appliance_00015548,Manual Thermostat - Analog,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10536
+SITE_01931,Room_00023493,Appliance_00016172,Programmable Thermostat,Trane,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,10601
+SITE_01944,Not Available,Appliance_00023415,Manual Thermostat - Digital,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,10666
+SITE_01952,Not Available,Appliance_00023418,Programmable Thermostat,Unknown,Unknown,Not Available,Unknown,Unknown,Unknown,Not Available,Not Available,RBSA II,10706
+SITE_01960,Not Available,Appliance_00023421,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,Unknown,Not Available,Not Available,RBSA II,10746
+SITE_01973,Room_00024062,Appliance_00016209,Programmable Thermostat,Honeywell,Unknown,Not Available,No,Yes,No,Not Available,Not Available,RBSA II,10811
+SITE_01984,Room_00024221,Appliance_00016214,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10866
+SITE_01997,Room_00024417,Appliance_00015462,Manual Thermostat - Analog,Unknown,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10931
+SITE_01997,Room_00024416,Appliance_00015463,Manual Thermostat - Analog,King,Unknown,Not Available,No,No,No,Not Available,Not Available,RBSA II,10931
+SITE_01997,Room_00024423,Appliance_00015632,Programmable Thermostat,Rite Temp,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,10931
+SITE_02008,Room_00024585,Appliance_00016222,Wi-Fi Enabled Thermostat,Lennox,103445-04,Not Available,Unknown,Yes,Yes,Not Available,Not Available,RBSA II,10986
+SITE_02023,Room_00024823,Appliance_00015465,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,11061
+SITE_02025,Room_00024848,Appliance_00016235,Manual Thermostat - Analog,Means,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024849,Appliance_00016236,Manual Thermostat - Analog,Means,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024850,Appliance_00016237,Manual Thermostat - Analog,Unknown,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024851,Appliance_00016238,Manual Thermostat - Analog,King,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024852,Appliance_00016239,Manual Thermostat - Digital,SunTouch,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024852,Appliance_00016240,Manual Thermostat - Analog,King,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024853,Appliance_00016241,Manual Thermostat - Analog,Means,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024854,Appliance_00016242,Manual Thermostat - Analog,King,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02025,Room_00024858,Appliance_00016243,Manual Thermostat - Analog,Means,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11071
+SITE_02031,Room_00024943,Appliance_00016245,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,11101
+SITE_02034,Room_00024983,Appliance_00016247,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,No,No,Not Available,Not Available,RBSA II,11116
+SITE_02039,Room_00025074,Appliance_00016257,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,11141
+SITE_02056,Room_00025312,Appliance_00016681,Programmable Thermostat,Honeywell,Unknown,Not Available,Unknown,Yes,No,Not Available,Not Available,RBSA II,11226
+SNOPUD_01534,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1534
+SNOPUD_01528,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1528
+SNOPUD_01577,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1577
+SNOPUD_01575,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1575
+SNOPUD_01576,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,15760
+AVISTA_10186,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,101860
+AVISTA_10118,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10118
+AVISTA_10125,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10125
+AVISTA_10100,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10100
+AVISTA_10037,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10037
+AVISTA_10239,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10239
+AVISTA_10023,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10023
+AVISTA_10310,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10310
+AVISTA_10039,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10039
+AVISTA_10021,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,100210
+AVISTA_10073,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10073
+AVISTA_10014,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10014
+AVISTA_10088,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10088
+AVISTA_10015,ROOM_45498,APPL_164508,Programmable thermostat,Honeywell,1950,Unknown,Unknown,Yes,Not Available,Central System,Unknown,HEMS RBSA,10015
+AVISTA_10076,ROOM_46719,APPL_174004,Smart/Wi-Fi thermostat,Honeywell,TH6320ZW2003,Unknown,Unknown,Yes,Yes,Central System,Unknown,HEMS RBSA,100760
+AVISTA_10099,ROOM_41444,APPL_170218,Programmable thermostat,Honeywell,UNKNOWN,Unknown,No,Yes,Not Available,Central System,Unknown,HEMS RBSA,10099
+AVISTA_10120,ROOM_46339,APPL_157951,Smart/Wi-Fi thermostat,Honeywell,TH6320ZW2003,2021,Unknown,Yes,Yes,Central System,Unknown,HEMS RBSA,10120

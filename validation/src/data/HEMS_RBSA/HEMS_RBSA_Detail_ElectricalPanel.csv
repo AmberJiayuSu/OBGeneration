@@ -1,0 +1,422 @@
+SiteID,Primary_Panel,Electrical_Panel_Type,Electrical_Panel_Brand,Electrical_Panel_Vintage,Electrical_Panel_Capacity,RBSA Data Source,ee_site_id
+SITE_1023,Primary,Breaker Panel,Square D,1984,225,RBSA III,292998
+SITE_1023,Primary,Breaker Panel,Square D,Unknown,100,RBSA III,292998
+SITE_1023,Primary,Breaker Panel,Westinghouse,Unknown,125,RBSA III,292998
+SITE_1036,Primary,Breaker Panel,Square D,2015,200,RBSA III,295578
+SITE_1049,Primary,Breaker Panel,Square D,2007,200,RBSA III,298259
+SITE_105,Primary,Breaker Panel,General Electric,Unknown,200,RBSA III,113763
+SITE_1053,Primary,Breaker Panel,Gould,Unknown,200,RBSA III,299113
+SITE_107,Secondary,Breaker Panel,Federal Pacific/FPE/Noark,Unknown,125,RBSA III,113900
+SITE_107,Primary,Breaker Panel,Arrow-Hart/Murray,2008,125,RBSA III,113900
+SITE_1080,Primary,Breaker Panel,General Electric,1974,200,RBSA III,303645
+SITE_1087,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,100,RBSA III,306108
+SITE_1094,Primary,Breaker Panel,Square D,2011,200,RBSA III,307473
+SITE_1096,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,308069
+SITE_1096,Secondary,Breaker Panel,Eaton/Cutler Hammer,Unknown,125,RBSA III,308069
+SITE_110,Primary,Breaker Panel,Siemens,2014,200,RBSA III,114110
+SITE_1102,Primary,Breaker Panel,Other,Unknown,Unknown,RBSA III,308832
+SITE_1102,Secondary,Breaker Panel,General Electric,Unknown,Unknown,RBSA III,308832
+SITE_1109,Primary,Breaker Panel,Westinghouse,1993,200,RBSA III,312138
+SITE_1127,Primary,Breaker Panel,I-T-E/Imperial/Siemens,Unknown,200,RBSA III,315991
+SITE_1136,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,125,RBSA III,317951
+SITE_1141,Primary,Breaker Panel,General Electric,Unknown,150,RBSA III,320726
+SITE_1146,Primary,Breaker Panel,Square D,1980,200,RBSA III,322328
+SITE_1146,Secondary,Breaker Panel,Square D,1980,100,RBSA III,322328
+SITE_1194,Secondary,Breaker Panel,Square D,Unknown,100,RBSA III,339735
+SITE_1194,Primary,Breaker Panel,Siemens,Unknown,200,RBSA III,339735
+SITE_121,Primary,Breaker Panel,Eaton/Cutler Hammer,2000,100,RBSA III,15472
+SITE_1258,Primary,Breaker Panel,Square D,1985,200,RBSA III,363743
+SITE_1258,Primary,Breaker Panel,Unknown,Unknown,100,RBSA III,363743
+SITE_1285,Unknown,Breaker Panel,Westinghouse,Unknown,200,RBSA III,374781
+SITE_1285,Unknown,Breaker Panel,Westinghouse,Unknown,200,RBSA III,374781
+SITE_130,Secondary,Breaker Panel,Eaton/Cutler Hammer,2009,125,RBSA III,116404
+SITE_130,Primary,Breaker Panel,Challenger/Zinsco/Magnetrip,Unknown,200,RBSA III,116404
+SITE_130,Primary,Breaker Panel,Challenger/Zinsco/Magnetrip,1994,125,RBSA III,116404
+SITE_130,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,Unknown,RBSA III,116404
+SITE_1317,Primary,Breaker Panel,Challenger/Zinsco/Magnetrip,Unknown,200,RBSA III,388653
+SITE_1321,Primary,Breaker Panel,Gould,Unknown,200,RBSA III,390223
+SITE_1323,Primary,Breaker Panel,Siemens,2017,200,RBSA III,390591
+SITE_1325,Primary,Breaker Panel,General Electric,Unknown,200,RBSA III,391469
+SITE_1327,Unknown,Breaker Panel,Siemens,Unknown,200,RBSA III,391945
+SITE_1327,Unknown,Breaker Panel,Siemens,Unknown,200,RBSA III,391945
+SITE_1351,Primary,Breaker Panel,Siemens,2004,200,RBSA III,395998
+SITE_1354,Primary,Breaker Panel,General Electric,1979,200,RBSA III,397168
+SITE_1354,Secondary,Breaker Panel,General Electric,Unknown,Unknown,RBSA III,397168
+SITE_1355,Primary,Breaker Panel,Challenger/Zinsco/Magnetrip,1993,200,RBSA III,397295
+SITE_1357,Primary,Fuse Panel,Other,Unknown,Unknown,RBSA III,397758
+SITE_1367,Primary,Breaker Panel,Federal Pacific/FPE/Noark,1985,225,RBSA III,665
+SITE_138,Primary,Breaker Panel,Eaton/Cutler Hammer,1981,200,RBSA III,117592
+SITE_138,Secondary,Breaker Panel,Eaton/Cutler Hammer,1981,200,RBSA III,117592
+SITE_1404,Primary,Breaker Panel,Siemens,1996,200,RBSA III,11380
+SITE_1410,Primary,Breaker Panel,Eaton/Cutler Hammer,2003,200,RBSA III,613745
+SITE_1455,Primary,Breaker Panel,General Electric,Unknown,200,RBSA III,26709
+SITE_1457,Primary,Breaker Panel,General Electric,2007,200,RBSA III,626813
+SITE_1458,Secondary,Breaker Panel,Siemens,1996,125,RBSA III,627821
+SITE_1458,Primary,Breaker Panel,General Electric,2008,225,RBSA III,627821
+SITE_1464,Primary,Breaker Panel,Homeline,Unknown,100,RBSA III,628895
+SITE_1464,Primary,Breaker Panel,Siemens,2017,200,RBSA III,628895
+SITE_1467,Unknown,Breaker Panel,Unknown,Unknown,225,RBSA III,30128
+SITE_1467,Unknown,Breaker Panel,Unknown,Unknown,225,RBSA III,30128
+SITE_1487,Primary,Breaker Panel,Eaton/Cutler Hammer,2019,200,RBSA III,634231
+SITE_1499,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,636536
+SITE_1513,Primary,Breaker Panel,Arrow-Hart/Murray,Unknown,200,RBSA III,639673
+SITE_1514,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,639698
+SITE_1531,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,Unknown,RBSA III,645656
+SITE_1534,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,46691
+SITE_154,Primary,Breaker Panel,WSE,2012,200,RBSA III,120111
+SITE_1546,Primary,Breaker Panel,General Electric,Unknown,200,RBSA III,650217
+SITE_155,Primary,Breaker Panel,Siemens,2005,200,RBSA III,120179
+SITE_1553,Primary,Breaker Panel,Siemens,2018,200,RBSA III,651751
+SITE_1553,Secondary,Breaker Panel,Siemens,Unknown,200,RBSA III,651751
+SITE_1562,Primary,Breaker Panel,Eaton/Cutler Hammer,1980,200,RBSA III,654009
+SITE_1562,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,125,RBSA III,654009
+SITE_158,Primary,Breaker Panel,Siemens,Unknown,200,RBSA III,120622
+SITE_1584,Primary,Breaker Panel,General Electric,2007,200,RBSA III,88601
+SITE_1596,Primary,Breaker Panel,Square D,2015,200,RBSA III,67706
+SITE_1599,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,74648
+SITE_160,Primary,Breaker Panel,Eaton/Cutler Hammer,1990,200,RBSA III,121058
+SITE_160,Secondary,Breaker Panel,Square D,2014,125,RBSA III,121058
+SITE_160,Secondary,Breaker Panel,Square D,2009,125,RBSA III,121058
+SITE_1612,Primary,Breaker Panel,I-T-E/Imperial/Siemens,1975,200,RBSA III,77597
+SITE_1612,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,125,RBSA III,77597
+SITE_1623,Primary,Breaker Panel,Eaton/Cutler Hammer,2004,200,RBSA III,64314
+SITE_169,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,122373
+SITE_176,Primary,Breaker Panel,Eaton/Cutler Hammer,2005,200,RBSA III,122861
+SITE_177,Primary,Breaker Panel,Eaton/Cutler Hammer,2006,200,RBSA III,122989
+SITE_189,Primary,Breaker Panel,Westinghouse,1991,200,RBSA III,124018
+SITE_189,Secondary,Breaker Panel,Unknown,Unknown,Unknown,RBSA III,124018
+SITE_199,Primary,Breaker Panel,Eaton/Cutler Hammer,2017,200,RBSA III,125791
+SITE_232,Primary,Breaker Panel,Underwriters Laboratories Inc,Unknown,Unknown,RBSA III,130387
+SITE_235,Primary,Breaker Panel,Eaton/Cutler Hammer,2017,200,RBSA III,31425
+SITE_24,Primary,Breaker Panel,Siemens,Unknown,200,RBSA III,38710
+SITE_246,Primary,Breaker Panel,Other,2021,200,RBSA III,132997
+SITE_255,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,133904
+SITE_267,Primary,Breaker Panel,Unknown,Unknown,200,RBSA III,36063
+SITE_270,Primary,Breaker Panel,Homeline,2004,200,RBSA III,136665
+SITE_28,Primary,Breaker Panel,Siemens,2004,200,RBSA III,104344
+SITE_284,Primary,Breaker Panel,Sylvania (non-Challenger),1976,200,RBSA III,138004
+SITE_311,Primary,Breaker Panel,Siemens,Unknown,200,RBSA III,141373
+SITE_312,Primary,Breaker Panel,Square D,2019,200,RBSA III,141627
+SITE_314,Primary,Breaker Panel,Square D,2013,200,RBSA III,141880
+SITE_321,Primary,Breaker Panel,Unknown,Unknown,200,RBSA III,42713
+SITE_337,Primary,Breaker Panel,Eaton/Cutler Hammer,2018,200,RBSA III,144254
+SITE_340,Primary,Breaker Panel,Square D,2003,200,RBSA III,144417
+SITE_353,Primary,Breaker Panel,General Electric,1972,200,RBSA III,146524
+SITE_370,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,150409
+SITE_372,Primary,Breaker Panel,Arrow-Hart/Murray,Unknown,Unknown,RBSA III,150896
+SITE_373,Primary,Breaker Panel,Eaton/Cutler Hammer,2015,200,RBSA III,150973
+SITE_379,Primary,Breaker Panel,Siemens,2019,200,RBSA III,152143
+SITE_385,Primary,Breaker Panel,Grouse-Hinds,Unknown,200,RBSA III,152539
+SITE_392,Primary,Breaker Panel,Siemens,2006,200,RBSA III,153472
+SITE_392,Primary,Breaker Panel,Siemens,Unknown,200,RBSA III,153472
+SITE_4,Primary,Breaker Panel,Eaton/Cutler Hammer,1991,200,RBSA III,100506
+SITE_4,Secondary,Breaker Panel,Federal Pacific/FPE/Noark,1990,100,RBSA III,100506
+SITE_4,Primary,Breaker Panel,General Electric,2002,Unknown,RBSA III,100506
+SITE_408,Primary,Breaker Panel,Unknown,1979,150,RBSA III,155731
+SITE_411,Primary,Breaker Panel,Square D,1979,200,RBSA III,157237
+SITE_418,Primary,Breaker Panel,Square D,2004,200,RBSA III,158234
+SITE_420,Primary,Breaker Panel,Homeline,2012,200,RBSA III,158600
+SITE_43,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,105665
+SITE_446,Primary,Breaker Panel,Square D,2007,200,RBSA III,161948
+SITE_446,Secondary,Breaker Panel,Siemens,2007,125,RBSA III,161948
+SITE_446,Secondary,Breaker Panel,Siemens,2007,125,RBSA III,161948
+SITE_456,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,164432
+SITE_456,Secondary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,164432
+SITE_457,Primary,Breaker Panel,Square D,1990,200,RBSA III,164642
+SITE_46,Primary,Breaker Panel,Unknown,Unknown,200,RBSA III,63610
+SITE_465,Primary,Breaker Panel,Square D,2011,200,RBSA III,165840
+SITE_52,Primary,Breaker Panel,Siemens,1992,200,RBSA III,106986
+SITE_538,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,177845
+SITE_548,Primary,Breaker Panel,Eaton/Cutler Hammer,2021,200,RBSA III,179433
+SITE_559,Primary,Breaker Panel,Square D,2009,225,RBSA III,181472
+SITE_559,Secondary,Breaker Panel,Eaton/Cutler Hammer,2009,100,RBSA III,181472
+SITE_559,Primary,Breaker Panel,Square D,2009,200,RBSA III,181472
+SITE_572,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,183932
+SITE_598,Primary,Breaker Panel,General Electric,Unknown,200,RBSA III,90218
+SITE_604,Primary,Breaker Panel,Eaton/Cutler Hammer,2013,200,RBSA III,191005
+SITE_611,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,192460
+SITE_611,Secondary,Breaker Panel,Square D,2014,200,RBSA III,192460
+SITE_611,Secondary,Breaker Panel,Square D,Unknown,200,RBSA III,192460
+SITE_611,Secondary,Unknown,Square D,Unknown,Unknown,RBSA III,192460
+SITE_625,Primary,Breaker Panel,Eaton/Cutler Hammer,2004,200,RBSA III,194231
+SITE_643,Primary,Breaker Panel,Siemens,2003,200,RBSA III,197303
+SITE_643,Secondary,Breaker Panel,Siemens,2003,200,RBSA III,197303
+SITE_643,Secondary,Breaker Panel,Siemens,Unknown,Unknown,RBSA III,197303
+SITE_650,Unknown,Breaker Panel,Murray,Unknown,200,RBSA III,197783
+SITE_650,Unknown,Breaker Panel,Murray,Unknown,200,RBSA III,197783
+SITE_653,Primary,Breaker Panel,Eaton/Cutler Hammer,2010,200,RBSA III,198269
+SITE_669,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,200286
+SITE_69,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,109202
+SITE_7,Primary,Breaker Panel,General Electric,2001,200,RBSA III,101197
+SITE_707,Primary,Breaker Panel,Eaton/Cutler Hammer,2001,200,RBSA III,210461
+SITE_710,Primary,Breaker Panel,Eaton/Cutler Hammer,2019,200,RBSA III,211242
+SITE_710,Primary,Breaker Panel,Siemens,2007,200,RBSA III,211242
+SITE_710,Secondary,Breaker Panel,I-T-E/Imperial/Siemens,Unknown,125,RBSA III,211242
+SITE_710,Secondary,Breaker Panel,I-T-E/Imperial/Siemens,Unknown,Unknown,RBSA III,211242
+SITE_734,Primary,Breaker Panel,Westinghouse,1994,200,RBSA III,216927
+SITE_742,Primary,Breaker Panel,Square D,1993,200,RBSA III,219023
+SITE_768,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,125,RBSA III,225734
+SITE_805,Primary,Breaker Panel,Square D,2004,200,RBSA III,236818
+SITE_807,Primary,Breaker Panel,Eaton/Cutler Hammer,1993,100,RBSA III,238591
+SITE_815,Primary,Breaker Panel,Eaton/Cutler Hammer,2015,125,RBSA III,240427
+SITE_818,Primary,Breaker Panel,Square D,Unknown,125,RBSA III,241484
+SITE_819,Primary,Breaker Panel,General Electric,2002,200,RBSA III,241834
+SITE_846,Primary,Breaker Panel,Siemens,2017,200,RBSA III,248624
+SITE_846,Secondary,Breaker Panel,Siemens,2017,125,RBSA III,248624
+SITE_867,Primary,Breaker Panel,General Electric,1984,200,RBSA III,254366
+SITE_883,Primary,Breaker Panel,Square D,2005,100,RBSA III,256399
+SITE_9,Primary,Breaker Panel,Square D,Unknown,125,RBSA III,101222
+SITE_921,Primary,Breaker Panel,Square D,2020,200,RBSA III,268535
+SITE_926,Secondary,Breaker Panel,Square D,Unknown,125,RBSA III,269104
+SITE_95,Primary,Breaker Panel,Square D,2004,200,RBSA III,112258
+SITE_955,Primary,Breaker Panel,Unknown,2016,200,RBSA III,275917
+SITE_96,Primary,Breaker Panel,Eaton/Cutler Hammer,Unknown,200,RBSA III,12564
+SITE_974,Primary,Breaker Panel,Siemens,Unknown,Unknown,RBSA III,281519
+SITE_974,Primary,Breaker Panel,Unknown,Unknown,Unknown,RBSA III,281519
+SITE_984,Primary,Breaker Panel,Square D,Unknown,200,RBSA III,282974
+SITE_993,Primary,Breaker Panel,Pushmatic,Unknown,Unknown,RBSA III,285144
+SITE_00005,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,971
+SITE_00006,Not Available,Breaker Panel,Siemens,2015,200,RBSA II,976
+SITE_00007,Not Available,Breaker Panel,Unknown,1978,200,RBSA II,981
+SITE_00011,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,1001
+SITE_00014,Not Available,Breaker Panel,Unknown,Not Available,200,RBSA II,1016
+SITE_00020,Not Available,Breaker Panel,Cutler-Hammer,Not Available,125,RBSA II,1046
+SITE_00033,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,1111
+SITE_00124,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,1566
+SITE_00141,Not Available,Breaker Panel,Cutler-hammer,Not Available,200,RBSA II,1651
+SITE_00147,Not Available,Breaker Panel,Siemens,2013,200,RBSA II,1681
+SITE_00152,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,1706
+SITE_00156,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,1726
+SITE_00168,Not Available,Breaker Panel,Cutler-Hammer,Not Available,Not Available,RBSA II,1786
+SITE_00200,Not Available,Breaker Panel,Sylvania,Not Available,225,RBSA II,1946
+SITE_00216,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2026
+SITE_00225,Not Available,Breaker Panel,Cutler-Hammer,Not Available,50,RBSA II,2071
+SITE_00228,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2086
+SITE_00229,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,2091
+SITE_00239,Not Available,Breaker Panel,Westinghouse,1994,400,RBSA II,2141
+SITE_00252,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,2206
+SITE_00258,Not Available,Breaker Panel,Square D,Not Available,100,RBSA II,2236
+SITE_00269,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,2291
+SITE_00273,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,2311
+SITE_00277,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2331
+SITE_00301,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2451
+SITE_00306,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,2476
+SITE_00315,Not Available,Breaker Panel,General Electric,Not Available,Not Available,RBSA II,2521
+SITE_00323,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2561
+SITE_00327,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2581
+SITE_00334,Not Available,Breaker Panel,Cutler-Hammer,2011,200,RBSA II,2616
+SITE_00337,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,2631
+SITE_00339,Not Available,Breaker Panel,ITE Imperial Corporation,Not Available,120,RBSA II,2641
+SITE_00341,Not Available,Breaker Panel,Square D,2005,200,RBSA II,2651
+SITE_00350,Not Available,Breaker Panel,General Electric,Not Available,Not Available,RBSA II,2696
+SITE_00354,Not Available,Breaker Panel,General Electric,1981,200,RBSA II,2716
+SITE_00380,Not Available,Breaker Panel,Cutler-Hammer,2006,200,RBSA II,2846
+SITE_00394,Not Available,Breaker Panel,HomeLine,Not Available,200,RBSA II,2916
+SITE_00402,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,2956
+SITE_00411,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,3001
+SITE_00498,Not Available,Breaker Panel,Murray,Not Available,200,RBSA II,3436
+SITE_00499,Not Available,Breaker Panel,Cutler-Hammer,1991,200,RBSA II,3441
+SITE_00500,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,3446
+SITE_00503,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,3461
+SITE_00512,Not Available,Breaker Panel,Westinghouse,1999,200,RBSA II,3506
+SITE_00516,Not Available,Breaker Panel,Cutler-Hammer,2006,200,RBSA II,3526
+SITE_00538,Not Available,Breaker Panel,General Electric,Not Available,Not Available,RBSA II,3636
+SITE_00546,Not Available,Breaker Panel,Siemens,Not Available,400,RBSA II,3676
+SITE_00548,Not Available,Breaker Panel,Ite imperial,Not Available,Not Available,RBSA II,3686
+SITE_00558,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,3736
+SITE_00559,Not Available,Breaker Panel,Cutler-Hammer,2001,200,RBSA II,3741
+SITE_00561,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,3751
+SITE_00569,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,3791
+SITE_00574,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,3816
+SITE_00577,Not Available,Breaker Panel,Siemens,1999,200,RBSA II,3831
+SITE_00587,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,3881
+SITE_00589,Not Available,Breaker Panel,General Electric,1997,200,RBSA II,3891
+SITE_00591,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,3901
+SITE_00595,Not Available,Breaker Panel,Cutler-hammer,Not Available,200,RBSA II,3921
+SITE_00600,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,3946
+SITE_00601,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,3951
+SITE_00604,Not Available,Breaker Panel,Siemens,1996,200,RBSA II,3966
+SITE_00612,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,4006
+SITE_00615,Not Available,Breaker Panel,Challenger,1993,200,RBSA II,4021
+SITE_00619,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,4041
+SITE_00621,Not Available,Breaker Panel,I-T-E,Not Available,200,RBSA II,4051
+SITE_00629,Not Available,Breaker Panel,Cutler hammer,1986,Not Available,RBSA II,4091
+SITE_00630,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,4096
+SITE_00632,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,4106
+SITE_00635,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,4121
+SITE_00639,Not Available,Breaker Panel,Zinsco,1971,200,RBSA II,4141
+SITE_00641,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,4151
+SITE_00642,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,4156
+SITE_00650,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,4196
+SITE_00651,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,4201
+SITE_00661,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,4251
+SITE_00662,Not Available,Breaker Panel,General Electric,2016,200,RBSA II,4256
+SITE_00696,Not Available,Breaker Panel,Murray,Not Available,200,RBSA II,4426
+SITE_00699,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,4441
+SITE_00703,Not Available,Breaker Panel,cutler hammer,2002,200,RBSA II,4461
+SITE_00707,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,4481
+SITE_00710,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,4496
+SITE_00715,Not Available,Breaker Panel,Arrow Hart Murray,Not Available,200,RBSA II,4521
+SITE_00724,Not Available,Breaker Panel,Murray,Not Available,200,RBSA II,4566
+SITE_00726,Not Available,Breaker Panel,General Electric,1991,200,RBSA II,4576
+SITE_00734,Not Available,Breaker Panel,Square D,2001,200,RBSA II,4616
+SITE_00737,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,4631
+SITE_00750,Not Available,Breaker Panel,cutler hammer,Not Available,200,RBSA II,4696
+SITE_00752,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,4706
+SITE_00755,Not Available,Breaker Panel,Zinsco,1972,225,RBSA II,4721
+SITE_00756,Not Available,Breaker Panel,Murray,2007,200,RBSA II,4726
+SITE_00759,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,4741
+SITE_00760,Not Available,Breaker Panel,General Electric,1992,200,RBSA II,4746
+SITE_00764,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,4766
+SITE_00765,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,4771
+SITE_00768,Not Available,Breaker Panel,Challenger,Not Available,200,RBSA II,4786
+SITE_00773,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,4811
+SITE_00779,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,4841
+SITE_00781,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,4851
+SITE_00783,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,4861
+SITE_00813,Not Available,Breaker Panel,Sylvania,Not Available,125,RBSA II,5011
+SITE_00829,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,5091
+SITE_00836,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,5126
+SITE_00857,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,5231
+SITE_00908,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,5486
+SITE_00969,Not Available,Breaker Panel,General Electric,Not Available,125,RBSA II,5791
+SITE_00990,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,5896
+SITE_01044,Not Available,Breaker Panel,Square D,2016,Not Available,RBSA II,6166
+SITE_01046,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,6176
+SITE_01067,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,6281
+SITE_01081,Not Available,Breaker Panel,Westinghouse,1989,200,RBSA II,6351
+SITE_01082,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,6356
+SITE_01092,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,6406
+SITE_01099,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,6441
+SITE_01105,Not Available,Breaker Panel,Unknown,Not Available,200,RBSA II,6471
+SITE_01196,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,6926
+SITE_01204,Not Available,Breaker Panel,Cutler hammer,1992,200,RBSA II,6966
+SITE_01208,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,6986
+SITE_01209,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,6991
+SITE_01227,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,7081
+SITE_01274,Not Available,Breaker Panel,Unknown,Not Available,125,RBSA II,7316
+SITE_01293,Not Available,Breaker Panel,Challenger,Not Available,200,RBSA II,7411
+SITE_01305,Not Available,Breaker Panel,Cutler-Hammer,2016,200,RBSA II,7471
+SITE_01307,Not Available,Breaker Panel,Cutler Hammer,Not Available,Not Available,RBSA II,7481
+SITE_01311,Not Available,Breaker Panel,Cutler-Hammer,Not Available,225,RBSA II,7501
+SITE_01312,Not Available,Breaker Panel,Murray,Not Available,200,RBSA II,7506
+SITE_01313,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,7511
+SITE_01316,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,7526
+SITE_01317,Not Available,Breaker Panel,Zinsco,Not Available,Not Available,RBSA II,7531
+SITE_01332,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,7606
+SITE_01334,Not Available,Breaker Panel,Unknown,Not Available,200,RBSA II,7616
+SITE_01336,Not Available,Breaker Panel,Cutler hammer,Not Available,200,RBSA II,7626
+SITE_01340,Not Available,Breaker Panel,Siemens,2013,200,RBSA II,7646
+SITE_01344,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,7666
+SITE_01360,Not Available,Breaker Panel,Cutler-Hammer,1996,200,RBSA II,7746
+SITE_01385,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,7871
+SITE_01415,Not Available,Breaker Panel,Square D,Not Available,125,RBSA II,8021
+SITE_01428,Not Available,Breaker Panel,Federal Pacific Stab Lok,Not Available,200,RBSA II,8086
+SITE_01435,Not Available,Breaker Panel,Siemens,1988,300,RBSA II,8121
+SITE_01436,Not Available,Breaker Panel,Square D,2013,Not Available,RBSA II,8126
+SITE_01437,Not Available,Breaker Panel,General Electric,Not Available,Not Available,RBSA II,8131
+SITE_01438,Not Available,Breaker Panel,Siemens,1991,200,RBSA II,8136
+SITE_01443,Not Available,Breaker Panel,Square D,1992,200,RBSA II,8161
+SITE_01444,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,8166
+SITE_01445,Not Available,Breaker Panel,Underwriters' Laboratories Inc.,Not Available,Not Available,RBSA II,8171
+SITE_01455,Not Available,Breaker Panel,Cutler-Hammer,1996,125,RBSA II,8221
+SITE_01457,Not Available,Breaker Panel,Square D,2014,200,RBSA II,8231
+SITE_01458,Not Available,Breaker Panel,Square D,2007,Not Available,RBSA II,8236
+SITE_01465,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,8271
+SITE_01467,Not Available,Breaker Panel,Pushmatic,Not Available,Not Available,RBSA II,8281
+SITE_01475,Not Available,Breaker Panel,Murray,Not Available,200,RBSA II,8321
+SITE_01478,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,8336
+SITE_01479,Not Available,Breaker Panel,General Electric,Not Available,125,RBSA II,8341
+SITE_01480,Not Available,Breaker Panel,Challenger,1993,200,RBSA II,8346
+SITE_01485,Not Available,Breaker Panel,Federal Pacific Stab Lok,Not Available,200,RBSA II,8371
+SITE_01486,Not Available,Breaker Panel,Murray,2002,200,RBSA II,8376
+SITE_01497,Not Available,Breaker Panel,Siemens,2007,125,RBSA II,8431
+SITE_01512,Not Available,Breaker Panel,Bulldog Electric,1992,200,RBSA II,8506
+SITE_01539,Not Available,Breaker Panel,Murray,Not Available,Not Available,RBSA II,8641
+SITE_01543,Not Available,Breaker Panel,Unknown,1979,200,RBSA II,8661
+SITE_01544,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,8666
+SITE_01550,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,8696
+SITE_01554,Not Available,Breaker Panel,Grouse-Hinds,Not Available,200,RBSA II,8716
+SITE_01557,Not Available,Breaker Panel,Arrow Hart,Not Available,Not Available,RBSA II,8731
+SITE_01560,Not Available,Breaker Panel,General Electric,Not Available,Not Available,RBSA II,8746
+SITE_01563,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,8761
+SITE_01574,Not Available,Breaker Panel,Bryant,Not Available,200,RBSA II,8816
+SITE_01589,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,8891
+SITE_01606,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,8976
+SITE_01612,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,9006
+SITE_01618,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,9036
+SITE_01619,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,9041
+SITE_01635,Not Available,Breaker Panel,Zinsco,Not Available,225,RBSA II,9121
+SITE_01661,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,9251
+SITE_01669,Not Available,Breaker Panel,Cutler Hammer,Not Available,Not Available,RBSA II,9291
+SITE_01679,Not Available,Breaker Panel,General Electric,Not Available,125,RBSA II,9341
+SITE_01695,Not Available,Breaker Panel,Westinghouse,Not Available,200,RBSA II,9421
+SITE_01705,Not Available,Breaker Panel,Unknown,Not Available,Not Available,RBSA II,9471
+SITE_01727,Not Available,Breaker Panel,Imperial,Not Available,200,RBSA II,9581
+SITE_01764,Not Available,Breaker Panel,Square D,1975,200,RBSA II,9766
+SITE_01790,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,9896
+SITE_01794,Not Available,Breaker Panel,General Electric,Not Available,125,RBSA II,9916
+SITE_01820,Not Available,Breaker Panel,Cruise-Hinds,Not Available,200,RBSA II,10046
+SITE_01821,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10051
+SITE_01824,Not Available,Breaker Panel,I-T-E,Not Available,200,RBSA II,10066
+SITE_01826,Not Available,Breaker Panel,Eaton,Not Available,200,RBSA II,10076
+SITE_01838,Not Available,Breaker Panel,Siemens,2013,200,RBSA II,10136
+SITE_01840,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,10146
+SITE_01848,Not Available,Breaker Panel,Unknown,2017,200,RBSA II,10186
+SITE_01849,Not Available,Breaker Panel,Siemens,2004,200,RBSA II,10191
+SITE_01852,Not Available,Breaker Panel,Westinghouse,Not Available,200,RBSA II,10206
+SITE_01855,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10221
+SITE_01856,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10226
+SITE_01857,Not Available,Breaker Panel,Siemens,1993,200,RBSA II,10231
+SITE_01858,Not Available,Breaker Panel,Siemens,1993,200,RBSA II,10236
+SITE_01863,Not Available,Breaker Panel,Bryant,Not Available,Not Available,RBSA II,10261
+SITE_01868,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10286
+SITE_01870,Not Available,Breaker Panel,Unknown,Not Available,200,RBSA II,10296
+SITE_01871,Not Available,Breaker Panel,Westinghouse,Not Available,200,RBSA II,10301
+SITE_01892,Not Available,Breaker Panel,Cutler Hammer,2001,200,RBSA II,10406
+SITE_01893,Not Available,Breaker Panel,Cutler Hammer,Not Available,200,RBSA II,10411
+SITE_01894,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,10416
+SITE_01895,Not Available,Unknown,Unknown,Not Available,Not Available,RBSA II,10421
+SITE_01904,Not Available,Breaker Panel,Cutler hammer,Not Available,200,RBSA II,10466
+SITE_01907,Not Available,Breaker Panel,Siemens,2001,200,RBSA II,10481
+SITE_01918,Not Available,Breaker Panel,Westinghouse,Not Available,200,RBSA II,10536
+SITE_01931,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,10601
+SITE_01940,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10646
+SITE_01944,Not Available,Breaker Panel,Square D,Not Available,Not Available,RBSA II,10666
+SITE_01952,Not Available,Breaker Panel,Zinsco,1970,225,RBSA II,10706
+SITE_01960,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,10746
+SITE_01972,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,10806
+SITE_01973,Not Available,Breaker Panel,Cutler-hammer,Not Available,200,RBSA II,10811
+SITE_01984,Not Available,Breaker Panel,Siemens,2007,200,RBSA II,10866
+SITE_01997,Not Available,Breaker Panel,General Electric,Not Available,200,RBSA II,10931
+SITE_01998,Not Available,Breaker Panel,Cutler-Hammer,Not Available,200,RBSA II,10936
+SITE_02008,Not Available,Breaker Panel,Square D,Not Available,200,RBSA II,10986
+SITE_02023,Not Available,Breaker Panel,Cutler-Hammer,Not Available,225,RBSA II,11061
+SITE_02025,Not Available,Breaker Panel,Eaton,Not Available,200,RBSA II,11071
+SITE_02031,Not Available,Breaker Panel,Challenger,1994,200,RBSA II,11101
+SITE_02034,Not Available,Breaker Panel,Cutler Hammer,Not Available,Not Available,RBSA II,11116
+SITE_02039,Not Available,Breaker Panel,Siemens,Not Available,200,RBSA II,11141
+SITE_02056,Not Available,Breaker Panel,Square D,2015,200,RBSA II,11226
+SNOPUD_01534,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1534
+SNOPUD_01528,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1528
+SNOPUD_01577,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1577
+SNOPUD_01575,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,1575
+SNOPUD_01576,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,15760
+AVISTA_10186,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,101860
+AVISTA_10118,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10118
+AVISTA_10125,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10125
+AVISTA_10100,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10100
+AVISTA_10037,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10037
+AVISTA_10239,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10239
+AVISTA_10023,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10023
+AVISTA_10310,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10310
+AVISTA_10039,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10039
+AVISTA_10021,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,100210
+AVISTA_10073,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10073
+AVISTA_10014,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10014
+AVISTA_10088,Not Available,Not Available,Not Available,Not Available,Not Available,Mini-RBSA,10088
+AVISTA_10015,Primary,Breaker Panel,Eaton/Cutler Hammer,2019,200,HEMS RBSA,10015
+AVISTA_10076,Primary,Breaker Panel,Square D,2021,200,HEMS RBSA,100760
+AVISTA_10099,Secondary,Breaker Panel,Eaton/Cutler Hammer,2020,125,HEMS RBSA,10099
+AVISTA_10099,Primary,Breaker Panel,General Electric,1977,200,HEMS RBSA,10099
+AVISTA_10120,Primary,Breaker Panel,Square D,2021,200,HEMS RBSA,10120
