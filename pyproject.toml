@@ -24,6 +24,20 @@ dev = [
     "pytest-xdist>=3.3.0",
 ]
 
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/ob_generation",
+    "README.md",
+    "pyproject.toml",
+]
+exclude = [
+    ".gitignore",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ob_generation"]
-include = ["src/ob_generation/data/**"]
+only-packages = true
+include = [
+    "src/ob_generation/data/**/*.csv",
+    "src/ob_generation/data/**/*.json",
+]

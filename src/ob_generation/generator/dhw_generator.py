@@ -1,4 +1,3 @@
-import numpy as np
 from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path

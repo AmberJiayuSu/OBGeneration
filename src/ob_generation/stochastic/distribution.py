@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from math import erf, erfinv, sqrt
+from math import erf, sqrt
 import numpy as np
+from scipy.special import erfinv
 
 
 class Distribution(ABC):

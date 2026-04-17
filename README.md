@@ -1,22 +1,27 @@
 # Occupant Behavior Generation
 
-Takes a simple JSON occupant profile as input and generates annual household behavior schedules. The occupant profiles are translated into schedules internally using markov chain transitions, probability distributions, and sampling assumptions derived from ATUS and RECS.
+`obgeneration` generates annual residential occupant-behavior schedules from a structured occupant profile.
 
-Outputs per household: occupancy fractions, lighting, equipment power (W), domestic hot water, HVAC setpoints, and window opening fractions — all at a configurable time resolution.
+Outputs include:
+
+- occupancy fraction
+- lighting usage
+- equipment power
+- domestic hot water usage
+- HVAC setpoints
+- window opening fraction
 
 ## Structure
 
-```
+```text
 src/ob_generation/
-├── model/          # Pydantic input models (occupancy, equipment, HVAC, lighting, window)
-├── stochastic/     # Probability distributions (normal, uniform, categorical, etc.)
-├── generator/      # Schedule generators + main orchestrator (ob_generator.py)
-└── data/           # Markov chain transition matrices and activity timing CSVs
-
-test/               # Unit tests and example notebooks
+├── model/       Pydantic input models
+├── generator/   Schedule generators and orchestrator
+├── stochastic/  Probability distributions and Markov logic
+└── data/        Packaged CSV/JSON runtime assumptions
 ```
 
-## Installation 
+## Installation
 
 ```bash
 git clone <repo-url>
@@ -24,11 +29,24 @@ cd OccupancyGeneration
 uv sync
 ```
 
-Or without uv:
+For development:
+
 ```bash
-pip install -e .
+uv sync --extra dev
 ```
 
 ## Usage
 
-Define an occupant profile as a JSON file (see `test/unit/input/` for examples) and pass it to the generator
+```python
+from ob_generation.model import Occupant
+from ob_generation.generator import OccupantBehavior
+
+profile = Occupant.from_json_file("test/unit/input/OB_1.json")
+annual = OccupantBehavior.to_OB_annual(
+    resolution_mins=15,
+    occupant_profile=profile,
+)
+
+print(annual.num_occupants)
+print(len(annual.occupancy_schedule))
+```
