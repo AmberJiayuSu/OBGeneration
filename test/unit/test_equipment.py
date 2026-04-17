@@ -14,6 +14,11 @@ from pathlib import Path
 
 
 @pytest.fixture
+def rng() -> np.random.Generator:
+    return np.random.default_rng(0)
+
+
+@pytest.fixture
 def occ_1() -> Occupancy:
     occ_json ="""
         {
@@ -108,7 +113,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_no_equipment(self, occ_1):
+    def test_no_equipment(self, occ_1, rng):
         """Test case where household has minimal equipment just baseload. """
         equipment_json = """
         {
@@ -131,7 +136,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
 
@@ -144,7 +149,7 @@ class TestEquipmentGenerator:
             equipment_assumptions=assumptions
         )
 
-        annual_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule()
+        annual_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule(rng)
 
 
         # Should only have baseload
@@ -166,7 +171,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_laundry_equipment_1(self, occ_1):
+    def test_laundry_equipment_1(self, occ_1, rng):
         """Test laundry schedule when laundry equipment exists."""
         equipment_json = """
         {
@@ -183,7 +188,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -196,7 +201,7 @@ class TestEquipmentGenerator:
         num_cycles = 0
         power = []
         for _ in range(52):
-            laundry_schedule, cycles = equipment_gen.weekly_laundry_usage_schedule(occ_sch[0],False)
+            laundry_schedule, cycles = equipment_gen.weekly_laundry_usage_schedule(occ_sch[0], False, rng)
             num_cycles += sum(cycles)
             power.append(sum(laundry_schedule)/4)
 
@@ -209,7 +214,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_laundry_equipment_2(self, occ_1):
+    def test_laundry_equipment_2(self, occ_1, rng):
         """Test laundry schedule when laundry equipment exists."""
         equipment_json = """
         {
@@ -225,7 +230,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -238,7 +243,7 @@ class TestEquipmentGenerator:
         num_cycles = 0
         power = []
         for _ in range(52):
-            laundry_schedule, cycles = equipment_gen.weekly_laundry_usage_schedule(occ_sch[0],False)
+            laundry_schedule, cycles = equipment_gen.weekly_laundry_usage_schedule(occ_sch[0], False, rng)
             num_cycles += sum(cycles)
             power.append(sum(laundry_schedule)/4)
 
@@ -248,7 +253,7 @@ class TestEquipmentGenerator:
         assert pytest.approx(power_mean, rel=0.2) == expectation
 
 
-    def test_frige_equipment(self, occ_1):
+    def test_frige_equipment(self, occ_1, rng):
         """Test refrigerator power for default assumptions."""
         equipment_json = """
         {
@@ -264,7 +269,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
       
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -279,7 +284,7 @@ class TestEquipmentGenerator:
         
         all_powers = []
         for _ in range(100):
-            power = equipment_gen._get_fridge_power()
+            power = equipment_gen._get_fridge_power(rng)
             all_powers.append(power)
 
         expected_power = refrigerator_assumptions.efficient_compact.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[0] + \
@@ -312,7 +317,7 @@ class TestEquipmentGenerator:
         )
         all_powers = []
         for _ in range(100):
-            power = equipment_gen._get_fridge_power()
+            power = equipment_gen._get_fridge_power(rng)
             all_powers.append(power)
 
         expected_power_1 = refrigerator_assumptions.inefficient_compact.mean() * refrigerator_assumptions.primary_refrigerator_size._probabilities[0] + \
@@ -329,7 +334,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_cooking_schedule(self, occ_1):
+    def test_cooking_schedule(self, occ_1, rng):
         """Test cooking schedule generation."""
         equipment_json = """
         {
@@ -344,7 +349,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -359,7 +364,7 @@ class TestEquipmentGenerator:
         num_cooking = 0
         power = []
         for i in range(52):
-            cooking_schedule, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False)
+            cooking_schedule, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False, rng)
             num_cooking += len(end_times)
             power.append(sum(cooking_schedule)/4)
 
@@ -375,7 +380,7 @@ class TestEquipmentGenerator:
 
         
 
-    def test_dishwasher_after_each_meal(self, occ_1):
+    def test_dishwasher_after_each_meal(self, occ_1, rng):
         """Test dishwasher running after each cooked meal."""
         equipment_json = """
         {
@@ -397,7 +402,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -412,9 +417,9 @@ class TestEquipmentGenerator:
         total_cycles = 0
         powers = []
         for i in range(52):
-            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False)
+            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False, rng)
             dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
-                occ_sch[i], end_times, False
+                occ_sch[i], end_times, False, rng
             )
             total_cycles += sum(cycles)
             powers.append(sum(dishwasher_schedule)/4)
@@ -427,7 +432,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_dishwasher_daily_batch(self, occ_1):
+    def test_dishwasher_daily_batch(self, occ_1, rng):
         """Test dishwasher running once per day if cooking occurred."""
         equipment_json = """
         {
@@ -449,7 +454,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -462,9 +467,9 @@ class TestEquipmentGenerator:
         
         
         for i in range(52):
-            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False)
+            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False, rng)
             dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
-                occ_sch[i], end_times, False
+                occ_sch[i], end_times, False, rng
             )
             sum_cycles = sum(cycles)
             assert 1 <= sum_cycles <= 7  
@@ -472,7 +477,7 @@ class TestEquipmentGenerator:
 
 
 
-    def test_dishwasher_independent_frequency(self, occ_1):
+    def test_dishwasher_independent_frequency(self, occ_1, rng):
         """Test dishwasher with independent frequency pattern."""
         equipment_json = """
         {
@@ -495,7 +500,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -509,9 +514,9 @@ class TestEquipmentGenerator:
         num_cycles = 0
         power = []
         for i in range(52):
-            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False)
+            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False, rng)
             dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
-                occ_sch[i], end_times, False
+                occ_sch[i], end_times, False, rng
             )
             num_cycles += sum(cycles)
             power.append(sum(dishwasher_schedule)/4)
@@ -524,7 +529,7 @@ class TestEquipmentGenerator:
         
 
 
-    def test_dishwasher_wheneverfull(self, occ_1):
+    def test_dishwasher_wheneverfull(self, occ_1, rng):
         equipment_json = """
         {
             "dishwasher": {
@@ -545,7 +550,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -560,9 +565,9 @@ class TestEquipmentGenerator:
         power = []
         
         for i in range(52):
-            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False)
+            _, end_times = equipment_gen.weekly_cooking_usage_schedule(occ_sch[i], False, rng)
             dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
-                occ_sch[i], end_times, False
+                occ_sch[i], end_times, False, rng
             )
             num_cycles += sum(cycles)
             power.append(sum(dishwasher_schedule)/4)
@@ -577,7 +582,7 @@ class TestEquipmentGenerator:
     
 
 
-    def test_full_integration(self, occ_1):
+    def test_full_integration(self, occ_1, rng):
         """Test full equipment generation with all equipment types."""
         equipment_json = """
         {
@@ -611,7 +616,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -622,7 +627,7 @@ class TestEquipmentGenerator:
         )
 
 
-        annual_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule()
+        annual_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule(rng)
 
         # Validate structure
         assert len(annual_schedule) == 53
@@ -641,7 +646,7 @@ class TestEquipmentGenerator:
 
 class TestAnnualConsumption:
 
-    def test_laundry(self,occ_1):
+    def test_laundry(self,occ_1, rng):
         """Test annual laundry consumption calculation."""
         equipment_json = """
         {
@@ -690,7 +695,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen_1 = EquipmentGenerator(
             equipment=equipment_1,
@@ -709,8 +714,8 @@ class TestAnnualConsumption:
             equipment_assumptions=assumptions
         )
 
-        laundry_annual_1 = equipment_gen_1.laundry_annual_schedule()
-        laundry_annual_2 = equipment_gen_2.laundry_annual_schedule()
+        laundry_annual_1 = equipment_gen_1.laundry_annual_schedule(rng)
+        laundry_annual_2 = equipment_gen_2.laundry_annual_schedule(rng)
 
         total_consumption_1 = sum(sum(week) for week in laundry_annual_1) / 4000  # kWh
         total_consumption_2 = sum(sum(week) for week in laundry_annual_2) / 4000  # kWh
@@ -721,7 +726,7 @@ class TestAnnualConsumption:
 
 
 
-    def test_refrigerator(self, occ_1):
+    def test_refrigerator(self, occ_1, rng):
         equipment_json = """
         {
             "laundry": {
@@ -765,7 +770,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen_1 = EquipmentGenerator(
             equipment=equipment_1,
@@ -786,13 +791,13 @@ class TestAnnualConsumption:
 
         refrigerator_power_1 = []
         for _ in range(100):
-            refrigerator_power = equipment_gen_1._get_fridge_power()
+            refrigerator_power = equipment_gen_1._get_fridge_power(rng)
             annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
             refrigerator_power_1.append(annual_consumption)
 
         refrigerator_power_2 = []
         for _ in range(100):
-            refrigerator_power = equipment_gen_2._get_fridge_power()
+            refrigerator_power = equipment_gen_2._get_fridge_power(rng)
             annual_consumption = refrigerator_power * 24 * 365 / 1000  # kWh
             refrigerator_power_2.append(annual_consumption)
 
@@ -804,7 +809,7 @@ class TestAnnualConsumption:
         assert mean_2 < 1800
 
 
-    def test_cooking(self, occ_1):
+    def test_cooking(self, occ_1, rng):
         equipment_json = """
         {
             "laundry": {
@@ -826,7 +831,7 @@ class TestAnnualConsumption:
         equipment = Equipment.model_validate_json(equipment_json)
         assumptions = EquipmentAssumptions.default()
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -835,13 +840,13 @@ class TestAnnualConsumption:
             resolution_mins=15,
             equipment_assumptions=assumptions
         )
-        cooking_schedule,_ = equipment_gen.cooking_annual_schedule()
+        cooking_schedule,_ = equipment_gen.cooking_annual_schedule(rng)
         total_consumption = sum(sum(week) for week in cooking_schedule) / 4000  # kWh
         assert total_consumption > 200
         assert total_consumption < 400
 
 
-    def test_cooking_run_long(self):
+    def test_cooking_run_long(self, rng):
         occ_json = """
         {
             "num_occupants": 1,
@@ -877,7 +882,7 @@ class TestAnnualConsumption:
         equipment = Equipment.model_validate_json(equipment_json)
         assumptions = EquipmentAssumptions.default()
         occ_gen = OccupancyGenerator(occ, ClusterAssumptions.default(), 15)
-        occ_sch = occ_gen.generate()
+        occ_sch = occ_gen.generate(rng)
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
             occupancy_state=occ_sch,
@@ -892,7 +897,7 @@ class TestAnnualConsumption:
         signal.alarm(10)
         try:
             t0 = time.perf_counter()
-            _, _ = equipment_gen.cooking_annual_schedule()
+            _, _ = equipment_gen.cooking_annual_schedule(rng)
             elapsed = time.perf_counter() - t0
             assert elapsed < 10.0, f"cooking_annual_schedule() took {elapsed:.2f}s"
         except TimeoutError as e:
@@ -901,7 +906,7 @@ class TestAnnualConsumption:
             signal.alarm(0)  # cancel alarm if finished in time
 
 
-    def test_dishwasher(self, occ_1):
+    def test_dishwasher(self, occ_1, rng):
         equipment_json = """
         {
             "laundry": {
@@ -927,7 +932,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
         
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate()
+        occ_sch = occ.generate(rng)
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
             occupancy_state=occ_sch,
@@ -935,8 +940,8 @@ class TestAnnualConsumption:
             resolution_mins=15,
             equipment_assumptions=assumptions
         )
-        _,cooking_end_times = equipment_gen.cooking_annual_schedule()
-        dishwasher_schedule = equipment_gen.dishwasher_annual_schedule(cooking_end_times)
+        _,cooking_end_times = equipment_gen.cooking_annual_schedule(rng)
+        dishwasher_schedule = equipment_gen.dishwasher_annual_schedule(cooking_end_times, rng)
         total_consumption = sum(sum(week) for week in dishwasher_schedule) / 4000  # kWh
         assert total_consumption > 50
         assert total_consumption < 250

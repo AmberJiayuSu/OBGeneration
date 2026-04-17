@@ -7,6 +7,11 @@ from ob_generation.generator.hvac_generator import HVACAssumptions, HVACGenerato
 from ob_generation.model.occupancy import Occupancy
 
 @pytest.fixture
+def rng() -> np.random.Generator:
+    return np.random.default_rng(0)
+
+
+@pytest.fixture
 def occ_1() -> Occupancy:
     occ_json ="""
         {
@@ -41,7 +46,7 @@ def occ_1() -> Occupancy:
 class TestHVACGeneration:
 
     
-    def test_no_hvac(self, occ_1):
+    def test_no_hvac(self, occ_1, rng):
         """Test case where there is no HVAC system."""
         hvac_json = """
         {
@@ -54,7 +59,7 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, HVACAssumptions.default())
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate()
+        occ_sch = occ1.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
 
@@ -66,7 +71,7 @@ class TestHVACGeneration:
 
 
 
-    def test_heating_no_control(self, occ_1):
+    def test_heating_no_control(self, occ_1, rng):
         """Test case where there is heating but no control schedule."""
         hvac_json = """
         {
@@ -83,7 +88,7 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, HVACAssumptions.default())
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate()
+        occ_sch = occ1.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
         heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
@@ -103,7 +108,7 @@ class TestHVACGeneration:
         assert if_same_values
 
 
-    def test_binary_control(self,occ_1):
+    def test_binary_control(self,occ_1, rng):
         hvac_json = """
         {
             "heating": {
@@ -125,7 +130,7 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate()
+        occ_sch = occ1.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
         heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
@@ -171,7 +176,7 @@ class TestHVACGeneration:
 
 
 
-    def test_heating_valve_control(self,occ_1):
+    def test_heating_valve_control(self,occ_1, rng):
         hvac_json = """
         {
             "heating": {
@@ -188,7 +193,7 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate()
+        occ_sch = occ1.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
         heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
@@ -217,7 +222,7 @@ class TestHVACGeneration:
 
 
 
-    def test_setpoint_control(self,occ_1):
+    def test_setpoint_control(self,occ_1, rng):
         hvac_json = """
         {
             "heating": {
@@ -239,7 +244,7 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
        
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate()
+        occ_sch = occ1.generate(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
         heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)

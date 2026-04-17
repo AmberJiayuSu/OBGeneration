@@ -1,10 +1,16 @@
 import pytest
+import numpy as np
 
 from ob_generation.model.lighting import Lighting
 from ob_generation.model.occupancy import Occupancy
 from ob_generation.generator.lighting_generator import LightingGenerator
 from ob_generation.generator.occupancy_generator import OccupancyGenerator,ClusterAssumptions
 
+
+
+@pytest.fixture
+def rng() -> np.random.Generator:
+    return np.random.default_rng(0)
 
 
 @pytest.fixture
@@ -57,7 +63,7 @@ class TestLightingGeneration:
         assert generator2.get_dimming() == False
 
 
-    def test_lighting_house(self, occ_1):
+    def test_lighting_house(self, occ_1, rng):
         lighting_json = """{
             "when_daylight_bright": true
         }"""
@@ -65,9 +71,9 @@ class TestLightingGeneration:
         occ1 = OccupancyGenerator(occ_1, assumption, 30)
         lighting = Lighting.model_validate_json(lighting_json)
         lighting_gen = LightingGenerator(lighting)
-        household_occ_sch = occ1.generate()
+        household_occ_sch = occ1.generate(rng)
         _,sleep_mask = OccupancyGenerator.active_sleep_mask(household_occ_sch)
-        lighting_schedule = lighting_gen.lighting_annual_schedule(sleep_mask)
+        lighting_schedule = lighting_gen.lighting_annual_schedule(household_occ_sch, sleep_mask)
         assert len(lighting_schedule) == 53
         for time in range(53):
             lighting_weekly = lighting_schedule[time]

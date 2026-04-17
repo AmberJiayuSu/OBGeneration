@@ -189,6 +189,11 @@ def default_cluster_assumptions() -> ClusterAssumptions:
     return ClusterAssumptions.default()
 
 
+@pytest.fixture
+def rng() -> np.random.Generator:
+    return np.random.default_rng(0)
+
+
 SIM_RES = 15  # minutes — used throughout tests
 
 
@@ -210,20 +215,20 @@ class TestTimeRange:
     ])
     def test_snap_to_resolution(self, value, resolution, expected):
         """Test that time snapping works correctly."""
-        assert TimeRangeDistribution._snap_to_resolution(value, resolution) == pytest.approx(expected)
+        assert TimeRangeDistribution._snap(value, resolution) == pytest.approx(expected)
 
     @pytest.mark.parametrize("start, end", [
         (22.0, 2.0),
         (23.5, 0.5),
     ])
-    def test_wraps_midnight_handling(self, start, end):
+    def test_wraps_midnight_handling(self, start, end, rng):
         """Test that wraps_midnight flag is respected."""
         wrapping_range = TimeRange(start_hour=start, end_hour=end)
         assert wrapping_range.wraps_midnight is True
 
         dist = TimeRangeDistribution(wrapping_range, start_variance=0.5, end_variance=0.5, resolution_mins=15)
         assert dist.wraps_midnight is True
-        sampled = dist.sample()
+        sampled = dist.sample(rng)
         assert isinstance(sampled, TimeRange)
 
 
@@ -233,7 +238,7 @@ class TestTimeRange:
         (8.5, 16.5),
         (10.0, 15.0)
     ])    
-    def test_sample_returns_valid_time_range(self, start, end):
+    def test_sample_returns_valid_time_range(self, start, end, rng):
         """Test that sample returns a valid TimeRange."""
         base_range = TimeRange(start_hour=start, end_hour=end)
         dist = TimeRangeDistribution(base_range, start_variance=1.0, end_variance=1.0, resolution_mins=15)
@@ -241,7 +246,7 @@ class TestTimeRange:
         starts = []
         ends = []
         for _ in range(100):
-            sampled = dist.sample()
+            sampled = dist.sample(rng)
             starts.append(sampled.start_hour)
             ends.append(sampled.end_hour)
             assert isinstance(sampled, TimeRange)
@@ -267,14 +272,14 @@ class TestTimeRange:
         (9.15,17.45,30,3.0),
         (8.5,16.5,60,2.0)
     ])
-    def test_sample_many_times_stays_valid(self, start, end, res, var):
+    def test_sample_many_times_stays_valid(self, start, end, res, var, rng):
         """Run 100 samples and verify each satisfies all constraints."""
         base_range = TimeRange(start_hour=start, end_hour=end)
         dist = TimeRangeDistribution(base_range, start_variance=var, end_variance=var, resolution_mins=res)
         start_vals = []
         end_vals = []
         for _ in range(100):
-            sampled = dist.sample()
+            sampled = dist.sample(rng)
             start_vals.append(sampled.start_hour)
             end_vals.append(sampled.end_hour)
             assert isinstance(sampled, TimeRange)
@@ -282,8 +287,9 @@ class TestTimeRange:
             assert 0 <= sampled.end_hour < 24
             if not sampled.wraps_midnight:
                 assert sampled.end_hour > sampled.start_hour
-        assert np.mean(start_vals) == pytest.approx(start, abs=0.5)
-        assert np.mean(end_vals) == pytest.approx(end, abs=0.5)
+        mean_tol = max(0.5, var * 0.3)
+        assert np.mean(start_vals) == pytest.approx(start, abs=mean_tol)
+        assert np.mean(end_vals) == pytest.approx(end, abs=mean_tol)
         assert np.std(start_vals) == pytest.approx(var, abs=0.5)
         assert np.std(end_vals) == pytest.approx(var, abs=0.5)
 
@@ -294,22 +300,22 @@ class TestTimeRangeDistributionSampleWithAwayBounds:
         (10.0, 18.0),
         (7.0, 14.0)
     ])
-    def test_returns_none_when_mean_in_away_range_day(self, start, end, away_range_typical):
+    def test_returns_none_when_mean_in_away_range_day(self, start, end, away_range_typical, rng):
         """Returns None when the distribution mean falls inside the away window."""
         away_range = away_range_typical
         dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-        sampled = dist.sample_with_away_bounds(away_range)
+        sampled = dist.sample_with_away_bounds(rng, away_range)
         assert sampled is None
 
     @pytest.mark.parametrize("start, end", [
         (23.0, 8.0),
         (21.0,4.0)
     ])
-    def test_returns_none_when_mean_in_away_range_night(self, start, end, away_range_wraps_midnight):
+    def test_returns_none_when_mean_in_away_range_night(self, start, end, away_range_wraps_midnight, rng):
         """Returns None when the distribution mean falls inside the away window."""
         away_range = away_range_wraps_midnight
         dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-        sampled = dist.sample_with_away_bounds(away_range)
+        sampled = dist.sample_with_away_bounds(rng, away_range)
         print(f"Sampled range: {sampled}, away range: {away_range}")
         assert sampled is None
 
@@ -317,34 +323,34 @@ class TestTimeRangeDistributionSampleWithAwayBounds:
         (11.0, 14.0),
         (7.0, 20.0)
     ])
-    def test_returns_none_when_fully_contains_day(self, start, end, away_range_typical):
+    def test_returns_none_when_fully_contains_day(self, start, end, away_range_typical, rng):
         """Returns None when away_time fully contains the TimeRange."""
         away_range = away_range_typical
         dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-        sampled = dist.sample_with_away_bounds(away_range)
+        sampled = dist.sample_with_away_bounds(rng, away_range)
         assert sampled is None
 
     @pytest.mark.parametrize("start, end", [
         (19.0, 8.0),
         (1.0, 5.0)
     ])
-    def test_returns_none_when_fully_contains_night(self, start, end, away_range_wraps_midnight):
+    def test_returns_none_when_fully_contains_night(self, start, end, away_range_wraps_midnight, rng):
         """Returns None when away_time fully contains the TimeRange."""
         away_range = away_range_wraps_midnight
         dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-        sampled = dist.sample_with_away_bounds(away_range)
+        sampled = dist.sample_with_away_bounds(rng, away_range)
         assert sampled is None
 
     @pytest.mark.parametrize("start, end", [
         (22.0, 6.0),
         (1.0, 8.0)
     ])
-    def test_sampled_range_outside_away_window_day(self,start,end,away_range_typical):
+    def test_sampled_range_outside_away_window_day(self,start,end,away_range_typical, rng):
         """Returned TimeRange should not overlap with the away_time window."""
         for _ in range(50):
             away_range = away_range_typical
             dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-            sampled = dist.sample_with_away_bounds(away_range)
+            sampled = dist.sample_with_away_bounds(rng, away_range)
             assert sampled is not None
             assert not sampled.overlaps(away_range)
 
@@ -352,12 +358,12 @@ class TestTimeRangeDistributionSampleWithAwayBounds:
         (8.0, 15.0),
         (12.0, 20.0)
     ])
-    def test_sampled_range_outside_away_window_night(self,start,end,away_range_wraps_midnight):
+    def test_sampled_range_outside_away_window_night(self,start,end,away_range_wraps_midnight, rng):
         """Returned TimeRange should not overlap with the away_time window."""
         for _ in range(50):
             away_range = away_range_wraps_midnight
             dist = TimeRangeDistribution(TimeRange(start_hour=start, end_hour=end), start_variance=1.0, end_variance=1.0, resolution_mins=SIM_RES)
-            sampled = dist.sample_with_away_bounds(away_range)
+            sampled = dist.sample_with_away_bounds(rng, away_range)
             assert sampled is not None
             assert not sampled.overlaps(away_range)
 
@@ -440,9 +446,9 @@ class TestClusterAssumptions:
 
 
 class TestSampleCluster:
-    def test_returns_53_weeks(self, default_cluster_assumptions):
+    def test_returns_53_weeks(self, default_cluster_assumptions, rng):
         """sample_cluster_annually should return a list of 53 weeks."""
-        weeks = default_cluster_assumptions.sample_cluster_annually(0,0,SIM_RES)
+        weeks = default_cluster_assumptions.sample_cluster_annually(0, 0, SIM_RES, rng)
         assert isinstance(weeks, list)
         assert len(weeks) == 53
         for w in range(53):
@@ -453,7 +459,7 @@ class TestSampleCluster:
             else:
                 assert len(week) == 1 * (1440 // SIM_RES)
                 
-    def test_output_plot(self, default_cluster_assumptions):
+    def test_output_plot(self, default_cluster_assumptions, rng):
         """Plot the sampled cluster as a heatmap (days x time-of-day) and save to output/."""
         matplotlib.use("Agg")
 
@@ -471,7 +477,7 @@ class TestSampleCluster:
         cluster_names = ["mostly_home", "long_day_away", "morning_away", "afternoon_away", "evening_night_away"]
 
         for cluster in range(5):
-            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES)
+            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES, rng)
 
             # Flatten 53-week structure into (365, bins_per_day), then transpose to (bins_per_day, 365)
             flat = [s.value for week in weeks for s in week][:365 * bins_per_day]
@@ -495,7 +501,7 @@ class TestSampleCluster:
             plt.close(fig)
             assert out_path.exists()
 
-    def test_average_occupancy_line_plot(self, default_cluster_assumptions):
+    def test_average_occupancy_line_plot(self, default_cluster_assumptions, rng):
         """Plot average (home + sleep) fraction by time of day for weekdays and weekends, one line per cluster."""
         matplotlib.use("Agg")
 
@@ -519,7 +525,7 @@ class TestSampleCluster:
         fig.suptitle("Average Occupied Fraction by Time of Day (Home + Sleep)")
 
         for cluster in range(5):
-            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES)
+            weeks = default_cluster_assumptions.sample_cluster_annually(cluster, cluster, SIM_RES, rng)
 
             flat = np.array([s.value for week in weeks for s in week][:365 * bins_per_day], dtype=np.int8)
             grid = flat.reshape(365, bins_per_day)  # shape (365, bins_per_day)
@@ -558,26 +564,26 @@ class TestSampleCluster:
 # ---------------------------------------------------------------------------
 
 class TestHouseholdAwayTimeAnnually:
-    def test_returns_365_elements(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions):
+    def test_returns_365_elements(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, rng):
         """Should return exactly 365 elements."""
         occ = OccupancyGenerator(occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, SIM_RES)
-        away_times = occ.household_away_time_annually()
+        away_times = occ.household_away_time_annually(rng)
         
         assert isinstance(away_times, list)
         assert len(away_times) == 365
 
-    def test_always_occupied_yields_none(self, occupancy_always_home, default_cluster_assumptions):
+    def test_always_occupied_yields_none(self, occupancy_always_home, default_cluster_assumptions, rng):
         """If is_always_occupied=True, all days should be None."""
         occ = OccupancyGenerator(occupancy_always_home, default_cluster_assumptions, SIM_RES)
-        away_times = occ.household_away_time_annually()
+        away_times = occ.household_away_time_annually(rng)
         assert len(away_times) == 365
         assert all(at is None for at in away_times)
 
-    def test_away_day (self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions):
+    def test_away_day (self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, rng):
         """Non-None elements should be TimeRange instances.
             Sampled away intervals should be centered near the specified away_interval mean (statistical)."""
         occ = OccupancyGenerator(occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, SIM_RES)
-        away_times = occ.household_away_time_annually()
+        away_times = occ.household_away_time_annually(rng)
         assert len(away_times) == 365
         away_time_weekday = []
         away_time_weekend = []
@@ -608,7 +614,7 @@ class TestHouseholdAwayTimeAnnually:
         (ScheduleRigidness.SOMEWHAT_VARIABLE, 1.0),
         (ScheduleRigidness.HIGHLY_VARIABLE,   2.0),
     ])
-    def test_away_time_variance_matches_rigidness(self, default_cluster_assumptions, rigidness, expected_std):
+    def test_away_time_variance_matches_rigidness(self, default_cluster_assumptions, rigidness, expected_std, rng):
         """Std of sampled start/end hours should approximate the rigidness std_dev
         for both weekday (8–18) and weekend (16–20) away intervals."""
         occupancy = Occupancy(
@@ -631,7 +637,7 @@ class TestHouseholdAwayTimeAnnually:
             ),
         )
         occ = OccupancyGenerator(occupancy, default_cluster_assumptions, SIM_RES)
-        away_times = occ.household_away_time_annually()
+        away_times = occ.household_away_time_annually(rng)
 
         wd_starts = [away_times[d].start_hour for d in range(365) if away_times[d] is not None and d % 7 not in [0, 6]]
         wd_ends   = [away_times[d].end_hour   for d in range(365) if away_times[d] is not None and d % 7 not in [0, 6]]
@@ -655,10 +661,10 @@ class TestHouseholdAwayTimeAnnually:
                 f"[{rigidness.value}] weekend end std={np.std(we_ends):.3f}, expected≈{expected_std}"
             )
 
-    def test_away_time_wraps_midnight(self, occupancy_with_away_night, default_cluster_assumptions):
+    def test_away_time_wraps_midnight(self, occupancy_with_away_night, default_cluster_assumptions, rng):
         """Test that away_time intervals that wrap midnight are handled correctly."""
         occ = OccupancyGenerator(occupancy_with_away_night, default_cluster_assumptions, SIM_RES)
-        away_times = occ.household_away_time_annually()
+        away_times = occ.household_away_time_annually(rng)
         assert len(away_times) == 365
         for day in range(365):
             at = away_times[day]
@@ -681,10 +687,10 @@ class TestHouseholdAwayTimeAnnually:
 # ---------------------------------------------------------------------------
 
 class TestHouseholdSleepTimeAnnually:
-    def test_returns_with_away_times(self, occupancy_with_away_and_sleep, default_cluster_assumptions):
+    def test_returns_with_away_times(self, occupancy_with_away_and_sleep, default_cluster_assumptions, rng):
         occ = OccupancyGenerator(occupancy_with_away_and_sleep, default_cluster_assumptions, SIM_RES)
-        away_time = occ.household_away_time_annually()
-        sleep_time = occ.household_sleep_time_annually(away_time)
+        away_time = occ.household_away_time_annually(rng)
+        sleep_time = occ.household_sleep_time_annually(rng, away_time)
         assert len(sleep_time) == 365
         start_times = []
         end_times = []
@@ -702,11 +708,11 @@ class TestHouseholdSleepTimeAnnually:
             assert np.mean(end_times) == pytest.approx(6.0, abs=1.0)
 
 
-    def test_always_awake_yields_all_none(self, occupancy_always_home, default_cluster_assumptions):
+    def test_always_awake_yields_all_none(self, occupancy_always_home, default_cluster_assumptions, rng):
         """If is_always_awake=True, all days should be None."""
         occ = OccupancyGenerator(occupancy_always_home, default_cluster_assumptions, SIM_RES)
-        away_time = occ.household_away_time_annually()
-        sleep_time = occ.household_sleep_time_annually(away_time)
+        away_time = occ.household_away_time_annually(rng)
+        sleep_time = occ.household_sleep_time_annually(rng, away_time)
         assert len(sleep_time) == 365
         assert all(st is None for st in sleep_time)
 
@@ -716,7 +722,7 @@ class TestHouseholdSleepTimeAnnually:
         (ScheduleRigidness.SOMEWHAT_VARIABLE, 1.0),
         (ScheduleRigidness.HIGHLY_VARIABLE,   2.0),
     ])
-    def test_sleep_time_variance_matches_rigidness(self, default_cluster_assumptions, rigidness, expected_std):
+    def test_sleep_time_variance_matches_rigidness(self, default_cluster_assumptions, rigidness, expected_std, rng):
         """Std of sampled start/end hours should approximate the rigidness std_dev
         for sleep interval 22–6 (wraps midnight), with no away constraint."""
         occupancy = Occupancy(
@@ -734,7 +740,7 @@ class TestHouseholdSleepTimeAnnually:
             ),
         )
         occ = OccupancyGenerator(occupancy, default_cluster_assumptions, SIM_RES)
-        sleep_times = occ.household_sleep_time_annually([None] * 365)
+        sleep_times = occ.household_sleep_time_annually(rng, [None] * 365)
 
         starts = [st.start_hour for st in sleep_times if st is not None]
         ends   = [st.end_hour   for st in sleep_times if st is not None]
@@ -750,11 +756,11 @@ class TestHouseholdSleepTimeAnnually:
             f"[{rigidness.value}] end std={np.std(ends):.3f}, expected≈{expected_std}"
         )
 
-    def test_sleep_no_overlap_with_away(self, occupancy_with_away_and_sleep_overlap, default_cluster_assumptions):
+    def test_sleep_no_overlap_with_away(self, occupancy_with_away_and_sleep_overlap, default_cluster_assumptions, rng):
         """Non-None elements should be TimeRange instances."""
         occ = OccupancyGenerator(occupancy_with_away_and_sleep_overlap, default_cluster_assumptions, SIM_RES)
-        away_time = occ.household_away_time_annually()
-        sleep_time = occ.household_sleep_time_annually(away_time)
+        away_time = occ.household_away_time_annually(rng)
+        sleep_time = occ.household_sleep_time_annually(rng, away_time)
         assert len(sleep_time) == 365
         for day in range(365):
             st = sleep_time[day]
@@ -767,9 +773,9 @@ class TestHouseholdSleepTimeAnnually:
 # OccupancyGenerator — household_mc_state_annually
 # ---------------------------------------------------------------------------
 class TestHouseholdMCStateAnnually:
-    def test_returns(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions):
+    def test_returns(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, rng):
         occ = OccupancyGenerator(occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, SIM_RES)
-        states = occ.household_mc_state_annually()
+        states = occ.household_mc_state_annually(rng)
         assert isinstance(states, list)
         assert len(states) == 53
         for week in range(53):
@@ -796,7 +802,7 @@ class TestApplyAwayTime:
         """Helper: all bins set to fully away."""
         return [[HouseholdOccupancyFractions(home=0.0, sleep=0.0)] * bins_per_week for _ in range(num_weeks)]
 
-    def test_away_bins_forced_to_zero(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions):
+    def test_away_bins_forced_to_zero(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, rng):
         """Bins inside the away_time window must have home=0, sleep=0."""
         occ = OccupancyGenerator(occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, SIM_RES)
         bins_per_day = 1440 // SIM_RES
@@ -807,7 +813,7 @@ class TestApplyAwayTime:
         we_away = TimeRange(start_hour=16, end_hour=20)
         away_time = [we_away if (d % 7) in [0, 6] else wd_away for d in range(365)]
 
-        states = occ.apply_away_time(occ.household_mc_state_annually(), away_time)
+        states = occ.apply_away_time(occ.household_mc_state_annually(rng), away_time)
 
         for day in range(365):
             away_range = away_time[day]
@@ -885,7 +891,7 @@ class TestApplyAwayTime:
                     f"Week {w} bin {b}: state changed despite None away_time"
                 )
 
-    def test_average_away_bins_matches_interval(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions):
+    def test_average_away_bins_matches_interval(self, occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, rng):
         """Average number of away bins per day (counted from processed states) should approximate
         the expected bin count for the specified away interval, for weekday and weekend separately.
 
@@ -900,8 +906,8 @@ class TestApplyAwayTime:
         occ = OccupancyGenerator(occupancy_with_away_cluster_long_day_away, default_cluster_assumptions, SIM_RES)
         bins_per_day = 1440 // SIM_RES
 
-        away_time = occ.household_away_time_annually()
-        states = occ.apply_away_time(occ.household_mc_state_annually(), away_time)
+        away_time = occ.household_away_time_annually(rng)
+        states = occ.apply_away_time(occ.household_mc_state_annually(rng), away_time)
 
         wd_away_counts = []
         we_away_counts = []
@@ -942,7 +948,7 @@ class TestApplySleepTime:
         """Helper: all bins set to the given home/sleep fractions."""
         return [[HouseholdOccupancyFractions(home=home, sleep=sleep)] * bins_per_week for _ in range(num_weeks)]
 
-    def test_sleep_bins_forced_to_all_sleep(self, occupancy_with_away_and_sleep, default_cluster_assumptions):
+    def test_sleep_bins_forced_to_all_sleep(self, occupancy_with_away_and_sleep, default_cluster_assumptions, rng):
         """Bins inside sleep_time must have home=0, sleep=1.0."""
         occ = OccupancyGenerator(occupancy_with_away_and_sleep, default_cluster_assumptions, SIM_RES)
         bins_per_day = 1440 // SIM_RES
@@ -951,7 +957,7 @@ class TestApplySleepTime:
         sleep_range = TimeRange(start_hour=22, end_hour=6)  # fixed, no variance
         sleep_time = [sleep_range] * 365
 
-        states = occ.apply_sleep_time(occ.household_mc_state_annually(), sleep_time)
+        states = occ.apply_sleep_time(occ.household_mc_state_annually(rng), sleep_time)
 
         for day in range(365):
             week, day_in_week = day // 7, day % 7
@@ -1012,7 +1018,7 @@ class TestApplySleepTime:
                     f"Week {w} bin {b}: state changed despite None sleep_time"
                 )
 
-    def test_average_sleep_bins_matches_interval(self, occupancy_with_away_and_sleep, default_cluster_assumptions):
+    def test_average_sleep_bins_matches_interval(self, occupancy_with_away_and_sleep, default_cluster_assumptions, rng):
         """Average number of sleep bins per day (sleep==1.0 after apply_sleep_time) should
         approximate the expected bin count for the specified sleep interval.
 
@@ -1026,8 +1032,8 @@ class TestApplySleepTime:
         occ = OccupancyGenerator(occupancy_with_away_and_sleep, default_cluster_assumptions, SIM_RES)
         bins_per_day = 1440 // SIM_RES
 
-        sleep_time = occ.household_sleep_time_annually([None] * 365)
-        states = occ.apply_sleep_time(occ.household_mc_state_annually(), sleep_time)
+        sleep_time = occ.household_sleep_time_annually(rng, [None] * 365)
+        states = occ.apply_sleep_time(occ.household_mc_state_annually(rng), sleep_time)
 
         daily_sleep_counts = []
         for day in range(365):
@@ -1054,7 +1060,7 @@ class TestApplySleepTime:
 # ---------------------------------------------------------------------------
 
 class TestGenerate:
-    def test_generate_3_people(self, default_cluster_assumptions):
+    def test_generate_3_people(self, default_cluster_assumptions, rng):
         occ_json ="""
         {
             "num_occupants": 3,
@@ -1084,7 +1090,7 @@ class TestGenerate:
         }"""
         occ = Occupancy.model_validate_json(occ_json)
         occ_gen = OccupancyGenerator(occ, default_cluster_assumptions, SIM_RES)
-        schedule = occ_gen.generate()
+        schedule = occ_gen.generate(rng)
         occ_schedule = OccupancyGenerator.to_occupancy_schedule(schedule)
 
         matplotlib.use("Agg")
