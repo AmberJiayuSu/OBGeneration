@@ -1,11 +1,7 @@
-from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from ob_generation.generator.ob_utils import ScheduleUtils
-import ob_generation.model.equipment as Equipment
+import numpy as np
 from pydantic import BaseModel, Field, ConfigDict
-from ob_generation.stochastic.distribution_config import DistributionConfig
 import json
 from pathlib import Path
-import csv
 
 
 class DHWAssumptions(BaseModel):
@@ -25,7 +21,8 @@ class DHWAssumptions(BaseModel):
     
     @classmethod
     def default(cls) -> "DHWAssumptions":
-        """Returns the standard/default assumptions for DHW usage."""
+        """Returns the standard/default assumptions for DHW usage.
+           TODO: These values are deterministic, and we can rethink if we want to add some variability to them."""
         return cls(
             hot_water_per_person_per_day= 56.7812, # 15 gallons in liters
             efficient_washer_per_cycle=6.0,
@@ -36,13 +33,32 @@ class DHWAssumptions(BaseModel):
     
 class DHWGenerator:
     
-    def __init__(self, dhw_assumptions: DHWAssumptions, equipment:Equipment,num_occupants: int, laundry_cycles_per_day: list[list[int]], dishwasher_cycles_per_day: list[list[int]], resolution_mins: int = 15):
+    def __init__(self, dhw_assumptions: DHWAssumptions, num_occupants: int, laundry_cycles_per_day: list[list[int]], dishwasher_cycles_per_day: list[list[int]], resolution_mins: int = 15):
         self.dhw_assumptions = dhw_assumptions
-        self.equipment = equipment
+        #self.equipment = equipment
         self.num_occupants = num_occupants
         self.laundry_cycles_per_day = laundry_cycles_per_day
         self.dishwasher_cycles_per_day = dishwasher_cycles_per_day
         self.resolution_mins = resolution_mins
+
+    @staticmethod
+    def generate_with_defaults(
+        num_occupants: int,
+        laundry_cycles_per_day: list[list[int]],
+        dishwasher_cycles_per_day: list[list[int]],
+        resolution_mins: int
+    ) -> tuple[float, list[list[float]]]:
+        """Generates an annual DHW usage schedule in cubic meters per second using default assumptions."""
+        generator = DHWGenerator(
+            dhw_assumptions=DHWAssumptions.default(),
+            num_occupants=num_occupants,
+            laundry_cycles_per_day=laundry_cycles_per_day,
+            dishwasher_cycles_per_day=dishwasher_cycles_per_day,
+            resolution_mins=resolution_mins
+        )
+        return generator.dhw_annual_schedule()
+       
+    
 
     def dhw_annual_schedule(self) -> tuple[float, list[list[float]]]:
         """Generates an annual DHW usage schedule in cubic meters per second.
@@ -85,7 +101,8 @@ class DHWGenerator:
     
     def weekly_laundry_dhw(self,  weekly_laundry_cycles_per_day:list[int]) -> float:
         """Calculates weekly DHW usage based on laundry cycles."""
-        laundry = self.equipment.laundry
+        # laundry = self.equipment.laundry
+        laundry = sum(weekly_laundry_cycles_per_day) # If there are no cycles, we can assume no laundry equipment or usage
         if not laundry.has_washer:
             return [0.0] * len(weekly_laundry_cycles_per_day)
         else:
@@ -97,7 +114,8 @@ class DHWGenerator:
         
     def weekly_dishwasher_dhw(self, weekly_dishwasher_cycles_per_day:list[int]) -> float:
         """Calculates weekly DHW usage based on dishwasher cycles."""
-        dishwasher = self.equipment.dishwasher
+        #dishwasher = self.equipment.dishwasher
+        dishwasher = sum(weekly_dishwasher_cycles_per_day) # If there are no cycles, we can assume no dishwasher equipment or usage
         if not dishwasher.has_dishwasher:
             return [0.0] * len(weekly_dishwasher_cycles_per_day)
         else:

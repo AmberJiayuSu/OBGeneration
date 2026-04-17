@@ -1,5 +1,5 @@
 
-from ob_generation.generator.occupancy_generator import OccupancyGenerator
+from ob_generation.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
 import ob_generation.model.hvac as HVAC
 from pydantic import BaseModel, Field
 import json
@@ -30,8 +30,8 @@ class CoolingDefaultSetpoints(BaseModel):
 class HVACAssumptions(BaseModel):
     """Master configuration for HVAC behavioral assumptions."""
     trv: TRVAssumptions
-    minimum_heating_setpoint: float = Field(7.0, description="Minimum heating setpoint in Celsius")
-    maximum_cooling_setpoint: float = Field(35.0, description="Maximum cooling setpoint in Celsius")
+    minimum_heating_setpoint: float = Field(10.0, description="Minimum heating setpoint in Celsius")
+    maximum_cooling_setpoint: float = Field(40.0, description="Maximum cooling setpoint in Celsius")
     heating_defaults: HeatingDefaultSetpoints = Field(
         ...,description="Default setpoints for heating thermostat control"
     )
@@ -75,6 +75,19 @@ class HVACGenerator:
     def __init__(self, hvac: HVAC.HVAC, assumptions: HVACAssumptions):
         self.hvac = hvac
         self.assumptions = assumptions
+
+    @staticmethod
+    def generate_with_defaults(
+        hvac: HVAC.HVAC,
+        occupancy_states: list[list[HouseholdOccupancyFractions]]
+    ) -> tuple[list[list[float]], list[list[float]]]:
+        """Generate annual heating and cooling setpoint schedules from occupancy states using default assumptions."""
+        assumptions = HVACAssumptions.default()
+        generator = HVACGenerator(hvac, assumptions)
+        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        return heating_schedule, cooling_schedule
 
     @staticmethod
     def _get_trv_temp(assumptions: HVACAssumptions,level: HVAC.IntensityLevel) -> float:
