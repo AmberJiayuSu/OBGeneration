@@ -26,8 +26,7 @@ class LightingGenerator:
     def generate(
         lighting: Lighting.Lighting,
         occupancy_states: list[list[HouseholdOccupancyFractions]],
-        if_dimming: bool
-    ) -> list[list[float]]:
+    ) -> tuple[list[list[float]], bool]:
         """Generate an annual lighting schedule from occupancy states.
 
         Derives the sleep mask from occupancy_states, then returns a nested list
@@ -36,7 +35,7 @@ class LightingGenerator:
         _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         generator = LightingGenerator(lighting)
         dimming = generator.get_dimming()
-        return generator.lighting_annual_schedule(occupancy_states, sleep_mask), dimming
+        return (generator.lighting_annual_schedule(occupancy_states, sleep_mask), dimming)
 
 
 

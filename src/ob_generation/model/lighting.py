@@ -1,6 +1,4 @@
-from typing import Optional
-from pydantic import BaseModel, Field, computed_field
-from enum import Enum
+from pydantic import BaseModel, Field
 
 
 class Lighting(BaseModel):
@@ -9,6 +7,5 @@ class Lighting(BaseModel):
     Attributes:
        
     """
-    when_away: bool = Field(..., description="Indicates if lighting is on when people are away.")
-    when_daylight_bright: bool = Field(..., description="Indicates if lighting is adjusted based on daylight brightness.")
-
+    when_away: bool = Field(False, description="Indicates if lighting is on when people are away.")
+    when_daylight_bright: bool = Field(True, description="Indicates if lighting is adjusted based on daylight brightness.")

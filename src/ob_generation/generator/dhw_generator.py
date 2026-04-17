@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path
+import ob_generation.model.equipment as Equipment
 
 
 class DHWAssumptions(BaseModel):
@@ -32,9 +33,17 @@ class DHWAssumptions(BaseModel):
     
 class DHWGenerator:
     
-    def __init__(self, dhw_assumptions: DHWAssumptions, num_occupants: int, laundry_cycles_per_day: list[list[int]], dishwasher_cycles_per_day: list[list[int]], resolution_mins: int = 15):
+    def __init__(
+        self,
+        dhw_assumptions: DHWAssumptions,
+        equipment: Equipment.Equipment,
+        num_occupants: int,
+        laundry_cycles_per_day: list[list[int]],
+        dishwasher_cycles_per_day: list[list[int]],
+        resolution_mins: int = 15,
+    ):
         self.dhw_assumptions = dhw_assumptions
-        #self.equipment = equipment
+        self.equipment = equipment
         self.num_occupants = num_occupants
         self.laundry_cycles_per_day = laundry_cycles_per_day
         self.dishwasher_cycles_per_day = dishwasher_cycles_per_day
@@ -43,6 +52,7 @@ class DHWGenerator:
     @staticmethod
     def generate_with_defaults(
         num_occupants: int,
+        equipment: Equipment.Equipment ,
         laundry_cycles_per_day: list[list[int]],
         dishwasher_cycles_per_day: list[list[int]],
         resolution_mins: int
@@ -50,6 +60,7 @@ class DHWGenerator:
         """Generates an annual DHW usage schedule in cubic meters per second using default assumptions."""
         generator = DHWGenerator(
             dhw_assumptions=DHWAssumptions.default(),
+            equipment=equipment,
             num_occupants=num_occupants,
             laundry_cycles_per_day=laundry_cycles_per_day,
             dishwasher_cycles_per_day=dishwasher_cycles_per_day,
@@ -100,9 +111,8 @@ class DHWGenerator:
     
     def weekly_laundry_dhw(self,  weekly_laundry_cycles_per_day:list[int]) -> float:
         """Calculates weekly DHW usage based on laundry cycles."""
-        # laundry = self.equipment.laundry
-        laundry = sum(weekly_laundry_cycles_per_day) # If there are no cycles, we can assume no laundry equipment or usage
-        if not laundry.has_washer:
+        laundry = self.equipment.laundry if self.equipment is not None else None
+        if laundry is None or not laundry.has_washer:
             return [0.0] * len(weekly_laundry_cycles_per_day)
         else:
             per_cycle = self.dhw_assumptions.efficient_washer_per_cycle if laundry.washer_efficient else self.dhw_assumptions.inefficient_washer_per_cycle
@@ -113,9 +123,8 @@ class DHWGenerator:
         
     def weekly_dishwasher_dhw(self, weekly_dishwasher_cycles_per_day:list[int]) -> float:
         """Calculates weekly DHW usage based on dishwasher cycles."""
-        #dishwasher = self.equipment.dishwasher
-        dishwasher = sum(weekly_dishwasher_cycles_per_day) # If there are no cycles, we can assume no dishwasher equipment or usage
-        if not dishwasher.has_dishwasher:
+        dishwasher = self.equipment.dishwasher if self.equipment is not None else None
+        if dishwasher is None or not dishwasher.has_dishwasher:
             return [0.0] * len(weekly_dishwasher_cycles_per_day)
         else:
             per_cycle = self.dhw_assumptions.efficient_dishwasher_per_cycle if dishwasher.dishwasher_efficient else self.dhw_assumptions.inefficient_dishwasher_per_cycle
