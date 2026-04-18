@@ -4,8 +4,8 @@ from typing import Optional
 
 import numpy as np
 
-from ob_generation.model.occupancy import TimeRange
-from ob_generation.stochastic.distribution import NormalDistribution
+from obgeneration.model.occupancy import TimeRange
+from obgeneration.stochastic.distribution import NormalDistribution
 
 
 class TimeRangeDistribution:

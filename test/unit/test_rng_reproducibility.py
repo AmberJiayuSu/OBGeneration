@@ -1,11 +1,11 @@
 import numpy as np
 import pytest
 
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
-from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
-from ob_generation.model.equipment import Equipment
-from ob_generation.model.occupancy import Occupancy
-from ob_generation.stochastic.markov import ClusterAssumptions as MarkovClusterAssumptions
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
+from obgeneration.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
+from obgeneration.model.equipment import Equipment
+from obgeneration.model.occupancy import Occupancy
+from obgeneration.stochastic.markov import ClusterAssumptions as MarkovClusterAssumptions
 
 
 SIM_RES = 15

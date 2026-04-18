@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, Literal, Optional
 from pydantic import BaseModel, Field
 
-from ob_generation.stochastic.distribution import Constant, NormalDistribution, UniformDistribution, CategoricalDistribution, BinomialDistribution
+from obgeneration.stochastic.distribution import Constant, NormalDistribution, UniformDistribution, CategoricalDistribution, BinomialDistribution
 
 
 DistType = Literal["normal", "uniform", "constant", "categorical", "binomial"]

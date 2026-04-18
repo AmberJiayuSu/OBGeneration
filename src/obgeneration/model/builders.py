@@ -1,17 +1,17 @@
 """Public simplified builder for external callers.
 
 Each function takes a minimal set of parameters and returns the corresponding
-ob_generation input model, with all other fields filled in by defaults.
+obgeneration input model, with all other fields filled in by defaults.
 """
 
-from ob_generation.model.occupancy import (
+from obgeneration.model.occupancy import (
     HouseholdComposition,
     MobilityCluster,
     Occupancy,
     OccupantMobilityProfile,
 )
-from ob_generation.model.lighting import Lighting
-from ob_generation.model.equipment import (
+from obgeneration.model.lighting import Lighting
+from obgeneration.model.equipment import (
     CookingEquipment,
     DishwasherEquipment,
     DishwashingLogic,
@@ -22,7 +22,7 @@ from ob_generation.model.equipment import (
     NumberRange,
     RefrigerationEquipment,
 )
-from ob_generation.model.hvac import HVAC, ThermostatControl
+from obgeneration.model.hvac import HVAC, ThermostatControl
 
 
 def build_occupancy(

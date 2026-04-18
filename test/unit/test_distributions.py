@@ -8,7 +8,7 @@ import pytest
 import numpy as np
 
 
-from ob_generation.stochastic.distribution import (
+from obgeneration.stochastic.distribution import (
     Constant,
     NormalDistribution,
     UniformDistribution,

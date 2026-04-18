@@ -9,12 +9,12 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from pathlib import Path
-from ob_generation.generator.occupancy_generator import (
+from obgeneration.generator.occupancy_generator import (
     ClusterAssumptions,
     HouseholdOccupancyFractions,
     OccupancyGenerator,
 )
-from ob_generation.model.occupancy import (
+from obgeneration.model.occupancy import (
     Occupancy,
     HouseholdComposition,
     MobilityCluster,

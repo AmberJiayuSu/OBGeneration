@@ -3,13 +3,13 @@ import numpy as np
 import time
 import signal
 
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions, HouseholdOccupancyFractions
-from ob_generation.model.occupancy import Occupancy
-from ob_generation.model.equipment import Equipment
-from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
-from ob_generation.model.occupant_profile import Occupant
-from ob_generation.generator.ob_utils import ScheduleUtils
-from ob_generation.generator.ob_generator import OccupantBehavior
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions, HouseholdOccupancyFractions
+from obgeneration.model.occupancy import Occupancy
+from obgeneration.model.equipment import Equipment
+from obgeneration.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
+from obgeneration.model.occupant_profile import Occupant
+from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.ob_generator import OccupantBehavior
 from pathlib import Path
 
 

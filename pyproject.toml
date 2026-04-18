@@ -13,7 +13,7 @@ dependencies = [
     "scipy>=1.10.0",
     "pydantic>=2.0.0",
     "matplotlib>=3.7.0",
-    "pandas>=2.3.3",
+    "pandas>=2.2",
 ]
 
 [project.optional-dependencies]
@@ -26,7 +26,7 @@ dev = [
 
 [tool.hatch.build.targets.sdist]
 only-include = [
-    "src/ob_generation",
+    "src/obgeneration",
     "README.md",
     "pyproject.toml",
 ]
@@ -35,9 +35,9 @@ exclude = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/ob_generation"]
+packages = ["src/obgeneration"]
 only-packages = true
 include = [
-    "src/ob_generation/data/**/*.csv",
-    "src/ob_generation/data/**/*.json",
+    "src/obgeneration/data/**/*.csv",
+    "src/obgeneration/data/**/*.json",
 ]

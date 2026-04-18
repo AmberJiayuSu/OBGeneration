@@ -1,6 +1,6 @@
-from ob_generation.stochastic.distribution import Distribution, CategoricalDistribution
-from ob_generation.model.hvac import HVAC
-from ob_generation.generator.hvac_generator import HVACGenerator, HVACAssumptions
+from obgeneration.stochastic.distribution import Distribution, CategoricalDistribution
+from obgeneration.model.hvac import HVAC
+from obgeneration.generator.hvac_generator import HVACGenerator, HVACAssumptions
 
 
 ## TODO: Not sure if this is the best way for aggregated HVAC representation

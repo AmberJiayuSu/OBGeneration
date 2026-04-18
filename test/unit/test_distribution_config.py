@@ -5,8 +5,8 @@ Tests the configuration builder in src/stochastic/distribution_config.py
 """
 
 import pytest
-from ob_generation.stochastic.distribution_config import DistributionConfig
-from ob_generation.stochastic.distribution import (
+from obgeneration.stochastic.distribution_config import DistributionConfig
+from obgeneration.stochastic.distribution import (
     Constant,
     NormalDistribution,
     UniformDistribution,

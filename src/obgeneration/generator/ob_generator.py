@@ -1,11 +1,11 @@
-from ob_generation.model.occupant_profile import Occupant
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
-from ob_generation.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
-from ob_generation.generator.lighting_generator import LightingGenerator
-from ob_generation.generator.dhw_generator import DHWGenerator, DHWAssumptions
-from ob_generation.generator.hvac_generator import HVACGenerator, HVACAssumptions
-from ob_generation.generator.ob_utils import ScheduleUtils
-from ob_generation.generator.window_generator import WindowGenerator, WindowAssumptions
+from obgeneration.model.occupant_profile import Occupant
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
+from obgeneration.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions
+from obgeneration.generator.lighting_generator import LightingGenerator
+from obgeneration.generator.dhw_generator import DHWGenerator, DHWAssumptions
+from obgeneration.generator.hvac_generator import HVACGenerator, HVACAssumptions
+from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.window_generator import WindowGenerator, WindowAssumptions
 from pydantic import BaseModel, Field, ConfigDict
 
 import matplotlib.pyplot as plt

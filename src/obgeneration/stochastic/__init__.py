@@ -1,4 +1,4 @@
-from ob_generation.stochastic.distribution import (
+from obgeneration.stochastic.distribution import (
     Distribution,
     Constant,
     NormalDistribution,
@@ -6,4 +6,4 @@ from ob_generation.stochastic.distribution import (
     BinomialDistribution,
     CategoricalDistribution,
 )
-from ob_generation.stochastic.distribution_config import DistributionConfig
+from obgeneration.stochastic.distribution_config import DistributionConfig

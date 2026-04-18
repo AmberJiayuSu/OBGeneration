@@ -26,10 +26,10 @@ def get_project_root() -> Path:
     
     # Strategy 2: Try __file__ approach (works when running as script/module)
     try:
-        # This file is at src/ob_generation/generator/ob_utils.py, so go up 4 levels to project root
+        # This file is at src/obgeneration/generator/ob_utils.py, so go up 4 levels to project root
         file_path = Path(__file__).resolve()
         if file_path.exists():
-            # src/ob_generation/generator/ob_utils.py -> generator -> ob_generation -> src -> project_root
+            # src/obgeneration/generator/ob_utils.py -> generator -> obgeneration -> src -> project_root
             candidate = file_path.parent.parent.parent.parent
             if (candidate / "pyproject.toml").exists() or (candidate / "data").exists():
                 return candidate

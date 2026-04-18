@@ -1,5 +1,5 @@
-from ob_generation.model import builders
-from ob_generation.model.occupancy import (
+from obgeneration.model import builders
+from obgeneration.model.occupancy import (
     Occupancy,
     ScheduleRigidness,
     TimeRange,
@@ -10,8 +10,8 @@ from ob_generation.model.occupancy import (
     WeekendOccupancyPattern,
     SleepPattern,
 )
-from ob_generation.model.occupant_profile import Occupant
-from ob_generation.model.equipment import (
+from obgeneration.model.occupant_profile import Occupant
+from obgeneration.model.equipment import (
     Equipment,
     NumberRange,
     LaundryEquipment,
@@ -22,8 +22,8 @@ from ob_generation.model.equipment import (
     DishwasherEquipment,
     CookingEquipment,
 )
-from ob_generation.model.lighting import Lighting
-from ob_generation.model.hvac import (
+from obgeneration.model.lighting import Lighting
+from obgeneration.model.hvac import (
     HVAC,
     IntensityLevel,
     NoControl,
@@ -31,4 +31,4 @@ from ob_generation.model.hvac import (
     ValveControl,
     ThermostatControl,
 )
-from ob_generation.model.window import Window, WindowOpeningBehavior
+from obgeneration.model.window import Window, WindowOpeningBehavior

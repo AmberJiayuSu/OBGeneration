@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from ob_generation.generator.dhw_generator import DHWAssumptions, DHWGenerator
-from ob_generation.model.equipment import Equipment
+from obgeneration.generator.dhw_generator import DHWAssumptions, DHWGenerator
+from obgeneration.model.equipment import Equipment
 
 
 SIM_RES = 15

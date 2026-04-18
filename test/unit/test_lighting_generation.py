@@ -1,10 +1,10 @@
 import pytest
 import numpy as np
 
-from ob_generation.model.lighting import Lighting
-from ob_generation.model.occupancy import Occupancy
-from ob_generation.generator.lighting_generator import LightingGenerator
-from ob_generation.generator.occupancy_generator import OccupancyGenerator,ClusterAssumptions
+from obgeneration.model.lighting import Lighting
+from obgeneration.model.occupancy import Occupancy
+from obgeneration.generator.lighting_generator import LightingGenerator
+from obgeneration.generator.occupancy_generator import OccupancyGenerator,ClusterAssumptions
 
 
 

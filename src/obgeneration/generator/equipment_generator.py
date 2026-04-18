@@ -1,12 +1,12 @@
-from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
+from obgeneration.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
 import numpy as np
-from ob_generation.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.ob_utils import ScheduleUtils
 from importlib.resources import files
-from ob_generation.generator.occupancy_generator import HouseholdOccupancyFractions
-import ob_generation.model.equipment as Equipment
+from obgeneration.generator.occupancy_generator import HouseholdOccupancyFractions
+import obgeneration.model.equipment as Equipment
 
 from pydantic import BaseModel, Field, ConfigDict
-from ob_generation.stochastic.distribution_config import DistributionConfig
+from obgeneration.stochastic.distribution_config import DistributionConfig
 import json
 from pathlib import Path
 import csv
@@ -200,7 +200,7 @@ class EquipmentAssumptions(BaseModel):
     def default(cls, resolution_mins: int = 15) -> "EquipmentAssumptions":
         """Returns the standard/default assumptions for equipment power."""
         # Get project root directory using robust path resolution
-        data_dir = files("ob_generation.data.activity_initial_probability")
+        data_dir = files("obgeneration.data.activity_initial_probability")
         return cls(
             baseload=250.0,
             watts_per_person_active=120.0,

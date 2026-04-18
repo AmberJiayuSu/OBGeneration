@@ -93,7 +93,7 @@ class ClusterAssumptions:
 
     @classmethod
     def default(cls) -> "ClusterAssumptions":
-        data_dir = files("ob_generation.data.occupancy_probability")
+        data_dir = files("obgeneration.data.occupancy_probability")
         num_clusters = 5
         df = pd.read_csv(data_dir / "weekday" / "weekday_pi0.csv").sort_values("raw_cluster")
         weekday_initial_probs = df[["Away", "Home", "Sleep"]].values.tolist()

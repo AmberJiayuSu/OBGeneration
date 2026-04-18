@@ -1,6 +1,6 @@
-from ob_generation.stochastic.markov import ClusterAssumptions, OccupancyState
-from ob_generation.stochastic.time_range import TimeRangeDistribution
-from ob_generation.model.occupancy import Occupancy, TimeRange, WeekendOccupancyPattern, WeekdayOccupancyPattern
+from obgeneration.stochastic.markov import ClusterAssumptions, OccupancyState
+from obgeneration.stochastic.time_range import TimeRangeDistribution
+from obgeneration.model.occupancy import Occupancy, TimeRange, WeekendOccupancyPattern, WeekdayOccupancyPattern
 import math
 import numpy as np
 from typing import NamedTuple

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path
-import ob_generation.model.equipment as Equipment
+import obgeneration.model.equipment as Equipment
 
 
 class DHWAssumptions(BaseModel):

@@ -1,5 +1,5 @@
-import ob_generation.model.lighting as Lighting
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
+import obgeneration.model.lighting as Lighting
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
 
 
 

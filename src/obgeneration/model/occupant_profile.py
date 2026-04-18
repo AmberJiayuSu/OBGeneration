@@ -2,11 +2,11 @@ from typing import Optional
 from pydantic import BaseModel, Field
 from pathlib import Path
 import json
-from ob_generation.model.occupancy import Occupancy
-from ob_generation.model.lighting import Lighting
-from ob_generation.model.equipment import Equipment
-from ob_generation.model.hvac import HVAC
-from ob_generation.model.window import Window
+from obgeneration.model.occupancy import Occupancy
+from obgeneration.model.lighting import Lighting
+from obgeneration.model.equipment import Equipment
+from obgeneration.model.hvac import HVAC
+from obgeneration.model.window import Window
 
 class Occupant(BaseModel):
     occupancy: Occupancy = Field(...)

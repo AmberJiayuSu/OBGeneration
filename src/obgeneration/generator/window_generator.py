@@ -1,11 +1,11 @@
-from ob_generation.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
-from ob_generation.generator.ob_utils import ScheduleUtils
+from obgeneration.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
+from obgeneration.generator.ob_utils import ScheduleUtils
 from pydantic import BaseModel, Field, ConfigDict
-from ob_generation.stochastic.distribution_config import DistributionConfig
+from obgeneration.stochastic.distribution_config import DistributionConfig
 import json
 from pathlib import Path
 from datetime import  date, timedelta
-from ob_generation.model.window import Window, WindowOpeningBehavior
+from obgeneration.model.window import Window, WindowOpeningBehavior
 from typing import Tuple, List
 
 

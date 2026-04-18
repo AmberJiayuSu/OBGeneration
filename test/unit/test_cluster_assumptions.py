@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from ob_generation.generator.occupancy_generator import ClusterAssumptions
+from obgeneration.generator.occupancy_generator import ClusterAssumptions
 
 
 SIM_RES = 15

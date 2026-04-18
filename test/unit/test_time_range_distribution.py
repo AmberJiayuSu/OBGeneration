@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from ob_generation.generator.occupancy_generator import TimeRangeDistribution
-from ob_generation.model.occupancy import TimeRange
+from obgeneration.generator.occupancy_generator import TimeRangeDistribution
+from obgeneration.model.occupancy import TimeRange
 
 
 SIM_RES = 15

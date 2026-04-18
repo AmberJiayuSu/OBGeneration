@@ -1,10 +1,10 @@
 import pytest
 import numpy as np
 
-from ob_generation.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
-from ob_generation.model.hvac import HVAC
-from ob_generation.generator.hvac_generator import HVACAssumptions, HVACGenerator
-from ob_generation.model.occupancy import Occupancy
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
+from obgeneration.model.hvac import HVAC
+from obgeneration.generator.hvac_generator import HVACAssumptions, HVACGenerator
+from obgeneration.model.occupancy import Occupancy
 
 @pytest.fixture
 def rng() -> np.random.Generator:
