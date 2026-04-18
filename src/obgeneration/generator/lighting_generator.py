@@ -1,20 +1,31 @@
 import obgeneration.model.lighting as Lighting
 from obgeneration.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
+from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.results import LightingResult
+from collections.abc import Sequence
+from pydantic import BaseModel, Field
+from obgeneration.model.equipment import Distribution, DistributionConfig
 
 
 
-# class LightingAssumptions(BaseModel):
-#     """Master configuration for lighting power assumptions."""
-#     watts_per_person_led: Distribution = Field(..., description="Design level lighting power per person for LED (W)")
-#     watts_per_person_non_led: Distribution = Field(..., description="Design level lighting power per person for non-LED (W)")
-    
-#     @classmethod
-#     def default(cls) -> "LightingAssumptions":
-#         """Returns the standard/default assumptions for lighting power."""
-#         return cls(
-#             watts_per_person_led= DistributionConfig(dist_type="normal", params={"mean": 500.0, "std": 50.0, "lower": 0.0, "int": False}).build(),
-#             watts_per_person_non_led= DistributionConfig(dist_type="normal", params={"mean": 800.0, "std": 100.0, "lower": 0.0, "int": False}).build()
-#         )
+class LightingAssumptions(BaseModel):
+    """Master configuration for lighting power assumptions."""
+    watts_per_m2_led: Distribution = Field(..., description="Design level lighting power per square meter for LED (W)")
+    watts_per_m2_non_led: Distribution = Field(..., description="Design level lighting power per square meter for non-LED (W)")
+
+    @classmethod
+    def default(cls) -> "LightingAssumptions":
+        """Returns the standard/default assumptions for lighting power."""
+        return cls(
+            watts_per_m2_led=DistributionConfig(
+                dist_type="normal",
+                params={"mean": 4.0, "std": 0.9, "lower": 0.5, "int": False},
+            ).build(),
+            watts_per_m2_non_led=DistributionConfig(
+                dist_type="normal",
+                params={"mean": 9.0, "std": 1.5, "lower": 1.0, "int": False},
+            ).build(),
+        )
 
 
 class LightingGenerator:
@@ -23,23 +34,33 @@ class LightingGenerator:
         self.lighting = lighting
 
     @staticmethod
-    def generate(
+    def generate_with_defaults(
         lighting: Lighting.Lighting,
-        occupancy_states: list[list[HouseholdOccupancyFractions]],
-    ) -> tuple[list[list[float]], bool]:
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+    ) -> LightingResult:
         """Generate an annual lighting schedule from occupancy states.
 
-        Derives the sleep mask from occupancy_states, then returns a nested list
-        (53 weeks × bins_per_week) of lighting fractions.
+        Derives the sleep mask from occupancy_states and returns the flattened
+        annual lighting fraction schedule together with dimming metadata.
         """
         _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         generator = LightingGenerator(lighting)
         dimming = generator.get_dimming()
-        return (generator.lighting_annual_schedule(occupancy_states, sleep_mask), dimming)
+        schedule = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
+        flattened_schedule = ScheduleUtils.flatten_schedule(schedule)
+        if lighting.if_led:
+            peak_value = generator.lighting_assumptions.watts_per_m2_led.sample()
+        else:
+            peak_value = generator.lighting_assumptions.watts_per_m2_non_led.sample()
+        return LightingResult(
+            peak_value=peak_value,
+            schedule=flattened_schedule,
+            dimming_enabled=dimming,
+        )
 
 
 
-    def lighting_annual_schedule(self, occupancy_annual_schedule:  list[list[HouseholdOccupancyFractions]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def lighting_annual_schedule(self, occupancy_annual_schedule:  Sequence[Sequence[HouseholdOccupancyFractions]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
         """ Translates lighting usage pattern into a full annual schedule based on occupancy and sleep times."""
         annual_schedule = []
         for week_index in range(len(sleep_mask_annual)):
@@ -50,7 +71,7 @@ class LightingGenerator:
         return annual_schedule
        
     
-    def lighting_weekly_schedule(self, weekly_schedule: list[HouseholdOccupancyFractions], sleep_mask_weekly: list[bool]) -> list[float]:
+    def lighting_weekly_schedule(self, weekly_schedule: Sequence[HouseholdOccupancyFractions], sleep_mask_weekly: Sequence[bool]) -> list[float]:
         """ Translates lighting usage pattern into a full week schedule based on occupancy and sleep times."""
         schedule = []
         length = len(sleep_mask_weekly)

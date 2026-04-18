@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from obgeneration.stochastic.distribution import Distribution,NormalDistribution
 from obgeneration.model.occupancy_old import Occupancy, TimeRange
 from obgeneration.stochastic.distribution_config import DistributionConfig
@@ -341,7 +342,7 @@ class SingleOccupantTracker:
         self.assumption = assumption
         self.resolution_hours = resolution_mins / 60
 
-    def sample_weekdays(self, household_away_intervals: list[TimeRange | None], away_days: list[int], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+    def sample_weekdays(self, household_away_intervals: Sequence[TimeRange | None], away_days: Sequence[int], sleep_schedule: Sequence[TimeRange | None]) -> list[TimeRange | None]:
         """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
         intervals = []
         # no household level away days, so sample for each day based on role assumptions
@@ -389,7 +390,7 @@ class SingleOccupantTracker:
                         intervals.append(time_range)
         return intervals
     
-    def sample_weekends(self, household_away_intervals: list[TimeRange | None], sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+    def sample_weekends(self, household_away_intervals: Sequence[TimeRange | None], sleep_schedule: Sequence[TimeRange | None]) -> list[TimeRange | None]:
         """Samples the weekly leave and return times for this occupant based on their role and household patterns"""
         intervals = []
         for d in range(2):
@@ -470,7 +471,7 @@ class OccupancyGenerator:
                 trackers.append(SingleOccupantTracker(role, assumption, resolution_mins))
         return trackers
         
-    def weekday_away_interval(self, sleep_schedule: list[TimeRange | None]) -> tuple[list[TimeRange | None], list[int]]:
+    def weekday_away_interval(self, sleep_schedule: Sequence[TimeRange | None]) -> tuple[list[TimeRange | None], list[int]]:
         """ Based on the household's weekday away patterns, sample and return the away intervals for each weekday."""
         occupancy = self.occupancy
         if occupancy.weekday_pattern.is_always_occupied:
@@ -495,7 +496,7 @@ class OccupancyGenerator:
                     interval.append(None)
             return interval,away_days
         
-    def household_weekday_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+    def household_weekday_schedule(self, sleep_schedule: Sequence[TimeRange | None]) -> list[float]:
         """Generates the household's overall weekday away schedule based on individual occupant patterns."""
         if self.enforce_weekday_away:
             weekday_away_intervals, away_days = self.weekday_away_interval(sleep_schedule)
@@ -560,7 +561,7 @@ class OccupancyGenerator:
             return schedule
         
     
-    def weekend_away_interval(self, sleep_schedule: list[TimeRange | None]) -> list[TimeRange | None]:
+    def weekend_away_interval(self, sleep_schedule: Sequence[TimeRange | None]) -> list[TimeRange | None]:
         """ Based on the household's weekday away patterns, sample and return the away intervals for each weeend."""
         occupancy = self.occupancy
         if occupancy.weekend_pattern.is_always_occupied:
@@ -580,7 +581,7 @@ class OccupancyGenerator:
                     interval.append(self.weekend_away.sample())
             return interval
         
-    def household_weekend_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+    def household_weekend_schedule(self, sleep_schedule: Sequence[TimeRange | None]) -> list[float]:
         """Generates the household's overall weekend away schedule based on individual occupant patterns."""
         if self.enforce_weekend_away:
             weekend_away_intervals = self.weekend_away_interval(sleep_schedule)
@@ -647,7 +648,7 @@ class OccupancyGenerator:
 
  
     
-    def household_fullweek_schedule(self, sleep_schedule: list[TimeRange | None]) -> list[float]:
+    def household_fullweek_schedule(self, sleep_schedule: Sequence[TimeRange | None]) -> list[float]:
         """Generates the household's full week away schedule based on individual occupant patterns."""
         weekday_schedule = self.household_weekday_schedule(sleep_schedule[:5])
         weekend_schedule = self.household_weekend_schedule(sleep_schedule[5:7])
@@ -722,7 +723,7 @@ class OccupancyGenerator:
     
 
     @staticmethod
-    def get_sleep_mask(sleep_schedule: list[TimeRange | None], num_per_hour: int) -> list[bool]:
+    def get_sleep_mask(sleep_schedule: Sequence[TimeRange | None], num_per_hour: int) -> list[bool]:
         """ Generates a mask indicating occupied and sleep hours (True) vs unoccupied or active hours (False)."""
         mask = [False] * (24 * 7 * num_per_hour)
         for d in range(7):
@@ -736,7 +737,7 @@ class OccupancyGenerator:
         return mask
     
     @staticmethod
-    def revise_by_sleep(sleep_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+    def revise_by_sleep(sleep_weekly_mask: Sequence[bool], existing_schedule: Sequence[float], value: float) -> list[float]:
         """ Revisions to an existing schedule based on sleep times. 
             Assume both inputs (sleep_weekly_mask and existing_schedule) should be in the same length."""
         assert len(sleep_weekly_mask) == len(existing_schedule), "sleep mask and schedule must have the same length"
@@ -752,7 +753,7 @@ class OccupancyGenerator:
         return mask
     
     @staticmethod
-    def revise_by_absence(occupancy_weekly_mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+    def revise_by_absence(occupancy_weekly_mask: Sequence[bool], existing_schedule: Sequence[float], value: float) -> list[float]:
         """ Revisions to an existing schedule based on occupancy times. 
             Assume both inputs (occupancy_weekly_mask and existing_schedule) should be in the same length."""
         assert len(occupancy_weekly_mask) == len(existing_schedule), "occupancy mask and schedule must have the same length"
@@ -762,7 +763,7 @@ class OccupancyGenerator:
         ]
     
     @staticmethod
-    def get_active_mask(occupancy_schedule: list[float], sleep_schedule: list[bool]) -> list[bool]:
+    def get_active_mask(occupancy_schedule: Sequence[float], sleep_schedule: Sequence[bool]) -> list[bool]:
         """ Generates a mask indicating active hours (True) vs sleep or unoccupied hours (False)."""
         mask = [
             (occ > 0.0) and (not asleep)
@@ -805,7 +806,7 @@ class OccupancyGenerator:
                 annual_sleep_schedule.append(sleep_mask[:24 * self.num_per_hour])
         return annual_schedule, annual_sleep_schedule
     
-    def get_annual_mask(self, annual_schedule: list[list[float]], annual_sleep_schedule: list[list[bool]]) -> tuple[list[list[bool]], list[list[bool]], list[list[bool]]]:
+    def get_annual_mask(self, annual_schedule: Sequence[Sequence[float]], annual_sleep_schedule: Sequence[Sequence[bool]]) -> tuple[list[list[bool]], list[list[bool]], list[list[bool]]]:
         """ Generates the annual occupancy, sleep, and active masks based on the annual schedule.
             Returns:
             Tuple of (annual_occupancy_mask, annual_sleep_schedule, annual_active_mask)

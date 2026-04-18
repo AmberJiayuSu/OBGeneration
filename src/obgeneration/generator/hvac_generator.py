@@ -1,6 +1,9 @@
 
+from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
+from obgeneration.generator.results import HVACResult, SetpointResult
 import obgeneration.model.hvac as HVAC
+from collections.abc import Sequence
 from pydantic import BaseModel, Field
 import json
 from pathlib import Path
@@ -79,15 +82,46 @@ class HVACGenerator:
     @staticmethod
     def generate_with_defaults(
         hvac: HVAC.HVAC,
-        occupancy_states: list[list[HouseholdOccupancyFractions]]
-    ) -> tuple[list[list[float]], list[list[float]]]:
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+    ) -> HVACResult:
         """Generate annual heating and cooling setpoint schedules from occupancy states using default assumptions."""
         assumptions = HVACAssumptions.default()
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
         cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
-        return heating_schedule, cooling_schedule
+        return HVACResult(
+            heating=SetpointResult(schedule=ScheduleUtils.flatten_schedule(heating_schedule)) if heating_schedule is not None else None,
+            cooling=SetpointResult(schedule=ScheduleUtils.flatten_schedule(cooling_schedule)) if cooling_schedule is not None else None,
+        )
+    
+    @staticmethod
+    def generate_cooling_with_defaults(
+        hvac: HVAC.HVAC,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+    ) -> SetpointResult | None:
+        """Generate annual cooling setpoint schedule from occupancy states using default assumptions."""
+        assumptions = HVACAssumptions.default()
+        generator = HVACGenerator(hvac, assumptions)
+        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        if cooling_schedule is None:
+            return None
+        return SetpointResult(schedule=ScheduleUtils.flatten_schedule(cooling_schedule))
+    
+    @staticmethod
+    def generate_heating_with_defaults(
+        hvac: HVAC.HVAC,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+    ) -> SetpointResult | None:
+        """Generate annual heating setpoint schedule from occupancy states using default assumptions."""
+        assumptions = HVACAssumptions.default()
+        generator = HVACGenerator(hvac, assumptions)
+        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        if heating_schedule is None:
+            return None
+        return SetpointResult(schedule=ScheduleUtils.flatten_schedule(heating_schedule))
 
     @staticmethod
     def _get_trv_temp(assumptions: HVACAssumptions,level: HVAC.IntensityLevel) -> float:
@@ -104,7 +138,7 @@ class HVACGenerator:
             raise ValueError(f"Unknown intensity level: {level}")
         return level_to_temp[level]
 
-    def heating_setpoint_annual_schedule(self, active_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def heating_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         if self.hvac.heating is None:
             return None
@@ -119,7 +153,7 @@ class HVACGenerator:
         return schedule
         
        
-    def heating_setpoint_weekly_schedule(self, active_mask_weekly: list[bool], sleep_mask_weekly: list[bool]) -> list[float]:
+    def heating_setpoint_weekly_schedule(self, active_mask_weekly: Sequence[bool], sleep_mask_weekly: Sequence[bool]) -> list[float]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
         heating = self.hvac.heating
         minimum_setpoint = self.assumptions.minimum_heating_setpoint
@@ -185,7 +219,7 @@ class HVACGenerator:
 
 
 
-    def cooling_setpoint_annual_schedule(self, active_mask_annual: list[list[bool]], sleep_mask_annual: list[list[bool]]) -> list[list[float]]:
+    def cooling_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         if self.hvac.cooling is None:
             return None
@@ -200,7 +234,7 @@ class HVACGenerator:
         return schedule
 
 
-    def cooling_setpoint_weekly_schedule(self, active_time_mask_weekly: list[bool], sleep_time_mask_weekly: list[bool]) -> list[float]:
+    def cooling_setpoint_weekly_schedule(self, active_time_mask_weekly: Sequence[bool], sleep_time_mask_weekly: Sequence[bool]) -> list[float]:
         """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
         cooling = self.hvac.cooling
         cooling_max_setpoint = self.assumptions.maximum_cooling_setpoint
@@ -249,4 +283,3 @@ class HVACGenerator:
         else:
             raise NotImplementedError(f"Cooling type {cooling.type} not yet implemented.")
         
-

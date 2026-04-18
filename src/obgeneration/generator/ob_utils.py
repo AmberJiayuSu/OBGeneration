@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 import os
+from collections.abc import Sequence
 from matplotlib.figure import Figure
 
 
@@ -88,7 +89,7 @@ class ScheduleUtils:
         return [item for sublist in schedule for item in sublist]
 
     @staticmethod
-    def get_typical_week_values(schedule: list[float] | list[list[float]], resolution_mins: int) -> tuple[np.ndarray, int, int, float]:
+    def get_typical_week_values(schedule: Sequence[float] | Sequence[Sequence[float]], resolution_mins: int) -> tuple[np.ndarray, int, int, float]:
         """Extract typical week values by averaging the first 52 weeks.
 
         Args:
@@ -106,7 +107,7 @@ class ScheduleUtils:
         timesteps_per_day = int(24 * 60 / resolution_mins)
         week_len = 7 * timesteps_per_day
 
-        if schedule and isinstance(schedule[0], list):
+        if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
             weeks_to_average = schedule[:52]
             W = np.array([week_data[:week_len] for week_data in weeks_to_average], dtype=float)
         else:
@@ -119,7 +120,7 @@ class ScheduleUtils:
         return avg_week, timesteps_per_day, week_len, num_per_hour
 
     @staticmethod
-    def plot_annual_schedule_heatmap(schedule: list[float] | list[list[float]], title: str, out_path: str | Path, resolution_mins: int, colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
+    def plot_annual_schedule_heatmap(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, out_path: str | Path, resolution_mins: int, colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
         """Plot annual schedule as a heatmap with days on x-axis and timesteps per day on y-axis.
         
         Args:
@@ -134,7 +135,7 @@ class ScheduleUtils:
         timesteps_per_day = int(24 * 60 / resolution_mins)
         
         # Detect if schedule is flattened or nested
-        if schedule and isinstance(schedule[0], list):
+        if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
             # Nested schedule (list of weeks)
             all_days = []
             for week_idx, week_data in enumerate(schedule):
@@ -194,7 +195,7 @@ class ScheduleUtils:
 
 
     @staticmethod
-    def plot_typical_week_schedule(schedule: list[float] | list[list[float]], title: str, out_path: str | Path, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> None:
+    def plot_typical_week_schedule(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, out_path: str | Path, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> None:
         """Plot typical week schedule by averaging the first 52 weeks.
         
         Args:
@@ -253,7 +254,7 @@ class ScheduleUtils:
         plt.close(fig)
 
     @staticmethod
-    def typical_week_schedule_figure(schedule: list[float] | list[list[float]], title: str, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> Figure:
+    def typical_week_schedule_figure(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> Figure:
         """Plot typical week schedule by averaging the first 52 weeks.
         
         Returns a Figure that can be displayed in a notebook (e.g., with plt.show() or
@@ -308,7 +309,7 @@ class ScheduleUtils:
         return fig
 
     @staticmethod
-    def single_day_schedule_figure(schedule: list[float] | list[list[float]], day: int, title: str, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> Figure:
+    def single_day_schedule_figure(schedule: Sequence[float] | Sequence[Sequence[float]], day: int, title: str, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> Figure:
         """Plot a single day's schedule (averaged across first 52 weeks for that weekday).
 
         Day is 0=Monday through 6=Sunday. Style matches proc.ipynb: hours 1-24 on x-axis,
@@ -350,7 +351,7 @@ class ScheduleUtils:
         return fig
 
     @staticmethod
-    def plot_two_typical_week_schedule(schedule1: list[float] | list[list[float]], schedule2: list[float] | list[list[float]], title: str, out_path: str | Path, resolution_mins: int, label1: str = 'Schedule 1', label2: str = 'Schedule 2') -> None:
+    def plot_two_typical_week_schedule(schedule1: Sequence[float] | Sequence[Sequence[float]], schedule2: Sequence[float] | Sequence[Sequence[float]], title: str, out_path: str | Path, resolution_mins: int, label1: str = 'Schedule 1', label2: str = 'Schedule 2') -> None:
         """Plot typical week schedule by averaging the first 52 weeks.
         
         Args:

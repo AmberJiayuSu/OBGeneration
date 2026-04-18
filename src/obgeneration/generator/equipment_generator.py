@@ -1,8 +1,10 @@
 from obgeneration.stochastic.distribution import Distribution, UniformDistribution, CategoricalDistribution
 import numpy as np
 from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.results import EquipmentResult
 from importlib.resources import files
 from obgeneration.generator.occupancy_generator import HouseholdOccupancyFractions
+from collections.abc import Sequence
 import obgeneration.model.equipment as Equipment
 
 from pydantic import BaseModel, Field, ConfigDict
@@ -78,7 +80,7 @@ class EventAssumptions(BaseModel):
     #             # If never occupied, return all zeros
     #             return masked_probs  
     
-    def get_updated_probabilities(self, occupancy_fraction: list[HouseholdOccupancyFractions], last_week=False) -> list[float]:
+    def get_updated_probabilities(self, occupancy_fraction: Sequence[HouseholdOccupancyFractions], last_week=False) -> list[float]:
         """ Apply occupancy fraction mask and return renormalized probabilities.
             Assume the probability of event occurrence is proportional to the occupancy fraction of the time bin and the time-based probability for that bin.
             If masking results all zero, if there is occupied time then assume the event occur relative to the occupancy fraction distribution, otherwise return all zeros.
@@ -251,7 +253,7 @@ class EquipmentAssumptions(BaseModel):
 
 class EquipmentGenerator:
 
-    def __init__(self, equipment: Equipment.Equipment, occupancy_state: list[list[HouseholdOccupancyFractions]], num_occupants: int, resolution_mins: int, equipment_assumptions: EquipmentAssumptions = EquipmentAssumptions.default()):
+    def __init__(self, equipment: Equipment.Equipment, occupancy_state: Sequence[Sequence[HouseholdOccupancyFractions]], num_occupants: int, resolution_mins: int, equipment_assumptions: EquipmentAssumptions = EquipmentAssumptions.default()):
         self.equipment = equipment
         self.occupancy_state = occupancy_state
         self.num_occupants = num_occupants
@@ -281,14 +283,15 @@ class EquipmentGenerator:
     @staticmethod
     def generate_with_defaults(
         equipment: Equipment.Equipment,
-        occupancy_states: list[list[HouseholdOccupancyFractions]],
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         num_occupants: int,
         resolution_mins: int,
         rng: np.random.Generator | int,
-    ) -> tuple[list[list[float]], list[list[int]], list[list[int]]]:
+    ) -> EquipmentResult:
         """Generate an annual equipment schedule with default assumptions.
 
-        Returns (annual_schedule, laundry_cycles, dishwasher_cycles).
+        Returns the normalized equipment schedule together with appliance-cycle
+        metadata used by downstream generators.
         """
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
@@ -299,7 +302,19 @@ class EquipmentGenerator:
             resolution_mins=resolution_mins,
             equipment_assumptions=EquipmentAssumptions.default(resolution_mins),
         )
-        return generator.equipment_annual_schedule(rng)
+        annual_equipment_schedule, laundry_cycles, dishwasher_cycles = generator.equipment_annual_schedule(rng)
+        flattend_schedule = ScheduleUtils.flatten_schedule(annual_equipment_schedule)
+        peak_value = max(flattend_schedule)
+        if peak_value > 0:
+            normalized_schedule = [power / peak_value for power in flattend_schedule]
+        else:
+            normalized_schedule = flattend_schedule
+        return EquipmentResult(
+            peak_value=peak_value,
+            schedule=normalized_schedule,
+            laundry_cycles=laundry_cycles,
+            dishwasher_cycles=dishwasher_cycles,
+        )
 
     
 
@@ -318,7 +333,7 @@ class EquipmentGenerator:
             dishwasher_cycles.append(dishwasher_num_cycles)
         return annual_schedule, laundry_cycles, dishwasher_cycles
 
-    def equipment_weekly_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], int, int]:
+    def equipment_weekly_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], int, int]:
         """ Translates equipment usage pattern into a full week schedule based on occupancy and sleep times."""
         baseload_schedule = self.weekly_baseload_schedule(weekly_occupancy_state)
         laundry_schedule, laundry_num_cycles = self.weekly_laundry_usage_schedule(weekly_occupancy_state, last_week, rng)
@@ -333,7 +348,7 @@ class EquipmentGenerator:
         return total_schedule, laundry_num_cycles, dishwasher_num_cycles
 
 
-    def weekly_baseload_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions]) -> list[float]:
+    def weekly_baseload_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions]) -> list[float]:
         assumptions = self.equipment_assumptions
         baseload_schedule = [assumptions.baseload] * len(weekly_occupancy_state)
         for i in range(len(weekly_occupancy_state)):
@@ -368,7 +383,7 @@ class EquipmentGenerator:
             annual_cooking_ends.append(cooking_ends)
         return annual_schedule, annual_cooking_ends
 
-    def dishwasher_annual_schedule(self, annual_cooking_ends: list[list[float]], rng: np.random.Generator) -> list[list[float]]:
+    def dishwasher_annual_schedule(self, annual_cooking_ends: Sequence[Sequence[float]], rng: np.random.Generator) -> list[list[float]]:
         """ Translates dishwasher equipment usage pattern into a full annual schedule based on occupancy."""
         annual_schedule = []
         dishwasher_cycles = []
@@ -401,7 +416,7 @@ class EquipmentGenerator:
                 dryer_power = assumptions.inefficient_dryer.sample(rng)
         return washer_power, dryer_power
     
-    def weekly_laundry_usage_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[int]]:
+    def weekly_laundry_usage_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[int]]:
         """ Translates laundry equipment usage schedule into a full week schedule with power."""
         laundry = self.equipment.laundry
         laundry_assumptions = self.equipment_assumptions.laundry
@@ -482,7 +497,7 @@ class EquipmentGenerator:
             return 0.0
         
 
-    def weekly_cooking_usage_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[float]]:
+    def weekly_cooking_usage_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[float]]:
         """ Translates kitchen equipment usage schedule into a full week schedule with power.
             Returns the cooking power schedule and the corresponding ending times."""
         cooking_products = self.equipment.cooking_products
@@ -547,7 +562,7 @@ class EquipmentGenerator:
             end_times.sort()
             return cooking_schedule, end_times
 
-    def weekly_fridge_usage_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions], rng: np.random.Generator) -> list[float]:
+    def weekly_fridge_usage_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], rng: np.random.Generator) -> list[float]:
         """ Translates refrigeration equipment usage schedule into a full week schedule with power."""
         if self.equipment.refrigerator.has_refrigerator:
             fridge_power = self._get_fridge_power(rng)
@@ -570,7 +585,7 @@ class EquipmentGenerator:
         else:
             return 0.0
 
-    def weekly_dishwasher_usage_schedule(self, weekly_occupancy_state: list[HouseholdOccupancyFractions], cooking_ending: list[float], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[int]]:
+    def weekly_dishwasher_usage_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], cooking_ending: Sequence[float], last_week: bool, rng: np.random.Generator) -> tuple[list[float], list[int]]:
         """ Translates dishwasher equipment usage schedule into a full week schedule with power."""
         dishwasher = self.equipment.dishwasher
         dishwasher_assumptions = self.equipment_assumptions.dishwasher

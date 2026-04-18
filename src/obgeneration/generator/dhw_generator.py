@@ -1,6 +1,9 @@
 from pydantic import BaseModel, Field, ConfigDict
 import json
 from pathlib import Path
+from collections.abc import Sequence
+from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.results import DHWResult
 import obgeneration.model.equipment as Equipment
 
 
@@ -38,8 +41,8 @@ class DHWGenerator:
         dhw_assumptions: DHWAssumptions,
         equipment: Equipment.Equipment,
         num_occupants: int,
-        laundry_cycles_per_day: list[list[int]],
-        dishwasher_cycles_per_day: list[list[int]],
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
         resolution_mins: int = 15,
     ):
         self.dhw_assumptions = dhw_assumptions
@@ -53,10 +56,10 @@ class DHWGenerator:
     def generate_with_defaults(
         num_occupants: int,
         equipment: Equipment.Equipment ,
-        laundry_cycles_per_day: list[list[int]],
-        dishwasher_cycles_per_day: list[list[int]],
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
         resolution_mins: int
-    ) -> tuple[float, list[list[float]]]:
+    ) -> DHWResult:
         """Generates an annual DHW usage schedule in cubic meters per second using default assumptions."""
         generator = DHWGenerator(
             dhw_assumptions=DHWAssumptions.default(),
@@ -66,7 +69,11 @@ class DHWGenerator:
             dishwasher_cycles_per_day=dishwasher_cycles_per_day,
             resolution_mins=resolution_mins
         )
-        return generator.dhw_annual_schedule()
+        flow_rate, annual_schedule = generator.dhw_annual_schedule()
+        return DHWResult(
+            peak_value=flow_rate,
+            schedule=ScheduleUtils.flatten_schedule(annual_schedule),
+        )
        
     
 
@@ -90,7 +97,7 @@ class DHWGenerator:
 
 
 
-    def dhw_weekly_schedule(self, weekly_laundry_cycles_per_day: list[int], weekly_dishwasher_cycles_per_day: list[int]) -> list[float]:
+    def dhw_weekly_schedule(self, weekly_laundry_cycles_per_day: Sequence[int], weekly_dishwasher_cycles_per_day: Sequence[int]) -> list[float]:
         """Generates a weekly DHW usage schedule in cubic meters per second."""
         daily_occupants_dhw = self.occupants_dhw()
         daily_laundry_dhw = self.weekly_laundry_dhw(weekly_laundry_cycles_per_day)
@@ -109,7 +116,7 @@ class DHWGenerator:
         """Calculates daily DHW usage based on number of occupants."""
         return self.num_occupants * self.dhw_assumptions.hot_water_per_person_per_day
     
-    def weekly_laundry_dhw(self,  weekly_laundry_cycles_per_day:list[int]) -> float:
+    def weekly_laundry_dhw(self,  weekly_laundry_cycles_per_day: Sequence[int]) -> float:
         """Calculates weekly DHW usage based on laundry cycles."""
         laundry = self.equipment.laundry if self.equipment is not None else None
         if laundry is None or not laundry.has_washer:
@@ -121,7 +128,7 @@ class DHWGenerator:
                 daily_dhw.append(day_cycles * per_cycle)
             return daily_dhw
         
-    def weekly_dishwasher_dhw(self, weekly_dishwasher_cycles_per_day:list[int]) -> float:
+    def weekly_dishwasher_dhw(self, weekly_dishwasher_cycles_per_day: Sequence[int]) -> float:
         """Calculates weekly DHW usage based on dishwasher cycles."""
         dishwasher = self.equipment.dishwasher if self.equipment is not None else None
         if dishwasher is None or not dishwasher.has_dishwasher:

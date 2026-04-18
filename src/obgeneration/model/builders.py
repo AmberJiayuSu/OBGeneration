@@ -4,6 +4,8 @@ Each function takes a minimal set of parameters and returns the corresponding
 obgeneration input model, with all other fields filled in by defaults.
 """
 
+from collections.abc import Sequence
+
 from obgeneration.model.occupancy import (
     HouseholdComposition,
     MobilityCluster,
@@ -26,9 +28,9 @@ from obgeneration.model.hvac import HVAC, ThermostatControl
 
 
 def build_occupancy(
-    mobility_clusters: MobilityCluster | list[MobilityCluster],
+    mobility_clusters: MobilityCluster | Sequence[MobilityCluster],
     num_occupants: int | None = None,
-    weekend_clusters: MobilityCluster | list[MobilityCluster] | None = None,
+    weekend_clusters: MobilityCluster | Sequence[MobilityCluster] | None = None,
 ) -> Occupancy:
     """Build an Occupancy profile from mobility cluster(s).
        The whole household can be assigned a single mobility cluster (plus a number of occupants), or each occupant can be assigned their own cluster.
@@ -66,15 +68,21 @@ def build_occupancy(
 
 
 def build_lighting(
-    when_away: bool = False,
-    when_daylight_bright: bool = True,
+    if_led: bool,
+    when_away: bool | None = False,
+    when_daylight_bright: bool | None= True,
 ) -> Lighting:
     """Build a Lighting profile.
 
     when_away: lights on even when occupants are away.
     when_daylight_bright: lighting adjusts based on daylight availability.
     """
+    if when_away is None:
+        when_away = False
+    if when_daylight_bright is None:
+        when_daylight_bright = True
     return Lighting(
+        if_led=if_led,
         when_away=when_away,
         when_daylight_bright=when_daylight_bright,
     )
@@ -192,3 +200,56 @@ def build_hvac(
         ),
     )
 
+def build_cooling(
+    has_cooling: bool,
+    cooling_setpoint: float | None = None,
+    cooling_setpoint_sleep: float | None = None,
+    cooling_setpoint_absent: float | None = None,
+) -> HVAC:
+    """Build a cooling profile from minimal parameters.
+
+    Setpoints are absolute temperatures in °C, only required when cooling is present.
+    Sleep and absent setpoints default to the active setpoint if not specified.
+    """
+    if has_cooling and cooling_setpoint is None:
+        raise ValueError("cooling_setpoint is required when has_cooling=True")
+
+    return HVAC(
+        cooling=ThermostatControl(
+            active_setpoint=cooling_setpoint,
+            sleep_setpoint=cooling_setpoint_sleep or cooling_setpoint,
+            absent_setpoint=cooling_setpoint_absent or cooling_setpoint,
+        ) if has_cooling else ThermostatControl(
+            active_setpoint=40.0,
+            sleep_setpoint=40.0,
+            absent_setpoint=40.0,
+        ),
+        heating = None,
+    )
+
+def build_heating(
+    has_heating: bool,
+    heating_setpoint: float | None = None,
+    heating_setpoint_sleep: float | None = None,
+    heating_setpoint_absent: float | None = None,
+) -> HVAC:
+    """Build a heating profile from minimal parameters.
+
+    Setpoints are absolute temperatures in °C, only required when heating is present.
+    Sleep and absent setpoints default to the active setpoint if not specified.
+    """
+    if has_heating and heating_setpoint is None:
+        raise ValueError("heating_setpoint is required when has_heating=True")
+
+    return HVAC(
+        heating=ThermostatControl(
+            active_setpoint=heating_setpoint,
+            sleep_setpoint=heating_setpoint_sleep or heating_setpoint,
+            absent_setpoint=heating_setpoint_absent or heating_setpoint,
+        ) if has_heating else ThermostatControl(
+            active_setpoint=10.0,
+            sleep_setpoint=10.0,
+            absent_setpoint=10.0,
+        ),
+        cooling = None,
+    )

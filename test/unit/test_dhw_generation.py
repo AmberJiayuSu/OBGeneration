@@ -223,4 +223,8 @@ class TestDHWGenerator:
             resolution_mins=SIM_RES,
         )
 
-        assert generated == direct
+        direct_peak, direct_schedule = direct
+        flattened_direct_schedule = [value for week in direct_schedule for value in week]
+
+        assert generated.peak_value == direct_peak
+        assert list(generated.schedule) == flattened_direct_schedule

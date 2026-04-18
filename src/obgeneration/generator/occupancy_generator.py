@@ -1,8 +1,10 @@
 from obgeneration.stochastic.markov import ClusterAssumptions, OccupancyState
 from obgeneration.stochastic.time_range import TimeRangeDistribution
 from obgeneration.model.occupancy import Occupancy, TimeRange, WeekendOccupancyPattern, WeekdayOccupancyPattern
+from obgeneration.generator.results import OccupancyResult
 import math
 import numpy as np
+from collections.abc import Sequence
 from typing import NamedTuple
 import copy
 
@@ -28,11 +30,11 @@ class OccupancyGenerator:
         occupancy: Occupancy,
         resolution_mins: int,
         rng: np.random.Generator | int,
-    ) -> list[list[HouseholdOccupancyFractions]]:
+    ) -> OccupancyResult:
         """Generate an annual occupancy schedule with default assumptions.
 
-        Returns a nested list (53 weeks × bins_per_week) of HouseholdOccupancyFractions.
-        Use to_occupancy_schedule() to flatten to a simple list of presence fractions.
+        Returns the normalized occupancy fraction schedule together with the
+        raw occupancy-state detail used by downstream generators.
         """
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
@@ -41,7 +43,12 @@ class OccupancyGenerator:
             cluster_assumptions=ClusterAssumptions.default(),
             sim_resolution_min=resolution_mins,
         )
-        return generator.generate(rng)
+        occ_states = generator.generate(rng)
+        return OccupancyResult(
+            peak_value=float(occupancy.num_occupants),
+            schedule=OccupancyGenerator.to_occupancy_schedule(occ_states),
+            occupancy_states=occ_states,
+        )
 
 
     def household_mc_state_annually(self, rng: np.random.Generator) -> list[list[HouseholdOccupancyFractions]]:
@@ -70,7 +77,7 @@ class OccupancyGenerator:
                         for b in range(bins_per_week)])
         return result
     
-    def apply_away_time(self, occupancy_states: list[list[HouseholdOccupancyFractions]], away_time: list[None | TimeRange]) -> list[list[HouseholdOccupancyFractions]]:
+    def apply_away_time(self, occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]], away_time: Sequence[None | TimeRange]) -> list[list[HouseholdOccupancyFractions]]:
         """Post-process the generated occupancy states to enforce away_time constraints.
 
         During away_time: force home=0, sleep=0 (all occupants away).
@@ -106,7 +113,7 @@ class OccupancyGenerator:
 
         return new_states
 
-    def apply_sleep_time(self, occupancy_states: list[list[HouseholdOccupancyFractions]], sleep_time: list[None | TimeRange], active_threshold: float = 0.3) -> list[list[HouseholdOccupancyFractions]]:
+    def apply_sleep_time(self, occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]], sleep_time: Sequence[None | TimeRange], active_threshold: float = 0.3) -> list[list[HouseholdOccupancyFractions]]:
         """Post-process the generated occupancy states to enforce sleep_time constraints.
 
         During sleep_time: force sleep=1, home=0 (all occupants asleep).
@@ -188,7 +195,7 @@ class OccupancyGenerator:
         return states.tolist()
     
 
-    def household_sleep_time_annually(self, rng: np.random.Generator, away_time: list[None | TimeRange]) -> list[None | TimeRange]:
+    def household_sleep_time_annually(self, rng: np.random.Generator, away_time: Sequence[None | TimeRange]) -> list[None | TimeRange]:
         """Generate a year's worth of sleep/awake occupancy for the household.
             If specified in the occupancy patterns, the sleep_time will be forced to be sleep during the sampled sleep_time given the rigidness.
             This should only be called if the household has a specified sleep_time in the sleep pattern.
@@ -235,7 +242,7 @@ class OccupancyGenerator:
         return occ_states
     
     @staticmethod
-    def active_sleep_mask(occ_states:list[list[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> tuple[list[list[bool]], list[list[bool]]]:
+    def active_sleep_mask(occ_states: Sequence[Sequence[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> tuple[list[list[bool]], list[list[bool]]]:
         """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
 
         A bin is considered "active" if the home fraction >= active_threshold.
@@ -257,7 +264,7 @@ class OccupancyGenerator:
         return active_mask, sleep_mask
     
     @staticmethod
-    def apply_to_mask(mask:list[bool] , existing_schedule:list[float], value:float) -> list[float]:
+    def apply_to_mask(mask: Sequence[bool], existing_schedule: Sequence[float], value: float) -> list[float]:
         """ Apply a binary mask to an existing schedule, setting masked bins to the specified value while leaving unmasked bins unchanged."""
         assert len(mask) == len(existing_schedule), "mask and schedule must have the same length"
         return [
@@ -266,7 +273,7 @@ class OccupancyGenerator:
         ]
     
     @staticmethod
-    def to_occupancy_schedule(occ_states: list[list[HouseholdOccupancyFractions]]) -> list[float]:
+    def to_occupancy_schedule(occ_states: Sequence[Sequence[HouseholdOccupancyFractions]]) -> list[float]:
         """Convert the generated occupancy states into a schedule of home occupancy fractions for each time bin across the year.
 
         This flattens the weekly structure into a single list of 365 * bins_per_day fractions, where each fraction represents the expected proportion of occupants at home (including both active and sleep) during that time bin.

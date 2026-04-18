@@ -25,3 +25,13 @@ from obgeneration.generator.hvac_generator import (
     CoolingDefaultSetpoints,
 )
 from obgeneration.generator.window_generator import WindowGenerator, WindowAssumptions
+from obgeneration.generator.results import (
+    FractionalScheduleResult,
+    TemperatureScheduleResult,
+    OccupancyResult,
+    LightingResult,
+    EquipmentResult,
+    DHWResult,
+    SetpointResult,
+    HVACResult,
+)
