@@ -53,16 +53,17 @@ class DHWGenerator:
         self.resolution_mins = resolution_mins
 
     @staticmethod
-    def generate_with_defaults(
+    def generate_result(
         num_occupants: int,
         equipment: Equipment.Equipment ,
         laundry_cycles_per_day: Sequence[Sequence[int]],
         dishwasher_cycles_per_day: Sequence[Sequence[int]],
-        resolution_mins: int
+        resolution_mins: int,
+        dhw_assumptions: DHWAssumptions,
     ) -> DHWResult:
-        """Generates an annual DHW usage schedule in cubic meters per second using default assumptions."""
+        """Generate an annual DHW result with explicit assumptions."""
         generator = DHWGenerator(
-            dhw_assumptions=DHWAssumptions.default(),
+            dhw_assumptions=dhw_assumptions,
             equipment=equipment,
             num_occupants=num_occupants,
             laundry_cycles_per_day=laundry_cycles_per_day,
@@ -73,6 +74,24 @@ class DHWGenerator:
         return DHWResult(
             peak_value=flow_rate,
             schedule=ScheduleUtils.flatten_schedule(annual_schedule),
+        )
+
+    @staticmethod
+    def generate_with_defaults(
+        num_occupants: int,
+        equipment: Equipment.Equipment ,
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
+        resolution_mins: int
+    ) -> DHWResult:
+        """Generate an annual DHW result using default assumptions."""
+        return DHWGenerator.generate_result(
+            num_occupants=num_occupants,
+            equipment=equipment,
+            laundry_cycles_per_day=laundry_cycles_per_day,
+            dishwasher_cycles_per_day=dishwasher_cycles_per_day,
+            resolution_mins=resolution_mins,
+            dhw_assumptions=DHWAssumptions.default(),
         )
        
     

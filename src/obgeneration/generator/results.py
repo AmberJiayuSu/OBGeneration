@@ -1,14 +1,10 @@
 from __future__ import annotations
 
 from typing import Literal
-from typing import TYPE_CHECKING
-
-from collections.abc import Sequence
 
 from pydantic import BaseModel,  Field
 
-if TYPE_CHECKING:
-    from obgeneration.generator.occupancy_generator import HouseholdOccupancyFractions
+from obgeneration.generator.types import HouseholdOccupancyFractions
 
 
 class FractionalScheduleResult(BaseModel):
@@ -26,7 +22,7 @@ class TemperatureScheduleResult(BaseModel):
 class OccupancyResult(FractionalScheduleResult):
     """Occupancy output plus raw occupancy-state detail."""
 
-    occupancy_states: list[list["HouseholdOccupancyFractions"]]
+    occupancy_states: list[list[HouseholdOccupancyFractions]]
     peak_units:  Literal["people"] = "people"
 
 
@@ -34,7 +30,7 @@ class LightingResult(FractionalScheduleResult):
     """Lighting output plus dimming metadata."""
 
     dimming_enabled: bool
-    peak_units: Literal["fraction"] = "fraction"
+    peak_units: Literal["W/m2"] = "W/m2"
 
 
 class EquipmentResult(FractionalScheduleResult):
@@ -59,4 +55,3 @@ class HVACResult(BaseModel):
 
     heating: SetpointResult | None = None
     cooling: SetpointResult | None = None
-

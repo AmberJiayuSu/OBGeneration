@@ -10,10 +10,10 @@ from obgeneration.generator.equipment_generator import (
 from obgeneration.generator.occupancy_generator import (
     OccupancyGenerator,
     ClusterAssumptions,
-    HouseholdOccupancyFractions,
     OccupancyState,
     TimeRangeDistribution,
 )
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from obgeneration.generator.ob_generator import OccupantBehavior
 from obgeneration.generator.lighting_generator import LightingGenerator
 from obgeneration.generator.dhw_generator import DHWGenerator, DHWAssumptions

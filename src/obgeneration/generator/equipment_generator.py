@@ -2,8 +2,8 @@ from obgeneration.stochastic.distribution import Distribution, UniformDistributi
 import numpy as np
 from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.results import EquipmentResult
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from importlib.resources import files
-from obgeneration.generator.occupancy_generator import HouseholdOccupancyFractions
 from collections.abc import Sequence
 import obgeneration.model.equipment as Equipment
 
@@ -281,18 +281,15 @@ class EquipmentGenerator:
 
 
     @staticmethod
-    def generate_with_defaults(
+    def generate_result(
         equipment: Equipment.Equipment,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         num_occupants: int,
         resolution_mins: int,
+        equipment_assumptions: EquipmentAssumptions,
         rng: np.random.Generator | int,
     ) -> EquipmentResult:
-        """Generate an annual equipment schedule with default assumptions.
-
-        Returns the normalized equipment schedule together with appliance-cycle
-        metadata used by downstream generators.
-        """
+        """Generate an annual equipment result with explicit assumptions."""
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
         generator = EquipmentGenerator(
@@ -300,7 +297,7 @@ class EquipmentGenerator:
             occupancy_state=occupancy_states,
             num_occupants=num_occupants,
             resolution_mins=resolution_mins,
-            equipment_assumptions=EquipmentAssumptions.default(resolution_mins),
+            equipment_assumptions=equipment_assumptions,
         )
         annual_equipment_schedule, laundry_cycles, dishwasher_cycles = generator.equipment_annual_schedule(rng)
         flattend_schedule = ScheduleUtils.flatten_schedule(annual_equipment_schedule)
@@ -314,6 +311,24 @@ class EquipmentGenerator:
             schedule=normalized_schedule,
             laundry_cycles=laundry_cycles,
             dishwasher_cycles=dishwasher_cycles,
+        )
+
+    @staticmethod
+    def generate_with_defaults(
+        equipment: Equipment.Equipment,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        num_occupants: int,
+        resolution_mins: int,
+        rng: np.random.Generator | int,
+    ) -> EquipmentResult:
+        """Generate an annual equipment result using default assumptions."""
+        return EquipmentGenerator.generate_result(
+            equipment=equipment,
+            occupancy_states=occupancy_states,
+            num_occupants=num_occupants,
+            resolution_mins=resolution_mins,
+            equipment_assumptions=EquipmentAssumptions.default(resolution_mins),
+            rng=rng,
         )
 
     

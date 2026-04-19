@@ -2,20 +2,11 @@ from obgeneration.stochastic.markov import ClusterAssumptions, OccupancyState
 from obgeneration.stochastic.time_range import TimeRangeDistribution
 from obgeneration.model.occupancy import Occupancy, TimeRange, WeekendOccupancyPattern, WeekdayOccupancyPattern
 from obgeneration.generator.results import OccupancyResult
+from obgeneration.generator.types import HouseholdOccupancyFractions
 import math
 import numpy as np
 from collections.abc import Sequence
-from typing import NamedTuple
 import copy
-
-
-
-
-
-class HouseholdOccupancyFractions(NamedTuple):
-    home: float   # fraction of occupants in HOME state
-    sleep: float  # fraction of occupants in SLEEP state
-    # AWAY is implicit: 1.0 - home - sleep
 
 
 class OccupancyGenerator:
@@ -26,21 +17,18 @@ class OccupancyGenerator:
         self.sim_resolution_min = sim_resolution_min
 
     @staticmethod
-    def generate_with_defaults(
+    def generate_result(
         occupancy: Occupancy,
+        cluster_assumptions: ClusterAssumptions,
         resolution_mins: int,
         rng: np.random.Generator | int,
     ) -> OccupancyResult:
-        """Generate an annual occupancy schedule with default assumptions.
-
-        Returns the normalized occupancy fraction schedule together with the
-        raw occupancy-state detail used by downstream generators.
-        """
+        """Generate an annual occupancy result with explicit assumptions."""
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
         generator = OccupancyGenerator(
             occupancy=occupancy,
-            cluster_assumptions=ClusterAssumptions.default(),
+            cluster_assumptions=cluster_assumptions,
             sim_resolution_min=resolution_mins,
         )
         occ_states = generator.generate(rng)
@@ -48,6 +36,20 @@ class OccupancyGenerator:
             peak_value=float(occupancy.num_occupants),
             schedule=OccupancyGenerator.to_occupancy_schedule(occ_states),
             occupancy_states=occ_states,
+        )
+
+    @staticmethod
+    def generate_with_defaults(
+        occupancy: Occupancy,
+        resolution_mins: int,
+        rng: np.random.Generator | int,
+    ) -> OccupancyResult:
+        """Generate an annual occupancy result using default assumptions."""
+        return OccupancyGenerator.generate_result(
+            occupancy=occupancy,
+            cluster_assumptions=ClusterAssumptions.default(),
+            resolution_mins=resolution_mins,
+            rng=rng,
         )
 
 

@@ -1,8 +1,10 @@
 import obgeneration.model.lighting as Lighting
-from obgeneration.generator.occupancy_generator import OccupancyGenerator, HouseholdOccupancyFractions
+from obgeneration.generator.occupancy_generator import OccupancyGenerator
 from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.results import LightingResult
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from collections.abc import Sequence
+import numpy as np
 from pydantic import BaseModel, ConfigDict, Field
 from obgeneration.stochastic.distribution import Distribution
 from obgeneration.stochastic.distribution_config import DistributionConfig
@@ -32,32 +34,47 @@ class LightingAssumptions(BaseModel):
 
 class LightingGenerator:
 
-    def __init__(self, lighting: Lighting.Lighting):
+    def __init__(self, lighting: Lighting.Lighting, lighting_assumptions: LightingAssumptions = LightingAssumptions.default()):
         self.lighting = lighting
+        self.lighting_assumptions = lighting_assumptions
+
+    @staticmethod
+    def generate_result(
+        lighting: Lighting.Lighting,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        lighting_assumptions: LightingAssumptions,
+        rng: np.random.Generator | int,
+    ) -> LightingResult:
+        """Generate an annual lighting result with explicit assumptions."""
+        if isinstance(rng, int):
+            rng = np.random.default_rng(rng)
+        _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        generator = LightingGenerator(lighting, lighting_assumptions)
+        dimming = generator.get_dimming()
+        schedule = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
+        flattened_schedule = ScheduleUtils.flatten_schedule(schedule)
+        if lighting.if_led:
+            peak_value = generator.lighting_assumptions.watts_per_m2_led.sample(rng)
+        else:
+            peak_value = generator.lighting_assumptions.watts_per_m2_non_led.sample(rng)
+        return LightingResult(
+            peak_value=peak_value,
+            schedule=flattened_schedule,
+            dimming_enabled=dimming,
+        )
 
     @staticmethod
     def generate_with_defaults(
         lighting: Lighting.Lighting,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        rng: np.random.Generator | int,
     ) -> LightingResult:
-        """Generate an annual lighting schedule from occupancy states.
-
-        Derives the sleep mask from occupancy_states and returns the flattened
-        annual lighting fraction schedule together with dimming metadata.
-        """
-        _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        generator = LightingGenerator(lighting)
-        dimming = generator.get_dimming()
-        schedule = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
-        flattened_schedule = ScheduleUtils.flatten_schedule(schedule)
-        if lighting.if_led:
-            peak_value = generator.lighting_assumptions.watts_per_m2_led.sample()
-        else:
-            peak_value = generator.lighting_assumptions.watts_per_m2_non_led.sample()
-        return LightingResult(
-            peak_value=peak_value,
-            schedule=flattened_schedule,
-            dimming_enabled=dimming,
+        """Generate an annual lighting result using default assumptions."""
+        return LightingGenerator.generate_result(
+            lighting=lighting,
+            occupancy_states=occupancy_states,
+            lighting_assumptions=LightingAssumptions.default(),
+            rng=rng,
         )
 
 
