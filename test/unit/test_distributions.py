@@ -104,7 +104,8 @@ class TestNormalDistribution:
     def test_statistical_properties(self, mean, stddev):
         '''Test statistical properties of samples.'''
         dist = NormalDistribution(mean=mean, stddev=stddev, as_int=False)
-        samples = [dist.sample() for _ in range(10000)]
+        rng = np.random.default_rng(42)
+        samples = [dist.sample(rng) for _ in range(10000)]
 
         sample_mean = np.mean(samples)
         sample_stddev = np.std(samples)
@@ -146,7 +147,8 @@ class TestUniformDistribution:
     def test_statistical_properties(self, lower, upper):
         '''Test statistical properties of samples.'''
         dist = UniformDistribution(lower=lower, upper=upper, as_int=False)
-        samples = [dist.sample() for _ in range(10000)]
+        rng = np.random.default_rng(42)
+        samples = [dist.sample(rng) for _ in range(10000)]
 
         sample_mean = np.mean(samples)
         expected_mean = (lower + upper) / 2

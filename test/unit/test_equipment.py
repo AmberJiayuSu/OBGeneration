@@ -3,7 +3,8 @@ import numpy as np
 import time
 import signal
 
-from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions, HouseholdOccupancyFractions
+from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from obgeneration.model.occupancy import Occupancy
 from obgeneration.model.equipment import Equipment
 from obgeneration.generator.equipment_generator import EquipmentGenerator, EquipmentAssumptions, EventAssumptions
