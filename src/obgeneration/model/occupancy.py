@@ -74,6 +74,8 @@ class MobilityCluster(str, Enum):
 
 
 
+
+
 class OccupantMobilityProfile(BaseModel):
     """Weekday and weekend mobility cluster assignment for a single occupant."""
     weekday_cluster: MobilityCluster

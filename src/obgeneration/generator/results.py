@@ -15,19 +15,18 @@ class FractionalScheduleResult(BaseModel):
     """Base result for schedules represented as a peak plus normalized fractions."""
 
     peak_value: float = Field(..., ge=0)
-    schedule: Sequence[float]
+    schedule: list[float]
 
 
 class TemperatureScheduleResult(BaseModel):
     """Result for schedules represented as absolute temperatures."""
-
-    schedule: Sequence[float]
+    schedule: list[float]
 
 
 class OccupancyResult(FractionalScheduleResult):
     """Occupancy output plus raw occupancy-state detail."""
 
-    occupancy_states: Sequence[Sequence["HouseholdOccupancyFractions"]]
+    occupancy_states: list[list["HouseholdOccupancyFractions"]]
     peak_units:  Literal["people"] = "people"
 
 
@@ -41,8 +40,8 @@ class LightingResult(FractionalScheduleResult):
 class EquipmentResult(FractionalScheduleResult):
     """Equipment output plus appliance-cycle metadata used downstream."""
 
-    laundry_cycles: Sequence[Sequence[int]]
-    dishwasher_cycles: Sequence[Sequence[int]]
+    laundry_cycles: list[list[int]]
+    dishwasher_cycles: list[list[int]]
     peak_units: Literal["W"] = "W"
 
 class DHWResult(FractionalScheduleResult):

@@ -99,28 +99,24 @@ class HVACGenerator:
     def generate_cooling_with_defaults(
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
-    ) -> SetpointResult | None:
+    ) -> SetpointResult:
         """Generate annual cooling setpoint schedule from occupancy states using default assumptions."""
         assumptions = HVACAssumptions.default()
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
-        if cooling_schedule is None:
-            return None
         return SetpointResult(schedule=ScheduleUtils.flatten_schedule(cooling_schedule))
     
     @staticmethod
     def generate_heating_with_defaults(
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
-    ) -> SetpointResult | None:
+    ) -> SetpointResult:
         """Generate annual heating setpoint schedule from occupancy states using default assumptions."""
         assumptions = HVACAssumptions.default()
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        if heating_schedule is None:
-            return None
         return SetpointResult(schedule=ScheduleUtils.flatten_schedule(heating_schedule))
 
     @staticmethod
