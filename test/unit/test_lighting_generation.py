@@ -51,12 +51,14 @@ class TestLightingGeneration:
     def test_lighting_dimming(self):
         """ Test if dimming is correctly determined based on lighting usage pattern."""
         lighting1 = Lighting(
+            if_led=True,
             when_daylight_bright=True
         )
         generator1 = LightingGenerator(lighting1)
         assert generator1.get_dimming() == True
 
         lighting2 = Lighting(
+            if_led=False,
             when_daylight_bright=False
         )
         generator2 = LightingGenerator(lighting2)
@@ -65,6 +67,7 @@ class TestLightingGeneration:
 
     def test_lighting_house(self, occ_1, rng):
         lighting_json = """{
+            "if_led": true,
             "when_daylight_bright": true
         }"""
         assumption = ClusterAssumptions.default()

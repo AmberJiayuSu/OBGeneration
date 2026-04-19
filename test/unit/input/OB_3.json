@@ -44,6 +44,7 @@
     }
   },
   "lighting": {
+    "if_led": true,
     "when_daylight_bright": true
   },
   "hvac": {

@@ -3,13 +3,15 @@ from obgeneration.generator.occupancy_generator import OccupancyGenerator, House
 from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.results import LightingResult
 from collections.abc import Sequence
-from pydantic import BaseModel, Field
-from obgeneration.model.equipment import Distribution, DistributionConfig
+from pydantic import BaseModel, ConfigDict, Field
+from obgeneration.stochastic.distribution import Distribution
+from obgeneration.stochastic.distribution_config import DistributionConfig
 
 
 
 class LightingAssumptions(BaseModel):
     """Master configuration for lighting power assumptions."""
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     watts_per_m2_led: Distribution = Field(..., description="Design level lighting power per square meter for LED (W)")
     watts_per_m2_non_led: Distribution = Field(..., description="Design level lighting power per square meter for non-LED (W)")
 
