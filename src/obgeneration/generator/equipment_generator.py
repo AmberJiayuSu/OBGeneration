@@ -20,14 +20,14 @@ class EventAssumptions(BaseModel):
     start_time_probabilities: list[float] = Field(..., description="Probability distribution for event start times ")
     
     @classmethod
-    def from_csv_file(cls, path: str, resolution_mins: int = 15) -> "EventAssumptions":
+    def from_csv_file(cls, path: str, column_name: str = 'probability', resolution_mins: int = 15) -> "EventAssumptions":
         """Load laundry event assumptions from a CSV file with columns: minute_of_day, probability, day_of_week, time_label"""
         csv_path = Path(path)
         probabilities = []
         with open(csv_path, 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                probabilities.append(float(row['probability']))
+                probabilities.append(float(row[column_name]))
         event_assumptions = cls(start_time_probabilities=probabilities)
         event_assumptions.update_resolution(resolution_mins)
         return event_assumptions
@@ -184,17 +184,17 @@ class EquipmentAssumptions(BaseModel):
         # Load laundry
         if 'laundry' in data and 'start_time_event_csv_path' in data['laundry']:
             csv_path = data['laundry'].pop('start_time_event_csv_path')
-            data['laundry']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution)
+            data['laundry']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution_mins=resolution)
 
         # Load dishwasher
         if 'dishwasher' in data and 'start_time_event_csv_path' in data['dishwasher']:
             csv_path = data['dishwasher'].pop('start_time_event_csv_path')
-            data['dishwasher']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution)
+            data['dishwasher']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution_mins=resolution)
 
         # Load cooking
         if 'cooking_products' in data and 'start_time_event_csv_path' in data['cooking_products']:
             csv_path = data['cooking_products'].pop('start_time_event_csv_path')
-            data['cooking_products']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution)
+            data['cooking_products']['start_time_event_assumptions'] = EventAssumptions.from_csv_file(csv_path, resolution_mins=resolution)
 
         return cls(**data)
 
@@ -215,7 +215,7 @@ class EquipmentAssumptions(BaseModel):
                 inefficient_dryer=DistributionConfig(dist_type="normal", params={"mean": 3500.0, "std": 700.0, "lower": 0.0, "int": False}).build(),
                 washer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.25, "std": 0.25, "lower": 0.0, "int": False}).build(),
                 dryer_duration=DistributionConfig(dist_type="normal", params={"mean": 1.0, "std": 0.25, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "laundry_start_time_5min_bins.csv"), resolution_mins),
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "laundry_start_time_5min_bins.csv"), resolution_mins=resolution_mins),
                 weekday_same_day_downfactor=0.22,
                 weekend_same_day_downfactor=0.27
             ),
@@ -236,7 +236,7 @@ class EquipmentAssumptions(BaseModel):
                 efficient_dishwasher=DistributionConfig(dist_type="normal", params={"mean": 540.0, "std": 50.0, "lower": 0.0, "int": False}).build(),
                 inefficient_dishwasher=DistributionConfig(dist_type="normal", params={"mean": 810.0, "std": 75.0, "lower": 0.0, "int": False}).build(),
                 dishwasher_cycle_duration=DistributionConfig(dist_type="normal", params={"mean": 2.0, "std": 0.75, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "dishwasher_start_time_5min_bins.csv"), resolution_mins)
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "dishwasher_start_time_5min_bins.csv"), resolution_mins=resolution_mins)
             ),
             cooking_products=CookingAssumptions(
                 electric_cooking_products=DistributionConfig(dist_type="normal", params={"mean": 900.0, "std": 15.0, "lower": 0.0, "int": False}).build(),
@@ -246,7 +246,7 @@ class EquipmentAssumptions(BaseModel):
                 weekend_breakfast_duration=DistributionConfig(dist_type="normal", params={"mean": 0.4, "std": 0.4, "lower": 0.0, "int": False}).build(),
                 weekend_lunch_duration=DistributionConfig(dist_type="normal", params={"mean": 0.6, "std": 0.5, "lower": 0.0, "int": False}).build(),
                 weekend_dinner_duration=DistributionConfig(dist_type="normal", params={"mean": 0.6, "std": 0.4, "lower": 0.0, "int": False}).build(),
-                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "cooking_start_time_5min_bins.csv"), resolution_mins)
+                start_time_event_assumptions=EventAssumptions.from_csv_file(str(data_dir / "cooking_start_time_5min_bins.csv"), resolution_mins=resolution_mins)
             )
         )
 
