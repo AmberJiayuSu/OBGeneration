@@ -259,6 +259,10 @@ class EquipmentGenerator:
         self.num_occupants = num_occupants
         self.resolution_mins = resolution_mins
         self.equipment_assumptions = equipment_assumptions
+        self._laundry_power: tuple[float, float] | None = None
+        self._fridge_power: float | None = None
+        self._cooking_power: float | None = None
+        self._dishwasher_power: float | None = None
 
         if self.equipment.laundry.usage_frequency_per_week is not None:
             self.laundry_frequency_dist = UniformDistribution(
@@ -278,6 +282,31 @@ class EquipmentGenerator:
                 upper=self.equipment.dishwasher.dishwashing_operational_logic.usage_frequency_per_week.max,
                 as_int=True
             )
+
+
+    def _get_household_laundry_power(self, rng: np.random.Generator) -> tuple[float, float]:
+        """Return laundry appliance powers sampled once for this household."""
+        if self._laundry_power is None:
+            self._laundry_power = self._get_laundry_power(rng)
+        return self._laundry_power
+
+    def _get_household_fridge_power(self, rng: np.random.Generator) -> float:
+        """Return refrigerator power sampled once for this household."""
+        if self._fridge_power is None:
+            self._fridge_power = self._get_fridge_power(rng)
+        return self._fridge_power
+
+    def _get_household_cooking_power(self, rng: np.random.Generator) -> float:
+        """Return cooking equipment power sampled once for this household."""
+        if self._cooking_power is None:
+            self._cooking_power = self._get_cooking_power(rng)
+        return self._cooking_power
+
+    def _get_household_dishwasher_power(self, rng: np.random.Generator) -> float:
+        """Return dishwasher power sampled once for this household."""
+        if self._dishwasher_power is None:
+            self._dishwasher_power = self._get_dishwasher_power(rng)
+        return self._dishwasher_power
 
 
     @staticmethod
@@ -352,7 +381,7 @@ class EquipmentGenerator:
         """ Translates equipment usage pattern into a full week schedule based on occupancy and sleep times."""
         baseload_schedule = self.weekly_baseload_schedule(weekly_occupancy_state)
         laundry_schedule, laundry_num_cycles = self.weekly_laundry_usage_schedule(weekly_occupancy_state, last_week, rng)
-        fridge_power = self._get_fridge_power(rng)
+        fridge_power = self._get_household_fridge_power(rng)
         cooking_schedule, cooking_ends = self.weekly_cooking_usage_schedule(weekly_occupancy_state, last_week, rng)
         dishwashing_schedule, dishwasher_num_cycles = self.weekly_dishwasher_usage_schedule(weekly_occupancy_state, cooking_ends, last_week, rng)
 
@@ -441,7 +470,7 @@ class EquipmentGenerator:
         total_num_days = len(weekly_occupancy_state) // (24 * (60 // res_min))
         if laundry.has_washer or laundry.has_dryer:
             weekly_num_cycles = [0] * total_num_days
-            washer_power, dryer_power = self._get_laundry_power(rng)
+            washer_power, dryer_power = self._get_household_laundry_power(rng)
             num_cycle = self.laundry_frequency_dist.sample(rng)
             if last_week:
                 num_cycle = max(1, int(num_cycle/7)) # scale down laundry frequency for the last week to avoid excessive events when masked probabilities are low due to occupancy mask
@@ -529,8 +558,8 @@ class EquipmentGenerator:
             if last_week:
                 num_cooking = max(1, int(num_cooking/7)) # scale down cooking frequency for the last week to avoid excessive events when masked probabilities are low due to occupancy mask
             cnt = 0
+            cooking_power = self._get_household_cooking_power(rng)
             while cnt < num_cooking:
-                cooking_power = self._get_cooking_power(rng)
                 start_index = start_time_dist.sample(rng)
                 start_hour = ScheduleUtils.weekly_index_hour(start_index, self.resolution_mins)
                 day = ScheduleUtils.weekly_index_day(start_index, self.resolution_mins)
@@ -580,7 +609,7 @@ class EquipmentGenerator:
     def weekly_fridge_usage_schedule(self, weekly_occupancy_state: Sequence[HouseholdOccupancyFractions], rng: np.random.Generator) -> list[float]:
         """ Translates refrigeration equipment usage schedule into a full week schedule with power."""
         if self.equipment.refrigerator.has_refrigerator:
-            fridge_power = self._get_fridge_power(rng)
+            fridge_power = self._get_household_fridge_power(rng)
             fridge_schedule = [fridge_power for _ in range(len(weekly_occupancy_state))]
             return fridge_schedule
         else:
@@ -625,7 +654,7 @@ class EquipmentGenerator:
                     cycle_duration = round(dishwasher_assumptions.dishwasher_cycle_duration.sample(rng) * 60 / res_min)
                     cycle_duration = max(1, cycle_duration)  # Ensure at least 1 index
                     cycle_duration = min(cycle_duration, len(weekly_occupancy_state) - start_index)  # Ensure does not exceed week
-                    dishwasher_power = self._get_dishwasher_power(rng)
+                    dishwasher_power = self._get_household_dishwasher_power(rng)
                     for i in range(start_index, start_index + cycle_duration):
                         dishwasher_schedule[i] = dishwasher_power
             elif operation.pattern_type == Equipment.DishwashingPattern.DAILY_BATCH_IF_COOKED:
@@ -644,7 +673,7 @@ class EquipmentGenerator:
                         if start_index + cycle_duration >= len(weekly_occupancy_state):
                             continue  # skip if exceeds week
                         break
-                    dishwasher_power = self._get_dishwasher_power(rng)
+                    dishwasher_power = self._get_household_dishwasher_power(rng)
                     for i in range(start_index, start_index + cycle_duration):
                         dishwasher_schedule[i] = dishwasher_power
             elif operation.pattern_type == Equipment.DishwashingPattern.WHENEVER_FULL:
@@ -670,7 +699,7 @@ class EquipmentGenerator:
                         if actual_end_ind >= len(weekly_occupancy_state):
                             continue  # skip if exceeds week
                         break
-                    dishwasher_power = self._get_dishwasher_power(rng)
+                    dishwasher_power = self._get_household_dishwasher_power(rng)
                     for i in range(start_index, actual_end_ind):
                         dishwasher_schedule[i] = dishwasher_power
             elif operation.pattern_type == Equipment.DishwashingPattern.INDEPENDENT_FREQUENCY:
@@ -687,7 +716,7 @@ class EquipmentGenerator:
                     cnt += 1
                     day = ScheduleUtils.weekly_index_day(start_index, res_min)
                     weekly_num_cycles[day] += 1
-                    dishwasher_power = self._get_dishwasher_power(rng)
+                    dishwasher_power = self._get_household_dishwasher_power(rng)
                     for i in range(start_index, start_index + cycle_duration):
                         dishwasher_schedule[i] = dishwasher_power
                     update_prob_factor = {

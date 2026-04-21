@@ -210,7 +210,8 @@ class TestEquipmentGenerator:
         assert 2*52 <= num_cycles <= 4*52
         assert pytest.approx(num_cycles / 52, rel=0.1) == 3.0
         power_mean = np.mean(power)
-        expectation = (assumptions.laundry.efficient_washer.mean() * assumptions.laundry.washer_duration.mean() + assumptions.laundry.efficient_dryer.mean() * assumptions.laundry.dryer_duration.mean()) * 3 
+        washer_power, dryer_power = equipment_gen._laundry_power
+        expectation = (washer_power * assumptions.laundry.washer_duration.mean() + dryer_power * assumptions.laundry.dryer_duration.mean()) * 3
         assert pytest.approx(power_mean, rel=0.1) == expectation
 
 
@@ -250,7 +251,8 @@ class TestEquipmentGenerator:
 
         assert pytest.approx(num_cycles / 52, rel=0.1) == 1.0
         power_mean = np.mean(power)
-        expectation = (assumptions.laundry.inefficient_washer.mean() * assumptions.laundry.washer_duration.mean() ) 
+        washer_power, _ = equipment_gen._laundry_power
+        expectation = washer_power * assumptions.laundry.washer_duration.mean()
         assert pytest.approx(power_mean, rel=0.2) == expectation
 
 
@@ -387,7 +389,7 @@ class TestEquipmentGenerator:
         {
             "dishwasher": {
                 "has_dishwasher": true,
-                "efficient_dishwasher": true,
+                "dishwasher_efficient": true,
                 "dishwashing_operational_logic": {
                     "pattern_type": "after_each_cooked_meal"
                 }
