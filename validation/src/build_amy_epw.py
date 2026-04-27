@@ -75,7 +75,7 @@ class AMYEPWBuilder:
         email: str,
         short_gap_hours: int = 3,
     ):
-        self.station_id      = station_id
+        self.station_id      = self._normalize_station_id(station_id)
         self.year            = year
         self.api_key         = api_key
         self.email           = email
@@ -85,6 +85,15 @@ class AMYEPWBuilder:
         self.station_meta: dict | None        = None
         self.met:          pd.DataFrame | None = None
         self.solar:        pd.DataFrame | None = None
+
+    @staticmethod
+    def _normalize_station_id(station_id: str) -> str:
+        """Return station id as USAF-WBAN with a 5-digit WBAN."""
+        station_id = str(station_id).strip()
+        if "-" not in station_id:
+            return station_id
+        usaf, wban = station_id.split("-", 1)
+        return f"{usaf}-{wban.zfill(5)}"
 
     # ------------------------------------------------------------------
     # Public pipeline entry point
@@ -150,6 +159,18 @@ class AMYEPWBuilder:
         df.columns = [c.strip().upper().replace(" ", "_") for c in df.columns]
 
         row = df[(df["USAF"] == usaf) & (df["WBAN"] == wban)]
+        if row.empty and usaf == "999999":
+            row = df[df["WBAN"] == wban].copy()
+            if not row.empty:
+                if "END" in row.columns:
+                    row["_END"] = pd.to_numeric(row["END"], errors="coerce")
+                    row = row.sort_values("_END", ascending=False)
+                log.warning(
+                    "Station %s uses placeholder USAF 999999; using ISD row %s-%s",
+                    self.station_id,
+                    row.iloc[0].get("USAF", ""),
+                    row.iloc[0].get("WBAN", ""),
+                )
         if row.empty:
             raise ValueError(
                 f"Station {self.station_id} not found in ISD history. "
