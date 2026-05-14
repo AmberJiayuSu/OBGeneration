@@ -204,9 +204,9 @@ class EquipmentAssumptions(BaseModel):
         # Get project root directory using robust path resolution
         data_dir = files("obgeneration.data.activity_initial_probability")
         return cls(
-            baseload=250.0,
-            watts_per_person_active=120.0,
-            watts_per_person_sleep=40.0,
+            baseload=80.0,
+            watts_per_person_active=60.0,
+            watts_per_person_sleep=20.0,
             resolution_mins=resolution_mins,
             laundry=LaundryAssumptions(
                 efficient_washer=DistributionConfig(dist_type="normal", params={"mean": 410.0, "std": 135.0, "lower": 0.0, "int": False}).build(),

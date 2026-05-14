@@ -4,6 +4,8 @@ from pathlib import Path
 import os
 from collections.abc import Sequence
 from matplotlib.figure import Figure
+from obgeneration.generator.types import HouseholdOccupancyFractions
+from obgeneration.generator import occupancy_generator
 
 
 def get_project_root() -> Path:
@@ -87,40 +89,34 @@ class ScheduleUtils:
     def flatten_schedule(schedule):
         """ Flattens a schedule of lists into a single list. """
         return [item for sublist in schedule for item in sublist]
+    
+    # @staticmethod
+    # def get_typical_week_values_from_occ(schedule: list[list[HouseholdOccupancyFractions]]) -> np.ndarray:
+    #     occ_schedule = occupancy_generator.OccupancyGenerator.to_occupancy_schedule(schedule)
+    #     avg_week = ScheduleUtils.get_typical_week_values(occ_schedule)
+    #     return avg_week
+
 
     @staticmethod
-    def get_typical_week_values(schedule: Sequence[float] | Sequence[Sequence[float]], resolution_mins: int) -> tuple[np.ndarray, int, int, float]:
-        """Extract typical week values by averaging the first 52 weeks.
-
-        Args:
-            schedule: Either a flattened list of floats or nested list of lists (weeks)
-            resolution_mins: Time resolution in minutes
-
-        Returns:
-            Tuple of (avg_week, timesteps_per_day, week_len, num_per_hour)
-            - avg_week: 1D array of shape (week_len,) with averaged values
-            - timesteps_per_day: int
-            - week_len: int
-            - num_per_hour: float
+    def get_typical_week_values(schedule: Sequence[float] | Sequence[Sequence[float]]) -> tuple[np.ndarray, int, int, float]:
+        """ Calculates the average schedule for a typical week by averaging the first 52 weeks of data.
         """
-        num_per_hour = 60 / resolution_mins
-        timesteps_per_day = int(24 * 60 / resolution_mins)
+       #if nested schedule, flatten it
+        if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
+            schedule = ScheduleUtils.flatten_schedule(schedule)
+        timesteps_per_day = len(schedule) // 365
         week_len = 7 * timesteps_per_day
 
-        if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
-            weeks_to_average = schedule[:52]
-            W = np.array([week_data[:week_len] for week_data in weeks_to_average], dtype=float)
-        else:
-            schedule_array = np.array(schedule)
-            num_weeks = len(schedule_array) // week_len
-            weeks_reshaped = schedule_array[:num_weeks * week_len].reshape(num_weeks, week_len)
-            W = weeks_reshaped[:52]
+        first_52_weeks = schedule[:52 * week_len]
+        weeks_reshaped = np.array(first_52_weeks, dtype=float).reshape(52, week_len)
+        avg_week = weeks_reshaped.mean(axis=0)
+        return avg_week
 
-        avg_week = W.mean(axis=0)
-        return avg_week, timesteps_per_day, week_len, num_per_hour
+        
+
 
     @staticmethod
-    def plot_annual_schedule_heatmap(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, out_path: str | Path, resolution_mins: int, colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
+    def plot_annual_schedule_heatmap(schedule: Sequence[float] | Sequence[Sequence[float]], title: str,  colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
         """Plot annual schedule as a heatmap with days on x-axis and timesteps per day on y-axis.
         
         Args:
@@ -130,33 +126,14 @@ class ScheduleUtils:
             resolution_mins: Time resolution in minutes (used to calculate timesteps per day)
             colormap: Colormap name for the heatmap (default: 'YlGn')
         """
-        # Calculate timesteps
-        num_per_hour = 60 / resolution_mins
-        timesteps_per_day = int(24 * 60 / resolution_mins)
-        
-        # Detect if schedule is flattened or nested
+        # flatten schedule if nested
         if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
-            # Nested schedule (list of weeks)
-            all_days = []
-            for week_idx, week_data in enumerate(schedule):
-                week_array = np.array(week_data)
-                if week_idx < 52:
-                    # Full week: reshape into 7 days
-                    for day in range(7):
-                        day_data = week_array[day * timesteps_per_day:(day + 1) * timesteps_per_day]
-                        all_days.append(day_data)
-                else:
-                    # Last partial week (1 day)
-                    all_days.append(week_array[:timesteps_per_day])
-            
-            # Stack into 2D array: rows = time slots, cols = days
-            heatmap_data = np.column_stack(all_days)  # Shape: (timesteps_per_day, 365)
-        else:
-            # Flattened schedule: reshape into 2D array
-            schedule_array = np.array(schedule)
-            num_days = len(schedule_array) // timesteps_per_day
-            # Reshape: (num_days, timesteps_per_day) then transpose to (timesteps_per_day, num_days)
-            heatmap_data = schedule_array[:num_days * timesteps_per_day].reshape(num_days, timesteps_per_day).T
+            schedule = ScheduleUtils.flatten_schedule(schedule)
+        
+        timesteps_per_day = len(schedule) // 365
+        num_per_hour = 60 / (1440 / timesteps_per_day)
+        
+        heatmap_data = np.array(schedule, dtype=float).reshape(365, timesteps_per_day).T
 
         fig2, ax_heat = plt.subplots(figsize=(12, 3))
 
@@ -186,16 +163,11 @@ class ScheduleUtils:
         ax_heat.set_title(title)
 
         fig2.tight_layout()
-        
-        # Handle path
-        out_path = Path(out_path)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        fig2.savefig(out_path, dpi=200)
-        plt.close(fig2)
+        return fig2
 
 
     @staticmethod
-    def plot_typical_week_schedule(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, out_path: str | Path, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> None:
+    def plot_typical_week_schedule(typical_week: np.array, title: str,  label: str = 'Schedule', vmin=0, vmax=1) -> None:
         """Plot typical week schedule by averaging the first 52 weeks.
         
         Args:
@@ -205,13 +177,14 @@ class ScheduleUtils:
             resolution_mins: Time resolution in minutes (used to calculate timesteps per day)
             label: Label for the plot line (default: 'Schedule')
         """
-        avg_week, timesteps_per_day, week_len, num_per_hour = ScheduleUtils.get_typical_week_values(schedule, resolution_mins)
-
+        week_len = len(typical_week)
+        timesteps_per_day = week_len // 7
+        num_per_hour = 60 / (1440 / timesteps_per_day)
         # ---- plot ----
         fig = plt.figure(figsize=(12, 3))
         ax = fig.add_subplot(111)
         x = np.arange(week_len)
-        ax.plot(x, avg_week, label=label, linewidth=1.5)
+        ax.plot(x, typical_week, label=label, linewidth=1.5)
 
         # Major ticks: day labels at center of each day
         entries_per_day = timesteps_per_day
@@ -245,13 +218,9 @@ class ScheduleUtils:
         ax.legend(loc='upper right')
 
         ax.set_ylim(vmin, vmax)
-
         # Handle path
-        out_path = Path(out_path)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        fig.tight_layout()
-        fig.savefig(out_path, dpi=200)
-        plt.close(fig)
+        return fig
+        
 
     @staticmethod
     def typical_week_schedule_figure(schedule: Sequence[float] | Sequence[Sequence[float]], title: str, resolution_mins: int, label: str = 'Schedule', vmin=0, vmax=1) -> Figure:
