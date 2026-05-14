@@ -52,32 +52,110 @@ class OccupancyGenerator:
             rng=rng,
         )
 
+    @staticmethod
+    def _aggregate_per_occupant_states(
+        per_occupant: Sequence[Sequence[Sequence[OccupancyState]]],
+        num_occupants: int,
+        aggregation_factor: int,
+    ) -> list[list[HouseholdOccupancyFractions]]:
+        """Aggregate per-occupant state traces into household fractions.
+
+        When aggregation_factor > 1, each output bin is the mean occupancy
+        fraction over that many source bins.
+        """
+        weight = 1.0 / num_occupants
+        num_weeks = len(per_occupant[0])
+        result: list[list[HouseholdOccupancyFractions]] = []
+
+        for w in range(num_weeks):
+            bins_per_week = len(per_occupant[0][w])
+            if bins_per_week % aggregation_factor != 0:
+                raise ValueError(
+                    f"Week length {bins_per_week} is not divisible by aggregation factor {aggregation_factor}."
+                )
+            coarse_bins = bins_per_week // aggregation_factor
+            counts = np.zeros((coarse_bins, 2), dtype=float)  # col 0=home, col 1=sleep
+            for occupant_weeks in per_occupant:
+                states_arr = np.array([s.value for s in occupant_weeks[w]], dtype=np.int8)
+                home = (states_arr == OccupancyState.HOME.value).reshape(coarse_bins, aggregation_factor).mean(axis=1)
+                sleep = (states_arr == OccupancyState.SLEEP.value).reshape(coarse_bins, aggregation_factor).mean(axis=1)
+                counts[:, 0] += home * weight
+                counts[:, 1] += sleep * weight
+            result.append(
+                [
+                    HouseholdOccupancyFractions(home=counts[b, 0], sleep=counts[b, 1])
+                    for b in range(coarse_bins)
+                ]
+            )
+        return result
+
+    @staticmethod
+    def _resample_occupancy_states(
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        from_resolution_mins: int,
+        to_resolution_mins: int,
+    ) -> list[list[HouseholdOccupancyFractions]]:
+        """Resample household occupancy fractions between supported resolutions.
+
+        Supported modes:
+        - coarsen to larger multiples of the source resolution via block means
+        - refine to divisors of the source resolution via value repetition
+        """
+        if from_resolution_mins == to_resolution_mins:
+            return [list(week) for week in occupancy_states]
+
+        if to_resolution_mins > from_resolution_mins:
+            if to_resolution_mins % from_resolution_mins != 0:
+                raise ValueError(
+                    f"Cannot coarsen from {from_resolution_mins} to {to_resolution_mins}: "
+                    "target must be a multiple of the source resolution."
+                )
+            factor = to_resolution_mins // from_resolution_mins
+            resampled = []
+            for week in occupancy_states:
+                if len(week) % factor != 0:
+                    raise ValueError(
+                        f"Week length {len(week)} is not divisible by coarsening factor {factor}."
+                    )
+                coarse_week = []
+                for i in range(0, len(week), factor):
+                    block = week[i : i + factor]
+                    coarse_week.append(
+                        HouseholdOccupancyFractions(
+                            home=sum(x.home for x in block) / factor,
+                            sleep=sum(x.sleep for x in block) / factor,
+                        )
+                    )
+                resampled.append(coarse_week)
+            return resampled
+
+        if from_resolution_mins % to_resolution_mins != 0:
+            raise ValueError(
+                f"Cannot refine from {from_resolution_mins} to {to_resolution_mins}: "
+                "source must be divisible by target."
+            )
+        factor = from_resolution_mins // to_resolution_mins
+        return [[state for state in week for _ in range(factor)] for week in occupancy_states]
+
 
     def household_mc_state_annually(self, rng: np.random.Generator) -> list[list[HouseholdOccupancyFractions]]:
         # 1. Simulate each occupant independently
+        native_resolution = self.cluster_assumptions.assumption_resolution_min
         per_occupant = []
         for profile in self.occupancy.household_composition.occupants:
             wd_cluster = ClusterAssumptions.CLUSTER_INDEX[profile.weekday_cluster.value]
             we_cluster = ClusterAssumptions.CLUSTER_INDEX[profile.weekend_cluster.value]
             per_occupant.append(
-                self.cluster_assumptions.sample_cluster_annually(wd_cluster, we_cluster, self.sim_resolution_min, rng)
+                self.cluster_assumptions.sample_cluster_annually(wd_cluster, we_cluster, native_resolution, rng)
             )
         # per_occupant: shape (num_occupants, 53 weeks, bins_per_week)
 
-        # 2. Aggregate per week
-        weight = 1.0 / self.occupancy.num_occupants
-        num_weeks = len(per_occupant[0])
-        result = []
-        for w in range(num_weeks):
-            bins_per_week = len(per_occupant[0][w])
-            counts = np.zeros((bins_per_week, 2), dtype=float)  # col 0=home, col 1=sleep
-            for occupant_weeks in per_occupant:
-                states_arr = np.array([s.value for s in occupant_weeks[w]], dtype=np.int8)
-                counts[:, 0] += (states_arr == OccupancyState.HOME.value) * weight
-                counts[:, 1] += (states_arr == OccupancyState.SLEEP.value) * weight
-            result.append([HouseholdOccupancyFractions(home=counts[b, 0], sleep=counts[b, 1])
-                        for b in range(bins_per_week)])
-        return result
+        # 2. Aggregate per week at the native MC resolution.
+        return self._aggregate_per_occupant_states(
+            per_occupant=per_occupant,
+            num_occupants=self.occupancy.num_occupants,
+            aggregation_factor=1,
+        )
     
     def apply_away_time(self, occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]], away_time: Sequence[None | TimeRange]) -> list[list[HouseholdOccupancyFractions]]:
         """Post-process the generated occupancy states to enforce away_time constraints.
@@ -228,20 +306,29 @@ class OccupancyGenerator:
             2. If available, Generate away_time and sleep_time for each day using the specified patterns and rigidness. This will give us two lists of 365 elements (one per day), where each element is either None (if no away/sleep time that day) or a TimeRange specifying the away/sleep interval for that day.
             3. Post-process the generated occupancy states to enforce the away_time and sleep_time constraints. For bins that fall within an away_time, set occupancy to fully away; for bins that fall within a sleep_time, set occupancy to fully sleep.
         """
-        occ_states = self.household_mc_state_annually(rng)
-        occupancy = self.occupancy
+        native_resolution = self.cluster_assumptions.assumption_resolution_min
+        working_generator = self
+        if self.sim_resolution_min != native_resolution:
+            working_generator = OccupancyGenerator(self.occupancy, self.cluster_assumptions, native_resolution)
+
+        occ_states = working_generator.household_mc_state_annually(rng)
+        occupancy = working_generator.occupancy
         away_time = [None] * 365
         if occupancy.weekday_pattern is not None or occupancy.weekend_pattern is not None:
             if occupancy.weekend_pattern is None:
-                self.occupancy.weekend_pattern = WeekendOccupancyPattern(is_always_occupied=True)
+                working_generator.occupancy.weekend_pattern = WeekendOccupancyPattern(is_always_occupied=True)
             if occupancy.weekday_pattern is None:
-                self.occupancy.weekday_pattern = WeekdayOccupancyPattern(is_always_occupied=True)
-            away_time = self.household_away_time_annually(rng)
-            occ_states = self.apply_away_time(occ_states, away_time)
+                working_generator.occupancy.weekday_pattern = WeekdayOccupancyPattern(is_always_occupied=True)
+            away_time = working_generator.household_away_time_annually(rng)
+            occ_states = working_generator.apply_away_time(occ_states, away_time)
         if occupancy.sleep_pattern is not None:
-            sleep_time = self.household_sleep_time_annually(rng, away_time)
-            occ_states = self.apply_sleep_time(occ_states, sleep_time)
-        return occ_states
+            sleep_time = working_generator.household_sleep_time_annually(rng, away_time)
+            occ_states = working_generator.apply_sleep_time(occ_states, sleep_time)
+        return self._resample_occupancy_states(
+            occupancy_states=occ_states,
+            from_resolution_mins=native_resolution,
+            to_resolution_mins=self.sim_resolution_min,
+        )
     
     @staticmethod
     def active_sleep_mask(occ_states: Sequence[Sequence[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> tuple[list[list[bool]], list[list[bool]]]:

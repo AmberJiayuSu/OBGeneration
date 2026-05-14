@@ -49,7 +49,7 @@ class TestClusterAssumptions:
         result = ca._build_cumsum(matrix, ca.assumption_resolution_min)
         assert result.shape == (num_bins, 3, 3)
 
-    def test_upsample_doubles_bins(self):
+    def test_non_native_fine_resolution_raises(self):
         assumption_res = 30
         num_bins = 1440 // assumption_res
         uniform_row = [1 / 3, 1 / 3, 1 / 3]
@@ -57,15 +57,14 @@ class TestClusterAssumptions:
         init_probs = [[1 / 3, 1 / 3, 1 / 3]] * 5
         ca = ClusterAssumptions(5, 240, assumption_res, init_probs, init_probs, trans_probs, trans_probs)
         matrix = np.array(trans_probs[0])
-        result = ca._build_cumsum(matrix, assumption_res // 2)
-        assert result.shape[0] == num_bins * 2
+        with pytest.raises(ValueError):
+            ca._build_cumsum(matrix, assumption_res // 2)
 
-    def test_downsample_halves_bins(self, default_cluster_assumptions):
+    def test_non_native_coarse_resolution_raises(self, default_cluster_assumptions):
         ca = default_cluster_assumptions
-        num_bins = 1440 // ca.assumption_resolution_min
         matrix = np.array(ca.weekday_transition_probs[0])
-        result = ca._build_cumsum(matrix, ca.assumption_resolution_min * 2)
-        assert result.shape[0] == num_bins // 2
+        with pytest.raises(ValueError):
+            ca._build_cumsum(matrix, ca.assumption_resolution_min * 2)
 
     def test_cumsum_last_value_is_one(self, default_cluster_assumptions):
         ca = default_cluster_assumptions
@@ -75,6 +74,10 @@ class TestClusterAssumptions:
 
 
 class TestSampleCluster:
+    def test_non_native_resolution_raises(self, default_cluster_assumptions, rng):
+        with pytest.raises(ValueError):
+            default_cluster_assumptions.sample_cluster_annually(0, 0, SIM_RES * 2, rng)
+
     def test_returns_53_weeks(self, default_cluster_assumptions, rng):
         weeks = default_cluster_assumptions.sample_cluster_annually(0, 0, SIM_RES, rng)
         assert isinstance(weeks, list)

@@ -110,21 +110,12 @@ class ClusterAssumptions:
         return cls(num_clusters, 240, 15, weekday_initial_probs, weekend_initial_probs, weekday_transition_probs, weekend_transition_probs)
 
     def _build_cumsum(self, transition_matrices: np.ndarray, resolution_min: int) -> np.ndarray:
-        if resolution_min == self.assumption_resolution_min:
-            matrices = transition_matrices
-        elif resolution_min < self.assumption_resolution_min:
-            repeat = self.assumption_resolution_min // resolution_min
-            matrices = np.repeat(transition_matrices, repeat, axis=0)
-        else:
-            step = resolution_min // self.assumption_resolution_min
-            num_coarse_bins = len(transition_matrices) // step
-            matrices = np.empty((num_coarse_bins, transition_matrices.shape[1], transition_matrices.shape[2]))
-            for b in range(num_coarse_bins):
-                composed = transition_matrices[b * step]
-                for k in range(1, step):
-                    composed = composed @ transition_matrices[b * step + k]
-                matrices[b] = composed
-        return np.cumsum(matrices, axis=-1)
+        if resolution_min != self.assumption_resolution_min:
+            raise ValueError(
+                f"Markov transitions are only defined at the native assumption resolution "
+                f"of {self.assumption_resolution_min} minutes, got {resolution_min}."
+            )
+        return np.cumsum(transition_matrices, axis=-1)
 
     def sample_cluster_annually(
         self,
@@ -138,6 +129,11 @@ class ClusterAssumptions:
         Returns 53 weeks (52 full + 1 partial Saturday), each a flat list of
         OccupancyState values starting at Sunday midnight.
         """
+        if sim_resolution_min != self.assumption_resolution_min:
+            raise ValueError(
+                f"sample_cluster_annually only supports the native assumption resolution "
+                f"of {self.assumption_resolution_min} minutes, got {sim_resolution_min}."
+            )
         num_bins = 1440 // sim_resolution_min
         midnight_bin = (1440 - self.start_min) // sim_resolution_min
         we_cumsum = self._build_cumsum(self._we_cumsum[weekend_cluster_id], sim_resolution_min)
