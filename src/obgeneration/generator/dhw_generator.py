@@ -71,9 +71,27 @@ class DHWGenerator:
             resolution_mins=resolution_mins
         )
         flow_rate, annual_schedule = generator.dhw_annual_schedule()
+        flattened_schedule = ScheduleUtils.flatten_schedule(annual_schedule)
+        
+        bins_per_day = 1440 // resolution_mins
+        max_avg = float("-inf")
+        max_day = None
+
+        for day in range(365):
+            day_start = day * bins_per_day
+            day_schedule = flattened_schedule[day_start : day_start + bins_per_day]
+            day_avg = sum(day_schedule) / bins_per_day
+
+            if day_avg > max_avg:
+                max_avg = day_avg
+                max_day = day_schedule.copy()
+                
+
         return DHWResult(
             peak_value=flow_rate,
-            schedule=ScheduleUtils.flatten_schedule(annual_schedule),
+            annual_schedule=flattened_schedule,
+            summer_design_day_schedule=max_day,
+            winter_design_day_schedule=max_day,
         )
 
     @staticmethod

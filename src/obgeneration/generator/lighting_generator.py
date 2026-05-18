@@ -51,7 +51,7 @@ class LightingGenerator:
         _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
         generator = LightingGenerator(lighting, lighting_assumptions)
         dimming = generator.get_dimming()
-        schedule = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
+        schedule, max_day, min_day = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
         flattened_schedule = ScheduleUtils.flatten_schedule(schedule)
         if lighting.if_led:
             peak_value = generator.lighting_assumptions.watts_per_m2_led.sample(rng)
@@ -59,8 +59,10 @@ class LightingGenerator:
             peak_value = generator.lighting_assumptions.watts_per_m2_non_led.sample(rng)
         return LightingResult(
             peak_value=peak_value,
-            schedule=flattened_schedule,
+            annual_schedule=flattened_schedule,
             dimming_enabled=dimming,
+            summer_design_day_schedule=max_day,
+            winter_design_day_schedule=min_day,
         )
 
     @staticmethod
@@ -79,15 +81,32 @@ class LightingGenerator:
 
 
 
-    def lighting_annual_schedule(self, occupancy_annual_schedule:  Sequence[Sequence[HouseholdOccupancyFractions]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
-        """ Translates lighting usage pattern into a full annual schedule based on occupancy and sleep times."""
+    def lighting_annual_schedule(self, occupancy_annual_schedule:  Sequence[Sequence[HouseholdOccupancyFractions]], sleep_mask_annual: Sequence[Sequence[bool]]) -> tuple[list[list[float]], list[float], list[float]]:
+        """ Translates lighting usage pattern into a full annual schedule based on occupancy and sleep times, while also identifying the days with maximum and minimum average usage. """
         annual_schedule = []
+        max_avg = float("-inf")
+        min_avg = float("inf")
+        max_day = None
+        min_day = None
+        bins_per_day = len(occupancy_annual_schedule[0]) // 7
         for week_index in range(len(sleep_mask_annual)):
             weekly_sleep_mask = sleep_mask_annual[week_index]
             weekly_schedule = occupancy_annual_schedule[week_index]
             weekly_lighting_schedule = self.lighting_weekly_schedule(weekly_schedule,weekly_sleep_mask)
+            for day_index in range(7):
+                day_schedule = weekly_lighting_schedule[day_index * bins_per_day : (day_index + 1) * bins_per_day]
+                if len(day_schedule) != bins_per_day:
+                    continue
+                avg_usage = np.mean(day_schedule)
+                if avg_usage > max_avg:
+                    max_avg = avg_usage
+                    max_day = day_schedule.copy()
+                if avg_usage < min_avg:
+                    min_avg = avg_usage
+                    min_day = day_schedule.copy()
             annual_schedule.append(weekly_lighting_schedule)
-        return annual_schedule
+
+        return annual_schedule, max_day, min_day
        
     
     def lighting_weekly_schedule(self, weekly_schedule: Sequence[HouseholdOccupancyFractions], sleep_mask_weekly: Sequence[bool]) -> list[float]:

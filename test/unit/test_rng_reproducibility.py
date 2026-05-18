@@ -92,8 +92,8 @@ class TestRngReproducibility:
         gen_1 = OccupancyGenerator(occupancy_profile, assumptions, SIM_RES)
         gen_2 = OccupancyGenerator(occupancy_profile, assumptions, SIM_RES)
 
-        schedule_1 = gen_1.generate(np.random.default_rng(2024))
-        schedule_2 = gen_2.generate(np.random.default_rng(2024))
+        schedule_1 = gen_1.occupancy_annual_schedule(np.random.default_rng(2024))
+        schedule_2 = gen_2.occupancy_annual_schedule(np.random.default_rng(2024))
 
         assert schedule_1 == schedule_2
 
@@ -102,7 +102,7 @@ class TestRngReproducibility:
             occupancy_profile,
             ClusterAssumptions.default(),
             SIM_RES,
-        ).generate(np.random.default_rng(11))
+        ).occupancy_annual_schedule(np.random.default_rng(11))
 
         assumptions = EquipmentAssumptions.default(SIM_RES)
         gen_1 = EquipmentGenerator(
@@ -130,7 +130,7 @@ class TestRngReproducibility:
         generator = OccupancyGenerator(occupancy_profile, assumptions, SIM_RES)
         rng = np.random.default_rng(7)
 
-        schedule_1 = generator.generate(rng)
-        schedule_2 = generator.generate(rng)
+        schedule_1 = generator.occupancy_annual_schedule(rng)
+        schedule_2 = generator.occupancy_annual_schedule(rng)
 
         assert schedule_1 != schedule_2

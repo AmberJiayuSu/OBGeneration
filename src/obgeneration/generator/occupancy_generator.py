@@ -31,10 +31,33 @@ class OccupancyGenerator:
             cluster_assumptions=cluster_assumptions,
             sim_resolution_min=resolution_mins,
         )
-        occ_states = generator.generate(rng)
+        occ_states = generator.occupancy_annual_schedule(rng)
+        annual_schedule = generator.to_occupancy_schedule(occ_states)
+
+        bins_per_day = 1440 // resolution_mins
+        max_avg = float("-inf")
+        min_avg = float("inf")
+        max_day = None
+        min_day = None
+
+        for day in range(365):
+            day_start = day * bins_per_day
+            day_schedule = annual_schedule[day_start : day_start + bins_per_day]
+            day_avg = sum(day_schedule) / bins_per_day
+
+            if day_avg > max_avg:
+                max_avg = day_avg
+                max_day = day_schedule.copy()
+
+            if day_avg < min_avg:
+                min_avg = day_avg
+                min_day = day_schedule.copy()
+
         return OccupancyResult(
             peak_value=float(occupancy.num_occupants),
-            schedule=OccupancyGenerator.to_occupancy_schedule(occ_states),
+            annual_schedule=annual_schedule,
+            summer_design_day_schedule=max_day,
+            winter_design_day_schedule=min_day,
             occupancy_states=occ_states,
         )
 
@@ -299,7 +322,7 @@ class OccupancyGenerator:
         return states.tolist()
         
  
-    def generate(self, rng: np.random.Generator) -> list[list[HouseholdOccupancyFractions]]:
+    def occupancy_annual_schedule(self, rng: np.random.Generator) -> list[list[HouseholdOccupancyFractions]]:
         """Main method to generate occupancy states for the household.
             1. Generate initial occupancy states using Markov Chain based on the mobility clusters of the occupants. This will give us a list of 53 weeks, each week is a list of HouseholdOccupancyFractions for each time bin in that week.
             (2,3 steps only process the generated occupancy states if the corresponding patterns are specified in the occupancy input)

@@ -192,6 +192,51 @@ def rng() -> np.random.Generator:
 
 SIM_RES = 15  # minutes — used throughout tests
 
+
+def _daily_slices_from_annual_schedule(
+    annual_schedule: list[float],
+    resolution_mins: int,
+) -> list[list[float]]:
+    bins_per_day = 1440 // resolution_mins
+    assert len(annual_schedule) == 365 * bins_per_day
+    return [
+        annual_schedule[start:start + bins_per_day]
+        for start in range(0, len(annual_schedule), bins_per_day)
+    ]
+
+
+def _assert_occupancy_result_structure(result, resolution_mins: int) -> None:
+    bins_per_day = 1440 // resolution_mins
+
+    assert len(result.annual_schedule) == 365 * bins_per_day
+    assert len(result.occupancy_states) == 53
+    assert sum(len(week) for week in result.occupancy_states) == len(result.annual_schedule)
+    assert result.winter_design_day_schedule is not None
+    assert result.summer_design_day_schedule is not None
+    assert len(result.winter_design_day_schedule) == bins_per_day
+    assert len(result.summer_design_day_schedule) == bins_per_day
+
+
+def _assert_design_day_matches_extreme(
+    annual_schedule: list[float],
+    design_day: list[float] | None,
+    mode: str,
+    resolution_mins: int,
+) -> None:
+    daily_schedules = _daily_slices_from_annual_schedule(annual_schedule, resolution_mins)
+    assert design_day is not None
+    assert any(day == design_day for day in daily_schedules)
+
+    daily_averages = [sum(day) / len(day) for day in daily_schedules]
+    design_day_average = sum(design_day) / len(design_day)
+
+    if mode == "max":
+        assert design_day_average == pytest.approx(max(daily_averages))
+    elif mode == "min":
+        assert design_day_average == pytest.approx(min(daily_averages))
+    else:
+        raise ValueError(f"Unsupported mode: {mode}")
+
 # ---------------------------------------------------------------------------
 # OccupancyGenerator — household_away_time_annually
 # ---------------------------------------------------------------------------
@@ -723,7 +768,7 @@ class TestGenerate:
         }"""
         occ = Occupancy.model_validate_json(occ_json)
         occ_gen = OccupancyGenerator(occ, default_cluster_assumptions, SIM_RES)
-        schedule = occ_gen.generate(rng)
+        schedule = occ_gen.occupancy_annual_schedule(rng)
         occ_schedule = OccupancyGenerator.to_occupancy_schedule(schedule)
 
         matplotlib.use("Agg")
@@ -750,6 +795,60 @@ class TestGenerate:
         fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
         assert out_path.exists()
+
+
+class TestGenerateResult:
+    def test_design_days_and_structure(self, default_cluster_assumptions, rng):
+        occ_json ="""
+        {
+            "num_occupants": 3,
+            "household_composition":{
+                "occupants": [
+                    {"weekday_cluster": "long_day_away", "weekend_cluster": "mostly_home"},
+                    {"weekday_cluster": "long_day_away", "weekend_cluster": "mostly_home"},
+                    {"weekday_cluster": "morning_away", "weekend_cluster": "afternoon_away"}
+                ]
+            },
+            "weekday_pattern": {
+                "is_always_occupied": false,
+                "away_interval": {"start_hour": 8, "end_hour": 14},
+                "num_of_days":3,
+                "away_time_rigidness": "somewhat_variable"
+            },
+            "weekend_pattern": {
+                "is_always_occupied": false,
+                "away_interval": {"start_hour": 16, "end_hour": 20},
+                "away_time_rigidness": "somewhat_variable"
+            },
+            "sleep_pattern": {
+                "is_always_awake": false,
+                "sleep_time": {"start_hour": 22, "end_hour": 6},
+                "sleep_time_rigidness": "mostly_consistent"
+            }
+        }"""
+        occupancy = Occupancy.model_validate_json(occ_json)
+
+        result = OccupancyGenerator.generate_result(
+            occupancy=occupancy,
+            cluster_assumptions=default_cluster_assumptions,
+            resolution_mins=SIM_RES,
+            rng=rng,
+        )
+
+        _assert_occupancy_result_structure(result, SIM_RES)
+        assert result.annual_schedule == OccupancyGenerator.to_occupancy_schedule(result.occupancy_states)
+        _assert_design_day_matches_extreme(
+            result.annual_schedule,
+            result.summer_design_day_schedule,
+            mode="max",
+            resolution_mins=SIM_RES,
+        )
+        _assert_design_day_matches_extreme(
+            result.annual_schedule,
+            result.winter_design_day_schedule,
+            mode="min",
+            resolution_mins=SIM_RES,
+        )
 
 
 

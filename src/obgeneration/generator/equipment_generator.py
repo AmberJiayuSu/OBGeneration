@@ -335,11 +335,33 @@ class EquipmentGenerator:
             normalized_schedule = [power / peak_value for power in flattend_schedule]
         else:
             normalized_schedule = flattend_schedule
+
+        bins_per_day = 1440 // resolution_mins
+        max_avg = float("-inf")
+        min_avg = float("inf")
+        max_day = None
+        min_day = None
+
+        for day in range(365):
+            day_start = day * bins_per_day
+            day_schedule = normalized_schedule[day_start : day_start + bins_per_day]
+            day_avg = sum(day_schedule) / bins_per_day
+
+            if day_avg > max_avg:
+                max_avg = day_avg
+                max_day = day_schedule.copy()
+
+            if day_avg < min_avg:
+                min_avg = day_avg
+                min_day = day_schedule.copy()
+                
         return EquipmentResult(
             peak_value=peak_value,
-            schedule=normalized_schedule,
+            annual_schedule=normalized_schedule,
             laundry_cycles=laundry_cycles,
             dishwasher_cycles=dishwasher_cycles,
+            summer_design_day_schedule=max_day,
+            winter_design_day_schedule=min_day,
         )
 
     @staticmethod

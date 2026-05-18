@@ -9,33 +9,33 @@ from obgeneration.generator.types import HouseholdOccupancyFractions
 
 class FractionalScheduleResult(BaseModel):
     """Base result for schedules represented as a peak plus normalized fractions."""
-
     peak_value: float = Field(..., ge=0)
-    schedule: list[float]
+    annual_schedule: list[float]
+    summer_design_day_schedule: list[float] | None = None
+    winter_design_day_schedule: list[float] | None = None
 
 
 class TemperatureScheduleResult(BaseModel):
     """Result for schedules represented as absolute temperatures."""
-    schedule: list[float]
+    annual_schedule: list[float]
+    summer_design_day_schedule: list[float] | None = None
+    winter_design_day_schedule: list[float] | None = None
 
 
 class OccupancyResult(FractionalScheduleResult):
     """Occupancy output plus raw occupancy-state detail."""
-
     occupancy_states: list[list[HouseholdOccupancyFractions]]
     peak_units:  Literal["people"] = "people"
 
 
 class LightingResult(FractionalScheduleResult):
     """Lighting output plus dimming metadata."""
-
     dimming_enabled: bool
     peak_units: Literal["W/m2"] = "W/m2"
 
 
 class EquipmentResult(FractionalScheduleResult):
     """Equipment output plus appliance-cycle metadata used downstream."""
-
     laundry_cycles: list[list[int]]
     dishwasher_cycles: list[list[int]]
     peak_units: Literal["W"] = "W"
@@ -52,6 +52,5 @@ class SetpointResult(TemperatureScheduleResult):
 
 class HVACResult(BaseModel):
     """Combined HVAC output with optional heating and cooling schedules."""
-
     heating: SetpointResult | None = None
     cooling: SetpointResult | None = None

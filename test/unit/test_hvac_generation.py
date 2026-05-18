@@ -6,6 +6,51 @@ from obgeneration.model.hvac import HVAC
 from obgeneration.generator.hvac_generator import HVACAssumptions, HVACGenerator
 from obgeneration.model.occupancy import Occupancy
 
+
+def _flatten_schedule(schedule: list[list[float]]) -> list[float]:
+    return [value for week in schedule for value in week]
+
+
+def _daily_slices(schedule: list[list[float]]) -> list[list[float]]:
+    flat_schedule = _flatten_schedule(schedule)
+    timesteps_per_day = len(flat_schedule) // 365
+    assert timesteps_per_day * 365 == len(flat_schedule)
+    return [
+        flat_schedule[start:start + timesteps_per_day]
+        for start in range(0, len(flat_schedule), timesteps_per_day)
+    ]
+
+
+def _assert_schedule_structure(
+    schedule: list[list[float]] | None,
+    reference_mask: list[list[bool]],
+) -> None:
+    assert schedule is not None
+    assert len(schedule) == len(reference_mask)
+    assert all(len(schedule[w]) == len(reference_mask[w]) for w in range(len(schedule)))
+
+
+def _assert_design_day_matches_extreme(
+    schedule: list[list[float]],
+    design_day: list[float] | None,
+    mode: str,
+) -> None:
+    daily_schedules = _daily_slices(schedule)
+    assert design_day is not None
+    assert len(design_day) == len(daily_schedules[0])
+    assert any(day == design_day for day in daily_schedules)
+
+    daily_averages = [sum(day) / len(day) for day in daily_schedules]
+    design_day_avg = sum(design_day) / len(design_day)
+
+    if mode == "max":
+        assert design_day_avg == pytest.approx(max(daily_averages))
+    elif mode == "min":
+        assert design_day_avg == pytest.approx(min(daily_averages))
+    else:
+        raise ValueError(f"Unsupported mode: {mode}")
+
+
 @pytest.fixture
 def rng() -> np.random.Generator:
     return np.random.default_rng(0)
@@ -59,15 +104,17 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, HVACAssumptions.default())
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate(rng)
+        occ_sch = occ1.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
 
-        heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating, winter_design_day = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling, summer_design_day = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
         assert heating is None
         assert cooling is None
+        assert winter_design_day is None
+        assert summer_design_day is None
 
 
 
@@ -88,22 +135,18 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, HVACAssumptions.default())
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate(rng)
+        occ_sch = occ1.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
-        heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating, winter_design_day = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling, summer_design_day = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
-        assert heating is not None
-        assert len(heating) == len(active_mask)  
-        if_sublist_len_match = all(len(heating[w]) == len(active_mask[w]) for w in range(len(heating)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(heating, active_mask)
+        _assert_design_day_matches_extreme(heating, winter_design_day, mode="max")
         if_same_values = all(all(h == HVACAssumptions.default().heating_defaults.active_setpoint for h in heating[w]) for w in range(len(heating)))
         assert if_same_values
-        assert cooling is not None
-        assert len(cooling) == len(active_mask)
-        if_sublist_len_match = all(len(cooling[w]) == len(active_mask[w]) for w in range(len(cooling)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(cooling, active_mask)
+        _assert_design_day_matches_extreme(cooling, summer_design_day, mode="min")
         if_same_values = all(all(c == HVACAssumptions.default().cooling_defaults.active_setpoint for c in cooling[w]) for w in range(len(cooling)))
         assert if_same_values
 
@@ -130,16 +173,14 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate(rng)
+        occ_sch = occ1.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
-        heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating, winter_design_day = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling, summer_design_day = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
-        assert heating is not None
-        assert len(heating) == len(active_mask)  
-        if_sublist_len_match = all(len(heating[w]) == len(active_mask[w]) for w in range(len(heating)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(heating, active_mask)
+        _assert_design_day_matches_extreme(heating, winter_design_day, mode="max")
 
         sleep_on = all(all(heating[w][h] == assumptions.heating_defaults.sleep_setpoint 
                            for h in range(len(heating[w])) if sleep_mask[w][h]) 
@@ -156,10 +197,8 @@ class TestHVACGeneration:
                          for w in range(len(heating)))
         assert absent_off
 
-        assert cooling is not None
-        assert len(cooling) == len(active_mask)
-        if_sublist_len_match = all(len(cooling[w]) == len(active_mask[w]) for w in range(len(cooling)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(cooling, active_mask)
+        _assert_design_day_matches_extreme(cooling, summer_design_day, mode="min")
         sleep_off = all(all(cooling[w][h] == assumptions.maximum_cooling_setpoint
                            for h in range(len(cooling[w])) if sleep_mask[w][h]) 
                        for w in range(len(cooling)))
@@ -193,16 +232,14 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
 
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate(rng)
+        occ_sch = occ1.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
-        heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating, winter_design_day = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling, summer_design_day = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
-        assert heating is not None
-        assert len(heating) == len(active_mask)  
-        if_sublist_len_match = all(len(heating[w]) == len(active_mask[w]) for w in range(len(heating)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(heating, active_mask)
+        _assert_design_day_matches_extreme(heating, winter_design_day, mode="max")
 
         sleep_on = all(all(heating[w][h] == assumptions.trv.valve_medium
                            for h in range(len(heating[w])) if sleep_mask[w][h]) 
@@ -219,6 +256,7 @@ class TestHVACGeneration:
                          for w in range(len(heating)))
         assert absent_off
         assert cooling is None
+        assert summer_design_day is None
 
 
 
@@ -244,16 +282,14 @@ class TestHVACGeneration:
         hvac_generator = HVACGenerator(hvac, assumptions)
        
         occ1 = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 30)
-        occ_sch = occ1.generate(rng)
+        occ_sch = occ1.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
-        heating = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating, winter_design_day = hvac_generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling, summer_design_day = hvac_generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
-        assert heating is not None
-        assert len(heating) == len(active_mask)
-        if_sublist_len_match = all(len(heating[w]) == len(active_mask[w]) for w in range(len(heating)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(heating, active_mask)
+        _assert_design_day_matches_extreme(heating, winter_design_day, mode="max")
         sleep_setpoint = all(all(heating[w][h] == 18.0
                            for h in range(len(heating[w])) if sleep_mask[w][h]) 
                        for w in range(len(heating)))
@@ -267,10 +303,8 @@ class TestHVACGeneration:
                          for w in range(len(heating)))
         assert absent_setpoint
 
-        assert cooling is not None
-        assert len(cooling) == len(active_mask)
-        if_sublist_len_match = all(len(cooling[w]) == len(active_mask[w]) for w in range(len(cooling)))
-        assert if_sublist_len_match
+        _assert_schedule_structure(cooling, active_mask)
+        _assert_design_day_matches_extreme(cooling, summer_design_day, mode="min")
         sleep_setpoint = all(all(cooling[w][h] == 27.0
                            for h in range(len(cooling[w])) if sleep_mask[w][h]) 
                        for w in range(len(cooling)))

@@ -46,8 +46,8 @@ def test_30_min_generation_matches_15_min_mean_aggregation():
     occupancy = _sample_occupancy()
     assumptions = ClusterAssumptions.default()
 
-    states_15 = OccupancyGenerator(occupancy, assumptions, 15).generate(np.random.default_rng(42))
-    states_30 = OccupancyGenerator(occupancy, assumptions, 30).generate(np.random.default_rng(42))
+    states_15 = OccupancyGenerator(occupancy, assumptions, 15).occupancy_annual_schedule(np.random.default_rng(42))
+    states_30 = OccupancyGenerator(occupancy, assumptions, 30).occupancy_annual_schedule(np.random.default_rng(42))
 
     assert states_30 == _aggregate_states(states_15, factor=2)
     assert OccupancyGenerator.to_occupancy_schedule(states_30) == OccupancyGenerator.to_occupancy_schedule(
@@ -59,8 +59,8 @@ def test_60_min_generation_matches_15_min_mean_aggregation():
     occupancy = _sample_occupancy()
     assumptions = ClusterAssumptions.default()
 
-    states_15 = OccupancyGenerator(occupancy, assumptions, 15).generate(np.random.default_rng(42))
-    states_60 = OccupancyGenerator(occupancy, assumptions, 60).generate(np.random.default_rng(42))
+    states_15 = OccupancyGenerator(occupancy, assumptions, 15).occupancy_annual_schedule(np.random.default_rng(42))
+    states_60 = OccupancyGenerator(occupancy, assumptions, 60).occupancy_annual_schedule(np.random.default_rng(42))
 
     assert states_60 == _aggregate_states(states_15, factor=4)
     assert OccupancyGenerator.to_occupancy_schedule(states_60) == OccupancyGenerator.to_occupancy_schedule(
@@ -72,8 +72,8 @@ def test_5_min_generation_matches_15_min_repetition():
     occupancy = _sample_occupancy()
     assumptions = ClusterAssumptions.default()
 
-    states_15 = OccupancyGenerator(occupancy, assumptions, 15).generate(np.random.default_rng(42))
-    states_5 = OccupancyGenerator(occupancy, assumptions, 5).generate(np.random.default_rng(42))
+    states_15 = OccupancyGenerator(occupancy, assumptions, 15).occupancy_annual_schedule(np.random.default_rng(42))
+    states_5 = OccupancyGenerator(occupancy, assumptions, 5).occupancy_annual_schedule(np.random.default_rng(42))
 
     repeated = [[state for state in week for _ in range(3)] for week in states_15]
     assert states_5 == repeated

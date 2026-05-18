@@ -9,6 +9,33 @@ from obgeneration.model.equipment import Equipment
 SIM_RES = 15
 
 
+def _daily_slices_from_schedule_prefix(
+    annual_schedule: list[float],
+    bins_per_day: int,
+    num_days: int,
+) -> list[list[float]]:
+    return [
+        annual_schedule[start:start + bins_per_day]
+        for start in range(0, num_days * bins_per_day, bins_per_day)
+    ]
+
+
+def _assert_design_day_matches_max(
+    annual_schedule: list[float],
+    design_day: list[float] | None,
+    bins_per_day: int,
+    num_days: int,
+) -> None:
+    daily_schedules = _daily_slices_from_schedule_prefix(annual_schedule, bins_per_day, num_days)
+    assert design_day is not None
+    assert len(design_day) == bins_per_day
+    assert any(day == design_day for day in daily_schedules)
+
+    daily_averages = [sum(day) / len(day) for day in daily_schedules]
+    design_day_average = sum(design_day) / len(design_day)
+    assert design_day_average == pytest.approx(max(daily_averages))
+
+
 @pytest.fixture
 def empty_cycles() -> tuple[list[list[int]], list[list[int]]]:
     laundry = [[0, 0, 0, 0, 0, 0, 0] for _ in range(53)]
@@ -227,4 +254,41 @@ class TestDHWGenerator:
         flattened_direct_schedule = [value for week in direct_schedule for value in week]
 
         assert generated.peak_value == direct_peak
-        assert list(generated.schedule) == flattened_direct_schedule
+        assert list(generated.annual_schedule) == flattened_direct_schedule
+
+    def test_generate_result_design_days_and_structure(self, efficient_hot_water_equipment):
+        assumptions = DHWAssumptions.default()
+        laundry_cycles = [[1, 0, 0, 1, 0, 0, 0] for _ in range(53)]
+        dishwasher_cycles = [[0, 1, 0, 0, 1, 0, 0] for _ in range(53)]
+
+        direct_peak, direct_schedule = DHWGenerator(
+            dhw_assumptions=assumptions,
+            equipment=efficient_hot_water_equipment,
+            num_occupants=2,
+            laundry_cycles_per_day=laundry_cycles,
+            dishwasher_cycles_per_day=dishwasher_cycles,
+            resolution_mins=SIM_RES,
+        ).dhw_annual_schedule()
+        flattened_direct_schedule = [value for week in direct_schedule for value in week]
+
+        result = DHWGenerator.generate_result(
+            num_occupants=2,
+            equipment=efficient_hot_water_equipment,
+            laundry_cycles_per_day=laundry_cycles,
+            dishwasher_cycles_per_day=dishwasher_cycles,
+            resolution_mins=SIM_RES,
+            dhw_assumptions=assumptions,
+        )
+
+        bins_per_day = 1440 // SIM_RES
+        assert result.peak_units == "m3/s"
+        assert result.peak_value == direct_peak
+        assert list(result.annual_schedule) == flattened_direct_schedule
+        assert len(result.annual_schedule) == 53 * 7 * bins_per_day
+        assert result.summer_design_day_schedule == result.winter_design_day_schedule
+        _assert_design_day_matches_max(
+            result.annual_schedule,
+            result.summer_design_day_schedule,
+            bins_per_day=bins_per_day,
+            num_days=365,
+        )

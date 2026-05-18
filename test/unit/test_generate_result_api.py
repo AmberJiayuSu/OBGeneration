@@ -224,7 +224,7 @@ def test_lighting_generate_result_uses_explicit_led_assumptions():
 
     assert result.peak_value == 3.25
     assert result.peak_units == "W/m2"
-    assert set(result.schedule).issubset({0.0, 1.0})
+    assert set(result.annual_schedule).issubset({0.0, 1.0})
 
 
 def test_lighting_generate_result_uses_explicit_non_led_assumptions():
@@ -286,8 +286,8 @@ def test_dhw_generate_result_uses_explicit_assumptions():
     expected_peak_m3_s = expected_daily_peak_liters / 1000.0 / (24 * 3600)
 
     assert result.peak_value == expected_peak_m3_s
-    assert max(result.schedule) == 1.0
-    assert min(result.schedule) >= 0.0
+    assert max(result.annual_schedule) == 1.0
+    assert min(result.annual_schedule) >= 0.0
 
 
 def test_hvac_generate_result_returns_none_for_missing_systems():
@@ -336,8 +336,8 @@ def test_equipment_generate_result_wrapper_keeps_normalized_schedule():
     )
 
     assert result.peak_units == "W"
-    assert len(result.schedule) > 0
-    assert max(result.schedule) == 1.0
-    assert min(result.schedule) >= 0.0
+    assert len(result.annual_schedule) > 0
+    assert max(result.annual_schedule) == 1.0
+    assert min(result.annual_schedule) >= 0.0
     assert len(result.laundry_cycles) == 53
     assert len(result.dishwasher_cycles) == 53

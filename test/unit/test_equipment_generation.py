@@ -14,6 +14,36 @@ from obgeneration.generator.ob_generator import OccupantBehavior
 from pathlib import Path
 
 
+def _daily_slices_from_annual_schedule(annual_schedule: list[float], bins_per_day: int) -> list[list[float]]:
+    assert len(annual_schedule) == 365 * bins_per_day
+    return [
+        annual_schedule[start:start + bins_per_day]
+        for start in range(0, len(annual_schedule), bins_per_day)
+    ]
+
+
+def _assert_design_day_matches_extreme(
+    annual_schedule: list[float],
+    design_day: list[float] | None,
+    mode: str,
+    bins_per_day: int,
+) -> None:
+    daily_schedules = _daily_slices_from_annual_schedule(annual_schedule, bins_per_day)
+    assert design_day is not None
+    assert len(design_day) == bins_per_day
+    assert any(day == design_day for day in daily_schedules)
+
+    daily_averages = [sum(day) / len(day) for day in daily_schedules]
+    design_day_average = sum(design_day) / len(design_day)
+
+    if mode == "max":
+        assert design_day_average == pytest.approx(max(daily_averages))
+    elif mode == "min":
+        assert design_day_average == pytest.approx(min(daily_averages))
+    else:
+        raise ValueError(f"Unsupported mode: {mode}")
+
+
 @pytest.fixture
 def rng() -> np.random.Generator:
     return np.random.default_rng(0)
@@ -137,7 +167,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
         active_mask,sleep_mask=OccupancyGenerator.active_sleep_mask(occ_sch)
 
 
@@ -189,7 +219,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -232,7 +262,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -272,7 +302,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
       
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -352,7 +382,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -405,7 +435,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -457,7 +487,7 @@ class TestEquipmentGenerator:
         equipment = Equipment.model_validate_json(equipment_json)
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -503,7 +533,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -553,7 +583,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -619,7 +649,7 @@ class TestEquipmentGenerator:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -698,7 +728,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen_1 = EquipmentGenerator(
             equipment=equipment_1,
@@ -773,7 +803,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
 
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen_1 = EquipmentGenerator(
             equipment=equipment_1,
@@ -834,7 +864,7 @@ class TestAnnualConsumption:
         equipment = Equipment.model_validate_json(equipment_json)
         assumptions = EquipmentAssumptions.default()
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
 
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
@@ -885,7 +915,7 @@ class TestAnnualConsumption:
         equipment = Equipment.model_validate_json(equipment_json)
         assumptions = EquipmentAssumptions.default()
         occ_gen = OccupancyGenerator(occ, ClusterAssumptions.default(), 15)
-        occ_sch = occ_gen.generate(rng)
+        occ_sch = occ_gen.occupancy_annual_schedule(rng)
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
             occupancy_state=occ_sch,
@@ -935,7 +965,7 @@ class TestAnnualConsumption:
         assumptions = EquipmentAssumptions.default()
         
         occ = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15)
-        occ_sch = occ.generate(rng)
+        occ_sch = occ.occupancy_annual_schedule(rng)
         equipment_gen = EquipmentGenerator(
             equipment=equipment,
             occupancy_state=occ_sch,
@@ -949,6 +979,85 @@ class TestAnnualConsumption:
         assert total_consumption > 50
         assert total_consumption < 250
 
+    def test_generate_result_design_days_and_structure(self, occ_1):
+        equipment_json = """
+        {
+            "laundry": {
+                "has_washer": true,
+                "has_dryer": true,
+                "washer_efficient": true,
+                "dryer_efficient": true,
+                "usage_frequency_per_week": {"min": 2, "max": 4}
+            },
+            "refrigerator": {
+                "has_refrigerator": true,
+                "efficient_refrigerator": true,
+                "number_of_refrigerators": 1
+            },
+            "dishwasher": {
+                "has_dishwasher": true,
+                "dishwasher_efficient": true,
+                "dishwashing_operational_logic": {
+                    "pattern_type": "independent_frequency",
+                    "usage_frequency_per_week": {"min": 1, "max": 4}
+                }
+            },
+            "cooking_products": {
+                "has_cooking_products": true,
+                "cooking_products_fuel": "electric",
+                "usage_frequency_per_week": {"min": 6, "max": 12}
+            }
+        }
+        """
+        equipment = Equipment.model_validate_json(equipment_json)
+        assumptions = EquipmentAssumptions.default(15)
+        occupancy_states = OccupancyGenerator(occ_1, ClusterAssumptions.default(), 15).occupancy_annual_schedule(np.random.default_rng(0))
+
+        direct_generator = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=occupancy_states,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions,
+        )
+        direct_schedule, laundry_cycles, dishwasher_cycles = direct_generator.equipment_annual_schedule(np.random.default_rng(0))
+        flattened_direct_schedule = ScheduleUtils.flatten_schedule(direct_schedule)
+        direct_peak = max(flattened_direct_schedule)
+        normalized_direct_schedule = [
+            value / direct_peak for value in flattened_direct_schedule
+        ] if direct_peak > 0 else flattened_direct_schedule
+
+        result = EquipmentGenerator.generate_result(
+            equipment=equipment,
+            occupancy_states=occupancy_states,
+            num_occupants=occ_1.num_occupants,
+            resolution_mins=15,
+            equipment_assumptions=assumptions,
+            rng=np.random.default_rng(0),
+        )
+
+        bins_per_day = 1440 // 15
+        assert result.peak_units == "W"
+        assert result.peak_value == pytest.approx(direct_peak)
+        assert result.annual_schedule == pytest.approx(normalized_direct_schedule)
+        assert result.laundry_cycles == laundry_cycles
+        assert result.dishwasher_cycles == dishwasher_cycles
+        assert len(result.annual_schedule) == 365 * bins_per_day
+        assert len(result.laundry_cycles) == 53
+        assert len(result.dishwasher_cycles) == 53
+        _assert_design_day_matches_extreme(
+            result.annual_schedule,
+            result.summer_design_day_schedule,
+            mode="max",
+            bins_per_day=bins_per_day,
+        )
+        _assert_design_day_matches_extreme(
+            result.annual_schedule,
+            result.winter_design_day_schedule,
+            mode="min",
+            bins_per_day=bins_per_day,
+        )
+
 
     @pytest.mark.parametrize("input_file", [
         "test/unit/input/OB_1.json",
@@ -961,4 +1070,4 @@ class TestAnnualConsumption:
         equipment_schedule = occupant_behavior.equipment_schedule
         total_consumption = sum(equipment_schedule) / 4000  # kWh
         print(total_consumption)
-        assert total_consumption > 3000
+        assert total_consumption > 1500

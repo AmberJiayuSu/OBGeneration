@@ -65,12 +65,12 @@ class OccupantBehavior(BaseModel):
         """ Generate annual occupancy behavior schedules. """
         rng = np.random.default_rng()
         occ_gen = OccupancyGenerator( occupant_profile.occupancy, ClusterAssumptions.default(), resolution_mins)
-        occupancy_states = occ_gen.generate(rng)
+        occupancy_states = occ_gen.occupancy_annual_schedule(rng)
         occ_schedule = OccupancyGenerator.to_occupancy_schedule(occupancy_states)
         active_mask,sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
         lighting_gen = LightingGenerator(occupant_profile.lighting)
         if_dimming = lighting_gen.get_dimming()
-        lighting_schedule = lighting_gen.lighting_annual_schedule(occupancy_states, sleep_mask)
+        lighting_schedule, _, _ = lighting_gen.lighting_annual_schedule(occupancy_states, sleep_mask)
 
         equipment_gen = EquipmentGenerator(occupant_profile.equipment,occupancy_states, occupant_profile.occupancy.num_occupants, resolution_mins, EquipmentAssumptions.default())
         equipment_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule(rng)
@@ -79,8 +79,8 @@ class OccupantBehavior(BaseModel):
         flow_rate, dhw_schedule = dhw_gen.dhw_annual_schedule()
 
         hvac_gen = HVACGenerator( occupant_profile.hvac, HVACAssumptions.default())
-        heating_setpoint = hvac_gen.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling_setpoint = hvac_gen.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating_setpoint, _ = hvac_gen.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling_setpoint, _ = hvac_gen.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
 
         window_gen = WindowGenerator(occupant_profile.window, WindowAssumptions.default(), resolution_mins)
         window_schedule = window_gen.window_annual_schedule(active_mask)
@@ -151,5 +151,4 @@ class OccupantBehavior(BaseModel):
         
     #     return OccupantBehavior.aggregate_occupant_behavior(behaviors)
         
-
 

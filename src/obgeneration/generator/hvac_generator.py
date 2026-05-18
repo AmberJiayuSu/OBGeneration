@@ -89,11 +89,11 @@ class HVACGenerator:
         """Generate annual heating and cooling results with explicit assumptions."""
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating_schedule, winter_design_day = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling_schedule, summer_design_day = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
         return HVACResult(
-            heating=SetpointResult(schedule=ScheduleUtils.flatten_schedule(heating_schedule)) if heating_schedule is not None else None,
-            cooling=SetpointResult(schedule=ScheduleUtils.flatten_schedule(cooling_schedule)) if cooling_schedule is not None else None,
+            heating=SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(heating_schedule), winter_design_day_schedule=winter_design_day) if heating_schedule is not None else None,
+            cooling=SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(cooling_schedule), summer_design_day_schedule=summer_design_day) if cooling_schedule is not None else None,
         )
 
     @staticmethod
@@ -117,10 +117,10 @@ class HVACGenerator:
         """Generate an annual cooling setpoint result with explicit assumptions."""
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        cooling_schedule = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
+        cooling_schedule, summer_design_day = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
         if cooling_schedule is None:
             return None
-        return SetpointResult(schedule=ScheduleUtils.flatten_schedule(cooling_schedule))
+        return SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(cooling_schedule), summer_design_day_schedule=summer_design_day)
 
     @staticmethod
     def generate_cooling_with_defaults(
@@ -143,10 +143,10 @@ class HVACGenerator:
         """Generate an annual heating setpoint result with explicit assumptions."""
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        heating_schedule = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
+        heating_schedule, winter_design_day = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
         if heating_schedule is None:
             return None
-        return SetpointResult(schedule=ScheduleUtils.flatten_schedule(heating_schedule))
+        return SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(heating_schedule), winter_design_day_schedule=winter_design_day)
 
     @staticmethod
     def generate_heating_with_defaults(
@@ -175,19 +175,33 @@ class HVACGenerator:
             raise ValueError(f"Unknown intensity level: {level}")
         return level_to_temp[level]
 
-    def heating_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
-        """ Translates HVAC heating setpoint schedule in celcius into a full week schedule."""
+    def heating_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> tuple[list[list[float]], list[float] | None]:
+        """ Translates HVAC heating setpoint schedule in celcius into a full week schedule, and identifies the winter design day schedule by finding the day with the highest average temperature."""
         if self.hvac.heating is None:
-            return None
-        
+            return None, None
+
         assert len(active_mask_annual) == len(sleep_mask_annual), "active and sleep must have same #weeks"
         assert len(active_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
 
+        timesteps_per_day = len(active_mask_annual[0]) // 7
         schedule: list[list[float]] = []
+        winter_design_day: list[float] | None = None
+        highest_avg = float("-inf")
         for weekly_active_mask, weekly_sleep_mask in zip(active_mask_annual, sleep_mask_annual):
             assert len(weekly_active_mask) == len(weekly_sleep_mask), "weekly active/sleep length mismatch"
-            schedule.append(self.heating_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask))
-        return schedule
+            weekly_sch = self.heating_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask)
+            schedule.append(weekly_sch)
+
+            for start in range(0, len(weekly_sch), timesteps_per_day):
+                day_schedule = weekly_sch[start:start + timesteps_per_day]
+                if len(day_schedule) != timesteps_per_day:
+                    continue
+
+                day_avg = sum(day_schedule) / timesteps_per_day
+                if day_avg > highest_avg:
+                    highest_avg = day_avg
+                    winter_design_day = day_schedule.copy()
+        return schedule, winter_design_day
         
        
     def heating_setpoint_weekly_schedule(self, active_mask_weekly: Sequence[bool], sleep_mask_weekly: Sequence[bool]) -> list[float]:
@@ -256,19 +270,33 @@ class HVACGenerator:
 
 
 
-    def cooling_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> list[list[float]]:
-        """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule."""
+    def cooling_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> tuple[list[list[float]], list[float] | None]:
+        """ Translates HVAC cooling setpoint schedule in celcius into a full week schedule, and identifies the summer design day schedule by finding the day with the lowest average temperature."""
         if self.hvac.cooling is None:
-            return None
+            return None, None
         
         assert len(active_mask_annual) == len(sleep_mask_annual), "active and sleep must have same #weeks"
         assert len(active_mask_annual) == 53, "expected 53 chunks (52 weeks + 24h)"
 
+        timesteps_per_day = len(active_mask_annual[0]) // 7
         schedule: list[list[float]] = []
+        summer_design_day: list[float] | None = None
+        lowest_avg = float("inf")
         for weekly_active_mask, weekly_sleep_mask in zip(active_mask_annual, sleep_mask_annual):
             assert len(weekly_active_mask) == len(weekly_sleep_mask), "weekly active/sleep length mismatch"
-            schedule.append(self.cooling_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask))
-        return schedule
+            weekly_sch = self.cooling_setpoint_weekly_schedule(weekly_active_mask, weekly_sleep_mask)
+            schedule.append(weekly_sch)
+
+            for start in range(0, len(weekly_sch), timesteps_per_day):
+                day_schedule = weekly_sch[start:start + timesteps_per_day]
+                if len(day_schedule) != timesteps_per_day:
+                    continue
+
+                day_avg = sum(day_schedule) / timesteps_per_day
+                if day_avg < lowest_avg:
+                    lowest_avg = day_avg
+                    summer_design_day = day_schedule.copy()
+        return schedule, summer_design_day
 
 
     def cooling_setpoint_weekly_schedule(self, active_time_mask_weekly: Sequence[bool], sleep_time_mask_weekly: Sequence[bool]) -> list[float]:
