@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 
 from obgeneration.generator.occupancy_generator import OccupancyGenerator, ClusterAssumptions
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from obgeneration.model.hvac import HVAC
 from obgeneration.generator.hvac_generator import HVACAssumptions, HVACGenerator
 from obgeneration.model.occupancy import Occupancy
@@ -89,6 +90,115 @@ def occ_1() -> Occupancy:
 
 
 class TestHVACGeneration:
+
+    @staticmethod
+    def _annual_occupancy_with_single_active_spike(
+        spike_index: int,
+        bins_per_day: int = 96,
+    ) -> list[list[HouseholdOccupancyFractions]]:
+        week_len = 7 * bins_per_day
+        asleep = HouseholdOccupancyFractions(home=0.0, sleep=1.0)
+        active = HouseholdOccupancyFractions(home=1.0, sleep=0.0)
+
+        first_week = [asleep] * week_len
+        first_week[spike_index] = active
+        return [first_week] + [[asleep] * week_len for _ in range(51)] + [[asleep] * bins_per_day]
+
+    def test_smooth_hvac_state_sequence_removes_short_spike(self):
+        active_mask = [False, False, True, False, False]
+        sleep_mask = [True, True, False, True, True]
+
+        smoothed_active, smoothed_sleep = HVACGenerator._smooth_hvac_state_sequence(
+            active_mask,
+            sleep_mask,
+            minimum_state_bins=2,
+        )
+
+        assert smoothed_active == [False, False, False, False, False]
+        assert smoothed_sleep == [True, True, True, True, True]
+
+    def test_generate_result_smoothing_removes_short_hvac_spike(self):
+        hvac_json = """
+        {
+            "heating": {
+                "type": "thermostat",
+                "active_setpoint": 21.0,
+                "sleep_setpoint": 18.0,
+                "absent_setpoint": 16.0
+            },
+            "cooling": {
+                "type": "thermostat",
+                "active_setpoint": 24.0,
+                "sleep_setpoint": 27.0,
+                "absent_setpoint": 30.0
+            }
+        }"""
+        hvac = HVAC.model_validate_json(hvac_json)
+        assumptions = HVACAssumptions.default()
+        spike_index = 100
+        occupancy_states = self._annual_occupancy_with_single_active_spike(spike_index)
+
+        baseline = HVACGenerator.generate_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=None,
+        )
+        smoothed = HVACGenerator.generate_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=60,
+        )
+
+        assert baseline.heating is not None
+        assert baseline.cooling is not None
+        assert smoothed.heating is not None
+        assert smoothed.cooling is not None
+
+        assert baseline.heating.annual_schedule[spike_index] == 21.0
+        assert baseline.cooling.annual_schedule[spike_index] == 24.0
+        assert smoothed.heating.annual_schedule[spike_index] == 18.0
+        assert smoothed.cooling.annual_schedule[spike_index] == 27.0
+
+    def test_component_generate_result_applies_smoothing_option(self):
+        hvac_json = """
+        {
+            "heating": {
+                "type": "thermostat",
+                "active_setpoint": 21.0,
+                "sleep_setpoint": 18.0,
+                "absent_setpoint": 16.0
+            },
+            "cooling": {
+                "type": "thermostat",
+                "active_setpoint": 24.0,
+                "sleep_setpoint": 27.0,
+                "absent_setpoint": 30.0
+            }
+        }"""
+        hvac = HVAC.model_validate_json(hvac_json)
+        assumptions = HVACAssumptions.default()
+        spike_index = 100
+        occupancy_states = self._annual_occupancy_with_single_active_spike(spike_index)
+
+        heating = HVACGenerator.generate_heating_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=60,
+        )
+        cooling = HVACGenerator.generate_cooling_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=60,
+        )
+
+        assert heating is not None
+        assert cooling is not None
+        assert heating.annual_schedule[spike_index] == 18.0
+        assert cooling.annual_schedule[spike_index] == 27.0
 
     
     def test_no_hvac(self, occ_1, rng):

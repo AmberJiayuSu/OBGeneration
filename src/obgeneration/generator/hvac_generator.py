@@ -1,4 +1,6 @@
 
+import math
+
 from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.occupancy_generator import OccupancyGenerator
 from obgeneration.generator.results import HVACResult, SetpointResult
@@ -85,10 +87,24 @@ class HVACGenerator:
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
+        min_state_mins: int | None = None,
     ) -> HVACResult:
         """Generate annual heating and cooling results with explicit assumptions."""
         generator = HVACGenerator(hvac, assumptions)
         active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        if min_state_mins is not None and min_state_mins > 0:
+            minutes_per_bin = (7 * 24 * 60) / len(occupancy_states[0])
+            min_state_bins = max(1, math.ceil(min_state_mins / minutes_per_bin))
+            smoothed_active_mask, smoothed_sleep_mask = [], []
+            for weekly_active_mask, weekly_sleep_mask in zip(active_mask, sleep_mask):
+                smoothed_active, smoothed_sleep = HVACGenerator._smooth_hvac_state_sequence(
+                    weekly_active_mask,
+                    weekly_sleep_mask,
+                    minimum_state_bins=min_state_bins,
+                )
+                smoothed_active_mask.append(smoothed_active)
+                smoothed_sleep_mask.append(smoothed_sleep)
+            active_mask, sleep_mask = smoothed_active_mask, smoothed_sleep_mask
         heating_schedule, winter_design_day = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
         cooling_schedule, summer_design_day = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
         return HVACResult(
@@ -99,13 +115,15 @@ class HVACGenerator:
     @staticmethod
     def generate_with_defaults(
         hvac: HVAC.HVAC,
-        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]], 
+        min_state_mins: int | None = None,
     ) -> HVACResult:
         """Generate annual heating and cooling results using default assumptions."""
         return HVACGenerator.generate_result(
             hvac=hvac,
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
+            min_state_mins=min_state_mins,
         )
 
     @staticmethod
@@ -113,25 +131,31 @@ class HVACGenerator:
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
+        min_state_mins: int | None = None,
     ) -> SetpointResult | None:
         """Generate an annual cooling setpoint result with explicit assumptions."""
-        generator = HVACGenerator(hvac, assumptions)
-        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        cooling_schedule, summer_design_day = generator.cooling_setpoint_annual_schedule(active_mask, sleep_mask)
-        if cooling_schedule is None:
+        result = HVACGenerator.generate_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=min_state_mins,
+        )
+        if result.cooling is None:
             return None
-        return SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(cooling_schedule), summer_design_day_schedule=summer_design_day)
+        return result.cooling
 
     @staticmethod
     def generate_cooling_with_defaults(
         hvac: HVAC.HVAC,
-        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        min_state_mins: int | None = None,
     ) -> SetpointResult | None:
         """Generate an annual cooling setpoint result using default assumptions."""
         return HVACGenerator.generate_cooling_result(
             hvac=hvac,
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
+            min_state_mins=min_state_mins,
         )
 
     @staticmethod
@@ -139,25 +163,31 @@ class HVACGenerator:
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
+        min_state_mins: int | None = None,
     ) -> SetpointResult | None:
         """Generate an annual heating setpoint result with explicit assumptions."""
-        generator = HVACGenerator(hvac, assumptions)
-        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
-        heating_schedule, winter_design_day = generator.heating_setpoint_annual_schedule(active_mask, sleep_mask)
-        if heating_schedule is None:
+        result = HVACGenerator.generate_result(
+            hvac=hvac,
+            occupancy_states=occupancy_states,
+            assumptions=assumptions,
+            min_state_mins=min_state_mins,
+        )
+        if result.heating is None:
             return None
-        return SetpointResult(annual_schedule=ScheduleUtils.flatten_schedule(heating_schedule), winter_design_day_schedule=winter_design_day)
+        return result.heating
 
     @staticmethod
     def generate_heating_with_defaults(
         hvac: HVAC.HVAC,
-        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]]
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        min_state_mins: int | None = None,
     ) -> SetpointResult | None:
         """Generate an annual heating setpoint result using default assumptions."""
         return HVACGenerator.generate_heating_result(
             hvac=hvac,
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
+            min_state_mins=min_state_mins,
         )
 
     @staticmethod
@@ -174,6 +204,71 @@ class HVACGenerator:
         if level not in level_to_temp:
             raise ValueError(f"Unknown intensity level: {level}")
         return level_to_temp[level]
+
+    @staticmethod
+    def _smooth_hvac_state_sequence(
+        active_mask_sequence: Sequence[bool],
+        sleep_mask_sequence: Sequence[bool],
+        minimum_state_bins: int,
+    ) -> tuple[list[bool], list[bool]]:
+        """Suppress short active/sleep/absent runs in an HVAC state sequence.
+
+        The two masks are interpreted as a mutually-exclusive 3-state sequence:
+        absent=0, sleep=1, active=2. Runs shorter than ``minimum_state_bins`` are
+        replaced by the neighboring state, preferring the shared neighbor when both
+        sides match and otherwise the longer adjacent run.
+        """
+        assert len(active_mask_sequence) == len(sleep_mask_sequence), "active/sleep length mismatch"
+        if minimum_state_bins <= 1:
+            return list(active_mask_sequence), list(sleep_mask_sequence)
+
+        states = [
+            2 if active else 1 if sleep else 0
+            for active, sleep in zip(active_mask_sequence, sleep_mask_sequence)
+        ]
+        if not states:
+            return [], []
+
+        runs: list[tuple[int, int, int]] = []
+        run_start = 0
+        current_state = states[0]
+        for index in range(1, len(states)):
+            if states[index] != current_state:
+                runs.append((run_start, index, current_state))
+                run_start = index
+                current_state = states[index]
+        runs.append((run_start, len(states), current_state))
+
+        smoothed_states = states.copy()
+        for run_index, (start, end, state) in enumerate(runs):
+            run_length = end - start
+            if run_length >= minimum_state_bins:
+                continue
+
+            prev_run = runs[run_index - 1] if run_index > 0 else None
+            next_run = runs[run_index + 1] if run_index + 1 < len(runs) else None
+            prev_state = prev_run[2] if prev_run is not None else None
+            next_state = next_run[2] if next_run is not None else None
+
+            if prev_state is not None and prev_state == next_state:
+                replacement_state = prev_state
+            elif prev_run is None and next_state is not None:
+                replacement_state = next_state
+            elif next_run is None and prev_state is not None:
+                replacement_state = prev_state
+            elif prev_run is not None and next_run is not None:
+                prev_length = prev_run[1] - prev_run[0]
+                next_length = next_run[1] - next_run[0]
+                replacement_state = prev_state if prev_length >= next_length else next_state
+            else:
+                replacement_state = state
+
+            for index in range(start, end):
+                smoothed_states[index] = replacement_state
+
+        smoothed_active_mask = [state == 2 for state in smoothed_states]
+        smoothed_sleep_mask = [state == 1 for state in smoothed_states]
+        return smoothed_active_mask, smoothed_sleep_mask
 
     def heating_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> tuple[list[list[float]], list[float] | None]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule, and identifies the winter design day schedule by finding the day with the highest average temperature."""

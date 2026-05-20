@@ -1,916 +1,754 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "OB Profile Schema",
-    "type": "object",
-    "description": "Input profile consumed by obgeneration.model.Occupant.from_json_file for stochastic residential occupant-behavior schedule generation.",
-    "$defs": {
-        "TimeRange": {
-            "type": "object",
-            "description": "A time range with fractional start and end hours in [0, 24). Wraps midnight when end_hour < start_hour.",
-            "properties": {
-                "start_hour": {
-                    "type": "number",
-                    "minimum": 0,
-                    "exclusiveMaximum": 24,
-                    "default": 0,
-                    "description": "Hour of day when the interval starts."
-                },
-                "end_hour": {
-                    "type": "number",
-                    "minimum": 0,
-                    "exclusiveMaximum": 24,
-                    "default": 0,
-                    "description": "Hour of day when the interval ends."
-                }
-            },
-            "required": [
-                "start_hour",
-                "end_hour"
-            ]
+  "$defs": {
+    "BinaryControl": {
+      "properties": {
+        "type": {
+          "const": "binary",
+          "default": "binary",
+          "title": "Type",
+          "type": "string"
         },
-        "NumberRange": {
-            "type": "object",
-            "description": "Inclusive integer range used for weekly event frequencies.",
-            "properties": {
-                "min": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "default": 0
-                },
-                "max": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "default": 0
-                }
-            },
-            "required": [
-                "min",
-                "max"
-            ]
+        "active_state": {
+          "description": "Intensity level when occupants are active",
+          "title": "Active State",
+          "type": "boolean"
         },
-        "ScheduleRigidness": {
-            "type": "string",
-            "description": "How consistently a time pattern is followed. Maps to a start/end time standard deviation in the generator.",
-            "enum": [
-                "highly_variable",
-                "somewhat_variable",
-                "mostly_consistent",
-                "strict"
-            ]
+        "sleep_state": {
+          "description": "Intensity level during sleep",
+          "title": "Sleep State",
+          "type": "boolean"
         },
-        "MobilityCluster": {
-            "type": "string",
-            "description": "Daily mobility pattern for a single occupant, mapping to an ATUS Markov-chain cluster.",
-            "enum": [
-                "mostly_home",
-                "long_day_away",
-                "morning_away",
-                "afternoon_away",
-                "evening_night_away"
-            ]
-        },
-        "OccupantMobilityProfile": {
-            "type": "object",
-            "description": "Weekday and weekend mobility cluster assignment for a single occupant.",
-            "properties": {
-                "weekday_cluster": {
-                    "$ref": "#/$defs/MobilityCluster"
-                },
-                "weekend_cluster": {
-                    "$ref": "#/$defs/MobilityCluster"
-                }
-            },
-            "required": [
-                "weekday_cluster",
-                "weekend_cluster"
-            ]
-        },
-        "HouseholdComposition": {
-            "type": "object",
-            "description": "Per-occupant mobility cluster assignments. The occupants length should equal occupancy.num_occupants.",
-            "properties": {
-                "occupants": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/$defs/OccupantMobilityProfile"
-                    },
-                    "minItems": 1
-                }
-            },
-            "required": [
-                "occupants"
-            ]
-        },
-        "WeekdayOccupancyPattern": {
-            "type": "object",
-            "description": "Optional weekday household-away pattern used to post-process the Markov occupancy states.",
-            "properties": {
-                "is_always_occupied": {
-                    "type": "boolean"
-                },
-                "away_interval": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/TimeRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "num_of_days": {
-                    "anyOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 5
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "away_time_rigidness": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/ScheduleRigidness"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "required": [
-                "is_always_occupied"
-            ],
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "is_always_occupied": {
-                                "const": false
-                            }
-                        },
-                        "required": [
-                            "is_always_occupied"
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "away_interval"
-                        ],
-                        "properties": {
-                            "away_interval": {
-                                "$ref": "#/$defs/TimeRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "WeekendOccupancyPattern": {
-            "type": "object",
-            "description": "Optional weekend household-away pattern used to post-process the Markov occupancy states.",
-            "properties": {
-                "is_always_occupied": {
-                    "type": "boolean"
-                },
-                "away_interval": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/TimeRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "away_time_rigidness": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/ScheduleRigidness"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "required": [
-                "is_always_occupied"
-            ],
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "is_always_occupied": {
-                                "const": false
-                            }
-                        },
-                        "required": [
-                            "is_always_occupied"
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "away_interval"
-                        ],
-                        "properties": {
-                            "away_interval": {
-                                "$ref": "#/$defs/TimeRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "SleepPattern": {
-            "type": "object",
-            "description": "Optional household sleep pattern used to post-process the Markov occupancy states.",
-            "properties": {
-                "is_always_awake": {
-                    "type": "boolean"
-                },
-                "sleep_time": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/TimeRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "sleep_time_rigidness": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/ScheduleRigidness"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "required": [
-                "is_always_awake"
-            ],
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "is_always_awake": {
-                                "const": false
-                            }
-                        },
-                        "required": [
-                            "is_always_awake"
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "sleep_time"
-                        ],
-                        "properties": {
-                            "sleep_time": {
-                                "$ref": "#/$defs/TimeRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "Occupancy": {
-            "type": "object",
-            "description": "Household occupancy profile.",
-            "properties": {
-                "num_occupants": {
-                    "type": "integer",
-                    "minimum": 1
-                },
-                "household_composition": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/HouseholdComposition"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "weekday_pattern": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/WeekdayOccupancyPattern"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "weekend_pattern": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/WeekendOccupancyPattern"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "sleep_pattern": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/SleepPattern"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "required": [
-                "num_occupants",
-                "household_composition"
-            ]
-        },
-        "Lighting": {
-            "type": "object",
-            "description": "Household lighting profile.",
-            "properties": {
-                "if_led": {
-                    "type": "boolean",
-                    "description": "Whether the household uses LED lighting."
-                },
-                "when_away": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Whether lighting remains on when occupants are away."
-                },
-                "when_daylight_bright": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether lighting is adjusted when daylight is bright."
-                }
-            },
-            "required": [
-                "if_led"
-            ]
-        },
-        "IntensityLevel": {
-            "type": "string",
-            "description": "Valve intensity level.",
-            "enum": [
-                "minimum",
-                "low",
-                "medium",
-                "high",
-                "fullon"
-            ]
-        },
-        "NoControl": {
-            "type": "object",
-            "description": "No occupant control; system runs on building logic.",
-            "properties": {
-                "type": {
-                    "const": "no_control",
-                    "default": "no_control"
-                }
-            },
-            "required": [
-                "type"
-            ]
-        },
-        "BinaryControl": {
-            "type": "object",
-            "description": "Occupants control whether the system is on or off for active, sleep, and absent states.",
-            "properties": {
-                "type": {
-                    "const": "binary",
-                    "default": "binary"
-                },
-                "active_state": {
-                    "type": "boolean"
-                },
-                "sleep_state": {
-                    "type": "boolean"
-                },
-                "absent_state": {
-                    "type": "boolean"
-                }
-            },
-            "required": [
-                "type",
-                "active_state",
-                "sleep_state",
-                "absent_state"
-            ]
-        },
-        "ValveControl": {
-            "type": "object",
-            "description": "Heating valve control. Valid only for heating systems.",
-            "properties": {
-                "type": {
-                    "const": "valve",
-                    "default": "valve"
-                },
-                "active_level": {
-                    "$ref": "#/$defs/IntensityLevel"
-                },
-                "sleep_level": {
-                    "$ref": "#/$defs/IntensityLevel"
-                },
-                "absent_level": {
-                    "$ref": "#/$defs/IntensityLevel"
-                }
-            },
-            "required": [
-                "type",
-                "active_level",
-                "sleep_level",
-                "absent_level"
-            ]
-        },
-        "ThermostatControl": {
-            "type": "object",
-            "description": "Thermostat setpoint control in degrees C. Null setpoints represent off/unset states.",
-            "properties": {
-                "type": {
-                    "const": "thermostat",
-                    "default": "thermostat"
-                },
-                "active_setpoint": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "sleep_setpoint": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "absent_setpoint": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "required": [
-                "type"
-            ]
-        },
-        "HeatingSystem": {
-            "oneOf": [
-                {
-                    "$ref": "#/$defs/NoControl"
-                },
-                {
-                    "$ref": "#/$defs/BinaryControl"
-                },
-                {
-                    "$ref": "#/$defs/ValveControl"
-                },
-                {
-                    "$ref": "#/$defs/ThermostatControl"
-                }
-            ]
-        },
-        "CoolingSystem": {
-            "oneOf": [
-                {
-                    "$ref": "#/$defs/NoControl"
-                },
-                {
-                    "$ref": "#/$defs/BinaryControl"
-                },
-                {
-                    "$ref": "#/$defs/ThermostatControl"
-                }
-            ]
-        },
-        "HVAC": {
-            "type": "object",
-            "description": "Heating and cooling control profile. Either system may be null or omitted.",
-            "properties": {
-                "heating": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/HeatingSystem"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": {
-                        "type": "thermostat",
-                        "active_setpoint": 22,
-                        "sleep_setpoint": 21,
-                        "absent_setpoint": 20
-                    }
-                },
-                "cooling": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/CoolingSystem"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            }
-        },
-        "WindowOpeningBehavior": {
-            "type": "string",
-            "enum": [
-                "frequently_open",
-                "occasionally_open",
-                "always_closed"
-            ]
-        },
-        "Window": {
-            "type": "object",
-            "description": "Window operation profile. Season fields may be null or omitted.",
-            "properties": {
-                "heating_season": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/WindowOpeningBehavior"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "cooling_season": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/WindowOpeningBehavior"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                },
-                "shoulder_season": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/WindowOpeningBehavior"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            }
-        },
-        "FuelType": {
-            "type": "string",
-            "enum": [
-                "electric",
-                "gas",
-                "other"
-            ]
-        },
-        "DishwashingPattern": {
-            "type": "string",
-            "enum": [
-                "after_each_cooked_meal",
-                "daily_batch_if_cooked",
-                "whenever_full",
-                "independent_frequency"
-            ]
-        },
-        "DishwashingLogic": {
-            "type": "object",
-            "description": "Behavioral pattern and optional frequency range for dishwasher events.",
-            "properties": {
-                "pattern_type": {
-                    "$ref": "#/$defs/DishwashingPattern",
-                    "default": "daily_batch_if_cooked"
-                },
-                "usage_frequency_per_week": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/NumberRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "properties": {
-                            "pattern_type": {
-                                "const": "independent_frequency"
-                            }
-                        },
-                        "required": [
-                            "pattern_type"
-                        ]
-                    },
-                    "then": {
-                        "required": [
-                            "usage_frequency_per_week"
-                        ],
-                        "properties": {
-                            "usage_frequency_per_week": {
-                                "$ref": "#/$defs/NumberRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "LaundryEquipment": {
-            "type": "object",
-            "description": "Laundry appliance profile.",
-            "properties": {
-                "has_washer": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "washer_efficient": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "has_dryer": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "dryer_efficient": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "usage_frequency_per_week": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/NumberRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "not": {
-                            "properties": {
-                                "has_washer": {
-                                    "const": false
-                                },
-                                "has_dryer": {
-                                    "const": false
-                                }
-                            },
-                            "required": [
-                                "has_washer",
-                                "has_dryer"
-                            ]
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "usage_frequency_per_week"
-                        ],
-                        "properties": {
-                            "usage_frequency_per_week": {
-                                "$ref": "#/$defs/NumberRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "RefrigerationEquipment": {
-            "type": "object",
-            "description": "Refrigerator appliance profile.",
-            "properties": {
-                "has_refrigerator": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "efficient_refrigerator": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "number_of_refrigerators": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "default": 1
-                }
-            }
-        },
-        "DishwasherEquipment": {
-            "type": "object",
-            "description": "Dishwasher appliance profile.",
-            "properties": {
-                "has_dishwasher": {
-                    "type": "boolean",
-                    "default": false
-                },
-                "dishwasher_efficient": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Whether the dishwasher is efficient. This is the current model field name."
-                },
-                "dishwashing_operational_logic": {
-                    "$ref": "#/$defs/DishwashingLogic",
-                    "default": {
-                        "pattern_type": "daily_batch_if_cooked",
-                        "usage_frequency_per_week": null
-                    }
-                }
-            }
-        },
-        "CookingEquipment": {
-            "type": "object",
-            "description": "Cooking appliance profile.",
-            "properties": {
-                "has_cooking_products": {
-                    "type": "boolean",
-                    "default": true
-                },
-                "cooking_products_fuel": {
-                    "$ref": "#/$defs/FuelType",
-                    "default": "electric"
-                },
-                "usage_frequency_per_week": {
-                    "anyOf": [
-                        {
-                            "$ref": "#/$defs/NumberRange"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": null
-                }
-            },
-            "allOf": [
-                {
-                    "if": {
-                        "not": {
-                            "properties": {
-                                "has_cooking_products": {
-                                    "const": false
-                                }
-                            },
-                            "required": [
-                                "has_cooking_products"
-                            ]
-                        }
-                    },
-                    "then": {
-                        "required": [
-                            "usage_frequency_per_week"
-                        ],
-                        "properties": {
-                            "usage_frequency_per_week": {
-                                "$ref": "#/$defs/NumberRange"
-                            }
-                        }
-                    }
-                }
-            ]
-        },
-        "Equipment": {
-            "type": "object",
-            "description": "Household equipment profile. Subsections are required for profiles intended to run through the schedule generator.",
-            "properties": {
-                "laundry": {
-                    "$ref": "#/$defs/LaundryEquipment",
-                    "default": {
-                        "has_washer": true,
-                        "washer_efficient": true,
-                        "has_dryer": false,
-                        "dryer_efficient": true,
-                        "usage_frequency_per_week": null
-                    }
-                },
-                "refrigerator": {
-                    "$ref": "#/$defs/RefrigerationEquipment",
-                    "default": {
-                        "has_refrigerator": true,
-                        "efficient_refrigerator": true,
-                        "number_of_refrigerators": 1
-                    }
-                },
-                "dishwasher": {
-                    "$ref": "#/$defs/DishwasherEquipment",
-                    "default": {
-                        "has_dishwasher": false,
-                        "dishwasher_efficient": true,
-                        "dishwashing_operational_logic": {
-                            "pattern_type": "daily_batch_if_cooked",
-                            "usage_frequency_per_week": null
-                        }
-                    }
-                },
-                "cooking_products": {
-                    "$ref": "#/$defs/CookingEquipment",
-                    "default": {
-                        "has_cooking_products": true,
-                        "cooking_products_fuel": "electric",
-                        "usage_frequency_per_week": null
-                    }
-                }
-            },
-            "required": [
-                "laundry",
-                "refrigerator",
-                "dishwasher",
-                "cooking_products"
-            ]
-        },
-        "Meta": {
-            "type": "object",
-            "description": "Optional metadata ignored by the current Pydantic loader.",
-            "properties": {
-                "source": {
-                    "type": "string",
-                    "description": "Source label for the profile, for example user_reported, recs/census_imputed, mixed, or test_input."
-                },
-                "date": {
-                    "type": "string",
-                    "format": "date",
-                    "description": "Profile creation or update date in YYYY-MM-DD format."
-                },
-                "zip_code": {
-                    "type": "string",
-                    "pattern": "^[0-9]{5}$",
-                    "description": "Optional household ZIP code."
-                }
-            }
+        "absent_state": {
+          "description": "Intensity level when absent",
+          "title": "Absent State",
+          "type": "boolean"
         }
+      },
+      "required": [
+        "active_state",
+        "sleep_state",
+        "absent_state"
+      ],
+      "title": "BinaryControl",
+      "type": "object"
     },
-    "properties": {
-        "meta": {
-            "$ref": "#/$defs/Meta"
+    "CookingEquipment": {
+      "properties": {
+        "has_cooking_products": {
+          "default": true,
+          "title": "Has Cooking Products",
+          "type": "boolean"
         },
-        "occupancy": {
-            "$ref": "#/$defs/Occupancy"
+        "cooking_products_fuel": {
+          "$ref": "#/$defs/FuelType",
+          "default": "electric"
         },
-        "lighting": {
-            "$ref": "#/$defs/Lighting"
-        },
-        "equipment": {
-            "$ref": "#/$defs/Equipment",
-            "default": {}
-        },
-        "hvac": {
-            "$ref": "#/$defs/HVAC",
-            "default": {}
-        },
-        "window": {
-            "$ref": "#/$defs/Window",
-            "default": {}
+        "usage_frequency_per_week": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NumberRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
+      },
+      "title": "CookingEquipment",
+      "type": "object"
     },
-    "required": [
-        "occupancy",
-        "lighting",
-        "equipment"
-    ]
+    "DishwasherEquipment": {
+      "properties": {
+        "has_dishwasher": {
+          "default": false,
+          "title": "Has Dishwasher",
+          "type": "boolean"
+        },
+        "dishwasher_efficient": {
+          "default": true,
+          "title": "Dishwasher Efficient",
+          "type": "boolean"
+        },
+        "dishwashing_operational_logic": {
+          "$ref": "#/$defs/DishwashingLogic"
+        }
+      },
+      "title": "DishwasherEquipment",
+      "type": "object"
+    },
+    "DishwashingLogic": {
+      "properties": {
+        "pattern_type": {
+          "$ref": "#/$defs/DishwashingPattern",
+          "default": "daily_batch_if_cooked"
+        },
+        "usage_frequency_per_week": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NumberRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "DishwashingLogic",
+      "type": "object"
+    },
+    "DishwashingPattern": {
+      "enum": [
+        "after_each_cooked_meal",
+        "daily_batch_if_cooked",
+        "whenever_full",
+        "independent_frequency"
+      ],
+      "title": "DishwashingPattern",
+      "type": "string"
+    },
+    "Equipment": {
+      "description": "Represents the equipment profile of a household.\nAttributes:\n    laundry (LaundryEquipment): Laundry equipment details.\n    refrigeration (RefrigerationEquipment): Refrigeration equipment details.\n    dishwasher (DishwasherEquipment): Dishwasher equipment details.",
+      "properties": {
+        "laundry": {
+          "$ref": "#/$defs/LaundryEquipment"
+        },
+        "refrigerator": {
+          "$ref": "#/$defs/RefrigerationEquipment"
+        },
+        "dishwasher": {
+          "$ref": "#/$defs/DishwasherEquipment"
+        },
+        "cooking_products": {
+          "$ref": "#/$defs/CookingEquipment"
+        }
+      },
+      "title": "Equipment",
+      "type": "object"
+    },
+    "FuelType": {
+      "enum": [
+        "electric",
+        "gas",
+        "other"
+      ],
+      "title": "FuelType",
+      "type": "string"
+    },
+    "HVAC": {
+      "description": "heating: Can be a specific control system OR None (No heating).\ncooling: Can be a specific control system OR None (No cooling).",
+      "properties": {
+        "heating": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "binary": "#/$defs/BinaryControl",
+                  "no_control": "#/$defs/NoControl",
+                  "thermostat": "#/$defs/ThermostatControl",
+                  "valve": "#/$defs/ValveControl"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/NoControl"
+                },
+                {
+                  "$ref": "#/$defs/BinaryControl"
+                },
+                {
+                  "$ref": "#/$defs/ValveControl"
+                },
+                {
+                  "$ref": "#/$defs/ThermostatControl"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Heating"
+        },
+        "cooling": {
+          "anyOf": [
+            {
+              "discriminator": {
+                "mapping": {
+                  "binary": "#/$defs/BinaryControl",
+                  "no_control": "#/$defs/NoControl",
+                  "thermostat": "#/$defs/ThermostatControl"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/NoControl"
+                },
+                {
+                  "$ref": "#/$defs/BinaryControl"
+                },
+                {
+                  "$ref": "#/$defs/ThermostatControl"
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cooling"
+        }
+      },
+      "title": "HVAC",
+      "type": "object"
+    },
+    "HouseholdComposition": {
+      "description": "Per-occupant mobility cluster assignments for the household.",
+      "properties": {
+        "occupants": {
+          "items": {
+            "$ref": "#/$defs/OccupantMobilityProfile"
+          },
+          "title": "Occupants",
+          "type": "array"
+        }
+      },
+      "required": [
+        "occupants"
+      ],
+      "title": "HouseholdComposition",
+      "type": "object"
+    },
+    "IntensityLevel": {
+      "description": "Intensity levels for valve control (minimum=frost prevention*, low=~25%, medium=~50%, high=~75%, fullon=100%)",
+      "enum": [
+        "minimum",
+        "low",
+        "medium",
+        "high",
+        "fullon"
+      ],
+      "title": "IntensityLevel",
+      "type": "string"
+    },
+    "LaundryEquipment": {
+      "properties": {
+        "has_washer": {
+          "default": true,
+          "title": "Has Washer",
+          "type": "boolean"
+        },
+        "washer_efficient": {
+          "default": true,
+          "title": "Washer Efficient",
+          "type": "boolean"
+        },
+        "has_dryer": {
+          "default": false,
+          "title": "Has Dryer",
+          "type": "boolean"
+        },
+        "dryer_efficient": {
+          "default": true,
+          "title": "Dryer Efficient",
+          "type": "boolean"
+        },
+        "usage_frequency_per_week": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/NumberRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "LaundryEquipment",
+      "type": "object"
+    },
+    "Lighting": {
+      "description": "Represents the lighting profile of a household.",
+      "properties": {
+        "if_led": {
+          "description": "Indicates if the household uses LED lighting.",
+          "title": "If Led",
+          "type": "boolean"
+        },
+        "when_away": {
+          "default": false,
+          "description": "Indicates if lighting is on when people are away.",
+          "title": "When Away",
+          "type": "boolean"
+        },
+        "when_daylight_bright": {
+          "default": true,
+          "description": "Indicates if lighting is adjusted based on daylight brightness.",
+          "title": "When Daylight Bright",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "if_led"
+      ],
+      "title": "Lighting",
+      "type": "object"
+    },
+    "MobilityCluster": {
+      "description": "Mobility cluster for a single occupant.\nMaps to a Markov-chain centroid (cluster index 0\u20134) in the generator.\n- MOSTLY_HOME: near-zero away probability all day\n- LONG_DAY_AWAY: away from early morning through evening (work, school, day trip)\n- MORNING_AWAY: away peaking early morning through late morning (~4am\u201312pm)\n- AFTERNOON_AWAY: away peaking from late morning through early evening\n- EVENING_NIGHT_AWAY: away rising into evening and night",
+      "enum": [
+        "mostly_home",
+        "long_day_away",
+        "morning_away",
+        "afternoon_away",
+        "evening_night_away"
+      ],
+      "title": "MobilityCluster",
+      "type": "string"
+    },
+    "NoControl": {
+      "properties": {
+        "type": {
+          "const": "no_control",
+          "default": "no_control",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "title": "NoControl",
+      "type": "object"
+    },
+    "NumberRange": {
+      "properties": {
+        "min": {
+          "default": 0,
+          "title": "Min",
+          "type": "integer"
+        },
+        "max": {
+          "default": 0,
+          "title": "Max",
+          "type": "integer"
+        }
+      },
+      "title": "NumberRange",
+      "type": "object"
+    },
+    "Occupancy": {
+      "description": "The occupancy of the household (number of occupants, household composition, occupancy patterns).",
+      "properties": {
+        "num_occupants": {
+          "minimum": 1,
+          "title": "Num Occupants",
+          "type": "integer"
+        },
+        "household_composition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HouseholdComposition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weekday_pattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WeekdayOccupancyPattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "weekend_pattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WeekendOccupancyPattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sleep_pattern": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SleepPattern"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "num_occupants"
+      ],
+      "title": "Occupancy",
+      "type": "object"
+    },
+    "OccupantMobilityProfile": {
+      "description": "Weekday and weekend mobility cluster assignment for a single occupant.",
+      "properties": {
+        "weekday_cluster": {
+          "$ref": "#/$defs/MobilityCluster"
+        },
+        "weekend_cluster": {
+          "$ref": "#/$defs/MobilityCluster"
+        }
+      },
+      "required": [
+        "weekday_cluster",
+        "weekend_cluster"
+      ],
+      "title": "OccupantMobilityProfile",
+      "type": "object"
+    },
+    "RefrigerationEquipment": {
+      "properties": {
+        "has_refrigerator": {
+          "default": true,
+          "title": "Has Refrigerator",
+          "type": "boolean"
+        },
+        "efficient_refrigerator": {
+          "default": true,
+          "title": "Efficient Refrigerator",
+          "type": "boolean"
+        },
+        "number_of_refrigerators": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Number Of Refrigerators",
+          "type": "integer"
+        }
+      },
+      "title": "RefrigerationEquipment",
+      "type": "object"
+    },
+    "ScheduleRigidness": {
+      "description": "How consistently a time pattern is followed.\nMaps internally to a standard deviation applied to start/end hours.\n- HIGHLY_VARIABLE: schedule shifts by ~2 hrs regularly\n- SOMEWHAT_VARIABLE: schedule shifts by ~1 hr regularly\n- MOSTLY_CONSISTENT: schedule shifts by ~30 min regularly\n- STRICT: schedule shifts by ~15 min regularly",
+      "enum": [
+        "highly_variable",
+        "somewhat_variable",
+        "mostly_consistent",
+        "strict"
+      ],
+      "title": "ScheduleRigidness",
+      "type": "string"
+    },
+    "SleepPattern": {
+      "description": "Defines the typical sleep time pattern for the household.",
+      "properties": {
+        "is_always_awake": {
+          "title": "Is Always Awake",
+          "type": "boolean"
+        },
+        "sleep_time": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sleep_time_rigidness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScheduleRigidness"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "is_always_awake"
+      ],
+      "title": "SleepPattern",
+      "type": "object"
+    },
+    "ThermostatControl": {
+      "properties": {
+        "type": {
+          "const": "thermostat",
+          "default": "thermostat",
+          "title": "Type",
+          "type": "string"
+        },
+        "active_setpoint": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Active Temp C",
+          "title": "Active Setpoint"
+        },
+        "sleep_setpoint": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Sleep Temp C",
+          "title": "Sleep Setpoint"
+        },
+        "absent_setpoint": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Absent Temp C",
+          "title": "Absent Setpoint"
+        }
+      },
+      "title": "ThermostatControl",
+      "type": "object"
+    },
+    "TimeRange": {
+      "description": "Represents a time range with start and end hours.\nAttributes:\n    start_hour (float): The hour of the day [0-24) when the time range starts.\n    end_hour (float): The hour of the day [0-24) when the time range ends.",
+      "properties": {
+        "start_hour": {
+          "default": 0,
+          "exclusiveMaximum": 24,
+          "minimum": 0,
+          "title": "Start Hour",
+          "type": "number"
+        },
+        "end_hour": {
+          "default": 0,
+          "exclusiveMaximum": 24,
+          "minimum": 0,
+          "title": "End Hour",
+          "type": "number"
+        }
+      },
+      "title": "TimeRange",
+      "type": "object"
+    },
+    "ValveControl": {
+      "properties": {
+        "type": {
+          "const": "valve",
+          "default": "valve",
+          "title": "Type",
+          "type": "string"
+        },
+        "active_level": {
+          "$ref": "#/$defs/IntensityLevel",
+          "description": "Intensity level when occupants are active"
+        },
+        "sleep_level": {
+          "$ref": "#/$defs/IntensityLevel",
+          "description": "Intensity level during sleep"
+        },
+        "absent_level": {
+          "$ref": "#/$defs/IntensityLevel",
+          "description": "Intensity level when absent"
+        }
+      },
+      "required": [
+        "active_level",
+        "sleep_level",
+        "absent_level"
+      ],
+      "title": "ValveControl",
+      "type": "object"
+    },
+    "WeekdayOccupancyPattern": {
+      "description": "Defines the weekday unoccupied patterns.",
+      "properties": {
+        "is_always_occupied": {
+          "title": "Is Always Occupied",
+          "type": "boolean"
+        },
+        "away_interval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "num_of_days": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Num Of Days"
+        },
+        "away_time_rigidness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScheduleRigidness"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "is_always_occupied"
+      ],
+      "title": "WeekdayOccupancyPattern",
+      "type": "object"
+    },
+    "WeekendOccupancyPattern": {
+      "description": "Defines the weekend unoccupied patterns.",
+      "properties": {
+        "is_always_occupied": {
+          "title": "Is Always Occupied",
+          "type": "boolean"
+        },
+        "away_interval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeRange"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "away_time_rigidness": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ScheduleRigidness"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "is_always_occupied"
+      ],
+      "title": "WeekendOccupancyPattern",
+      "type": "object"
+    },
+    "Window": {
+      "description": "Represents the window operation characteristics of a household.",
+      "properties": {
+        "heating_season": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WindowOpeningBehavior"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Window opening behavior during heating season"
+        },
+        "cooling_season": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WindowOpeningBehavior"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Window opening behavior during cooling season"
+        },
+        "shoulder_season": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WindowOpeningBehavior"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Window opening behavior during shoulder seasons"
+        }
+      },
+      "title": "Window",
+      "type": "object"
+    },
+    "WindowOpeningBehavior": {
+      "description": "Window opening behavior patterns.",
+      "enum": [
+        "frequently_open",
+        "occasionally_open",
+        "always_closed"
+      ],
+      "title": "WindowOpeningBehavior",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "occupancy": {
+      "$ref": "#/$defs/Occupancy"
+    },
+    "lighting": {
+      "$ref": "#/$defs/Lighting"
+    },
+    "equipment": {
+      "$ref": "#/$defs/Equipment"
+    },
+    "hvac": {
+      "$ref": "#/$defs/HVAC"
+    },
+    "window": {
+      "$ref": "#/$defs/Window"
+    }
+  },
+  "required": [
+    "occupancy",
+    "lighting",
+    "equipment",
+    "hvac",
+    "window"
+  ],
+  "title": "Occupant",
+  "type": "object"
 }
