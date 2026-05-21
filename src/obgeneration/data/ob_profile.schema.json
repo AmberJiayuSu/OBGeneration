@@ -280,12 +280,6 @@
           "title": "If Led",
           "type": "boolean"
         },
-        "when_away": {
-          "default": false,
-          "description": "Indicates if lighting is on when people are away.",
-          "title": "When Away",
-          "type": "boolean"
-        },
         "when_daylight_bright": {
           "default": true,
           "description": "Indicates if lighting is adjusted based on daylight brightness.",
@@ -715,11 +709,12 @@
       "type": "object"
     },
     "WindowOpeningBehavior": {
-      "description": "Window opening behavior patterns.",
+      "description": "Low-dimensional household window-opening behavior pattern.\n\nThe categories are intentionally behavioral rather than purely frequency-based.\nThe key distinction is whether window opening is coordinated with mechanical\nHVAC operation or may occur while HVAC remains on.",
       "enum": [
-        "frequently_open",
+        "always_closed",
+        "natural_ventilation",
         "occasionally_open",
-        "always_closed"
+        "long_open"
       ],
       "title": "WindowOpeningBehavior",
       "type": "string"

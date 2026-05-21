@@ -116,54 +116,82 @@ class ScheduleUtils:
 
 
     @staticmethod
-    def plot_annual_schedule_heatmap(schedule: Sequence[float] | Sequence[Sequence[float]], title: str,  colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
-        """Plot annual schedule as a heatmap with days on x-axis and timesteps per day on y-axis.
-        
+    def annual_schedule_heatmap_figure(
+        flat_schedule: Sequence[float],
+        title: str,
+        colormap: str = "YlGn",
+        vmin=None,
+        vmax=None,
+    ) -> Figure:
+        """Plot a sequential flat annual schedule as a 365-day heatmap.
+
         Args:
-            schedule: Either a flattened list of floats or nested list of lists (weeks)
-            title: Title for the plot
-            out_path: Path where the plot will be saved
-            resolution_mins: Time resolution in minutes (used to calculate timesteps per day)
-            colormap: Colormap name for the heatmap (default: 'YlGn')
+            flat_schedule: Flat array-like schedule ordered sequentially in time across the year.
+            title: Figure title.
+            colormap: Matplotlib colormap name.
+            vmin: Optional lower bound for the color scale.
+            vmax: Optional upper bound for the color scale.
+
+        Returns:
+            matplotlib.figure.Figure: Figure containing the heatmap.
         """
-        # flatten schedule if nested
+        if len(flat_schedule) == 0:
+            raise ValueError("flat_schedule must not be empty.")
+        if len(flat_schedule) % 365 != 0:
+            raise ValueError(
+                f"flat_schedule length {len(flat_schedule)} is not divisible by 365."
+            )
+
+        timesteps_per_day = len(flat_schedule) // 365
+        minutes_per_step = 1440 / timesteps_per_day
+        steps_per_hour = 60 / minutes_per_step
+        heatmap_data = np.array(flat_schedule, dtype=float).reshape(365, timesteps_per_day).T
+
+        fig, ax = plt.subplots(figsize=(12, 3))
+        im = ax.imshow(
+            heatmap_data,
+            aspect="auto",
+            cmap=colormap,
+            vmin=vmin,
+            vmax=vmax,
+            origin="upper",
+        )
+
+        colorbar = fig.colorbar(im, ax=ax)
+        colorbar.set_label("Schedule", rotation=270, labelpad=20)
+
+        week_ticks = [day for day in range(0, 365, 28)]
+        ax.set_xticks(week_ticks)
+        ax.set_xticklabels([f"Week {day // 7}" for day in week_ticks])
+        ax.set_xlabel("Day of Year")
+
+        hour_tick_positions = [
+            int(hour * steps_per_hour)
+            for hour in range(0, 25, 2)
+            if int(hour * steps_per_hour) < timesteps_per_day
+        ]
+        ax.set_yticks(hour_tick_positions)
+        ax.set_yticklabels([
+            str(hour)
+            for hour in range(0, 25, 2)
+            if int(hour * steps_per_hour) < timesteps_per_day
+        ])
+        ax.set_ylabel("Hour of Day")
+        ax.set_title(title)
+        return fig
+
+    @staticmethod
+    def plot_annual_schedule_heatmap(schedule: Sequence[float] | Sequence[Sequence[float]], title: str,  colormap: str = 'YlGn', vmin=0, vmax=1) -> None:
+        """Plot annual schedule as a heatmap with days on x-axis and timesteps per day on y-axis."""
         if schedule and isinstance(schedule[0], (Sequence, np.ndarray)) and not isinstance(schedule[0], (str, bytes)):
             schedule = ScheduleUtils.flatten_schedule(schedule)
-        
-        timesteps_per_day = len(schedule) // 365
-        num_per_hour = 60 / (1440 / timesteps_per_day)
-        
-        heatmap_data = np.array(schedule, dtype=float).reshape(365, timesteps_per_day).T
-
-        fig2, ax_heat = plt.subplots(figsize=(12, 3))
-
-        # Create heatmap
-        im = ax_heat.imshow(heatmap_data, aspect='auto', cmap=colormap, vmin=vmin, vmax=vmax, origin='upper')
-
-        # Add colorbar
-        cbar = fig2.colorbar(im, ax=ax_heat)
-        cbar.set_label('Schedule', rotation=270, labelpad=20)
-
-        # Set x-axis (days)
-        num_days = heatmap_data.shape[1]
-        # Show ticks at week boundaries (every 7 days)
-        week_ticks = [w * 7 for w in range(0, (num_days // 7) + 1, 4) if w * 7 < num_days]
-        ax_heat.set_xticks(week_ticks)
-        ax_heat.set_xticklabels([f'Week {w}' for w in range(0, (num_days // 7) + 1, 4) if w * 7 < num_days])
-        ax_heat.set_xlabel('Day of Year')
-
-        # Set y-axis (hours of day)
-        # Show hour labels at every 2 hours
-        hour_tick_positions = [int(h * num_per_hour) for h in range(0, 25, 2) if int(h * num_per_hour) < timesteps_per_day]
-        ax_heat.set_yticks(hour_tick_positions)
-        ax_heat.set_yticklabels([str(h) for h in range(0, 25, 2) if int(h * num_per_hour) < timesteps_per_day])
-        ax_heat.set_ylabel('Hour of Day')
-
-
-        ax_heat.set_title(title)
-
-        fig2.tight_layout()
-        return fig2
+        return ScheduleUtils.annual_schedule_heatmap_figure(
+            flat_schedule=schedule,
+            title=title,
+            colormap=colormap,
+            vmin=vmin,
+            vmax=vmax,
+        )
 
 
     @staticmethod

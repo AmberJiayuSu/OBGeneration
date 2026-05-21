@@ -229,20 +229,32 @@ class HVACGenerator:
         if not states:
             return [], []
 
-        runs: list[tuple[int, int, int]] = []
+        runs: list[list[int]] = []
         run_start = 0
         current_state = states[0]
         for index in range(1, len(states)):
             if states[index] != current_state:
-                runs.append((run_start, index, current_state))
+                runs.append([run_start, index, current_state])
                 run_start = index
                 current_state = states[index]
-        runs.append((run_start, len(states), current_state))
+        runs.append([run_start, len(states), current_state])
 
-        smoothed_states = states.copy()
-        for run_index, (start, end, state) in enumerate(runs):
+        def _coalesce_around(run_index: int) -> int:
+            while 0 < run_index < len(runs) and runs[run_index - 1][2] == runs[run_index][2]:
+                runs[run_index - 1][1] = runs[run_index][1]
+                del runs[run_index]
+                run_index -= 1
+            while run_index + 1 < len(runs) and runs[run_index + 1][2] == runs[run_index][2]:
+                runs[run_index][1] = runs[run_index + 1][1]
+                del runs[run_index + 1]
+            return run_index
+
+        run_index = 0
+        while run_index < len(runs):
+            start, end, state = runs[run_index]
             run_length = end - start
             if run_length >= minimum_state_bins:
+                run_index += 1
                 continue
 
             prev_run = runs[run_index - 1] if run_index > 0 else None
@@ -261,14 +273,22 @@ class HVACGenerator:
                 next_length = next_run[1] - next_run[0]
                 replacement_state = prev_state if prev_length >= next_length else next_state
             else:
-                replacement_state = state
+                break
 
+            runs[run_index][2] = replacement_state
+            run_index = _coalesce_around(run_index)
+            if run_index > 0:
+                run_index -= 1
+
+        smoothed_states = [0] * len(states)
+        for start, end, state in runs:
             for index in range(start, end):
-                smoothed_states[index] = replacement_state
+                smoothed_states[index] = state
 
         smoothed_active_mask = [state == 2 for state in smoothed_states]
         smoothed_sleep_mask = [state == 1 for state in smoothed_states]
         return smoothed_active_mask, smoothed_sleep_mask
+
 
     def heating_setpoint_annual_schedule(self, active_mask_annual: Sequence[Sequence[bool]], sleep_mask_annual: Sequence[Sequence[bool]]) -> tuple[list[list[float]], list[float] | None]:
         """ Translates HVAC heating setpoint schedule in celcius into a full week schedule, and identifies the winter design day schedule by finding the day with the highest average temperature."""

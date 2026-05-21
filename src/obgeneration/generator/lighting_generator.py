@@ -112,12 +112,13 @@ class LightingGenerator:
     def lighting_weekly_schedule(self, weekly_schedule: Sequence[HouseholdOccupancyFractions], sleep_mask_weekly: Sequence[bool]) -> list[float]:
         """ Translates lighting usage pattern into a full week schedule based on occupancy and sleep times."""
         schedule = []
-        length = len(sleep_mask_weekly)
-
-        if self.lighting.when_away:
-            schedule = [occupancy.home for occupancy in weekly_schedule]
-        else:
-            schedule = [1.0] * length
+        schedule = [occupancy.home for occupancy in weekly_schedule]
+        
+        # length = len(sleep_mask_weekly)
+        # if self.lighting.when_away:
+        #     schedule = [occupancy.home for occupancy in weekly_schedule]
+        # else:
+        #     schedule = [1.0] * length
 
         # Adjust for sleep times
         # Assumption: during sleep time, lighting usage is zero

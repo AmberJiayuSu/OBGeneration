@@ -18,29 +18,17 @@ class WindowAssumptions(BaseModel):
     shoulder_season: list[WeekRange] = Field(..., description="Start and end week numbers for shoulder seasons (inclusive, weeks 1-52).")
     short_open_duration: Distribution = Field(..., description="Short open duration in minutes.")
     short_opening_times: Distribution = Field(..., description="The number of times the window is opened for short duration in a day.")
-    small_open_fraction: float = Field(..., description="The fraction of the window that is opened for long duration.")
-    large_open_fraction: float = Field(..., description="The fraction of the window that is opened for short duration.")
+    long_open_duration: Distribution = Field(..., description="Long open duration in minutes.")
+    long_opening_times: Distribution = Field(..., description="The number of times the window is opened for long duration in a week.")
+    natural_ventilation_opening_fraction: float = Field(..., ge=0.0, le=1.0, description="Opening fraction for natural ventilation behavior.")
+    occasionally_open_fraction: float = Field(..., ge=0.0, le=1.0, description="Opening fraction for occasionally open behavior.")
+    long_open_fraction: float = Field(..., ge=0.0, le=1.0, description="Opening fraction for long open behavior.")
 
 
     @classmethod
     def from_json_file(cls, path: str | Path) -> "WindowAssumptions":
-        """Load window assumptions from a JSON file.
-        
-        Expected JSON format:
-        {
-          "heating_season": [start_week, end_week],  // e.g., [42, 19] for weeks 42-19
-          "cooling_season": [start_week, end_week],  // e.g., [25, 35] for weeks 25-35
-          "shoulder_season": [                        // list of shoulder season ranges
-            [start_week, end_week],                  // e.g., [21, 24] for weeks 21-24
-            [start_week, end_week]                   // e.g., [36, 40] for weeks 36-40
-          ],
-          "short_open_duration": {...},               // DistributionConfig dict
-          "short_opening_times": {...},               // DistributionConfig dict
-          "small_open_fraction": 0.05,
-          "large_open_fraction": 0.5
-        }
-        
-        Weeks are numbered 1-52, where week 1 starts on January 1st.
+        """Load window assumptions from a JSON file
+           Weeks are numbered 1-52, where week 1 starts on January 1st.
         """
         data = json.loads(Path(path).read_text())
         
@@ -56,6 +44,11 @@ class WindowAssumptions(BaseModel):
         data['shoulder_season'] = [parse_week_range(season) for season in data['shoulder_season']]
         data['short_open_duration'] = DistributionConfig(data['short_open_duration']).build()
         data['short_opening_times'] = DistributionConfig(data['short_opening_times']).build()
+        data['long_open_duration'] = DistributionConfig(data['long_open_duration']).build()
+        data['long_opening_times'] = DistributionConfig(data['long_opening_times']).build()
+        data['natural_ventilation_opening_fraction'] = data['natural_ventilation_opening_fraction']
+        data['occasionally_open_fraction'] = data['occasionally_open_fraction']
+        data['long_open_fraction'] = data['long_open_fraction']
         return cls(**data)
 
 
@@ -68,8 +61,11 @@ class WindowAssumptions(BaseModel):
             shoulder_season=[(20, 24), (36, 41)],  # Weeks 20-24 and 36-41
             short_open_duration=DistributionConfig(dist_type="normal", params={"mean": 10, "std": 5, "lower": 0, "upper": 30, "int": False}).build(),
             short_opening_times=DistributionConfig(dist_type="normal", params={"mean": 2, "std": 1, "lower": 0, "upper": 3, "int": False}).build(),
-            small_open_fraction=0.05,
-            large_open_fraction=0.5
+            long_open_duration=DistributionConfig(dist_type="normal", params={"mean": 180, "std": 60, "lower": 0, "upper": 300, "int": False}).build(),
+            long_opening_times=DistributionConfig(dist_type="normal", params={"mean": 1, "std": 0.5, "lower": 0, "upper": 3, "int": False}).build(),
+            natural_ventilation_opening_fraction=0.5,
+            occasionally_open_fraction=0.5,
+            long_open_fraction=0.3
         )
 
 class WindowGenerator:
@@ -80,120 +76,143 @@ class WindowGenerator:
         self.assumptions = assumptions
         self.resolution_mins = resolution_mins
 
-    
-
-    def window_annual_schedule(self, occupancy_active_mask: list[list[bool]]) -> list[list[float]]:
-        schedule = [[0.0 for _ in row] for row in occupancy_active_mask]
+    def window_annual_schedule(self, lowest_cooling_setpoint, highest_heating_setpoint, occupancy_active_mask: list[list[bool]]) -> list[list[float]]:
+        raise NotImplementedError("Window schedule generation is not yet implemented. This will produce a schedule of window opening fractions based on the specified window behavior and assumptions, coordinated with occupancy patterns and HVAC setpoints.")
+        opening_fraction_schedule = [[0.0 for _ in row] for row in occupancy_active_mask] #start with all off
+        max_outdoor_temp_schedule = [[lowest_cooling_setpoint for _ in row] for row in occupancy_active_mask] 
+        min_outdoor_temp_schedule = [[highest_heating_setpoint for _ in row] for row in occupancy_active_mask]
         if self.window.heating_season is not None:
-            if self.window.heating_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-                for i in range(len(schedule)):
-                    if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-                        for j in range(len(schedule[i])):
-                            if occupancy_active_mask[i][j]:
-                                schedule[i][j] = self.assumptions.small_open_fraction
+            if self.window.heating_season == WindowOpeningBehavior.NATURAL_VENTILATION:
+                for i in range(len(opening_fraction_schedule)):
+                    for j in range(len(opening_fraction_schedule[i])):
+                        if occupancy_active_mask[i][j]:
+                            opening_fraction_schedule[i][j] = self.assumptions.natural_ventilation_opening_fraction
             elif self.window.heating_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-                slots_per_day = 24 * (60 // self.resolution_mins)
-                for i in range(len(schedule)):
+                for i in range(len(opening_fraction_schedule)):
                     if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-                        day_range = 1 if i == 52 else 7
-                        for d in range(day_range):
-                            num_of_times = round(self.assumptions.short_opening_times.sample())
-                            day_start = d * slots_per_day
-                            day_end = day_start + slots_per_day
-                            occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-                            start_time_dist = CategoricalDistribution(occupancy_mask_float)
-                            cnt = 0
-                            max_attempts = num_of_times * 10 + 50
-                            attempts = 0
-                            while cnt < num_of_times and attempts < max_attempts:
-                                attempts += 1
-                                start_time = start_time_dist.sample()
-                                start_time_index = day_start + start_time
-                                duration = self.assumptions.short_open_duration.sample()
-                                duration_index = max(1, round(duration / self.resolution_mins))
-                                if start_time_index + duration_index > day_end:
-                                    continue
-                                for j in range(start_time_index, start_time_index + duration_index):
-                                    schedule[i][j] = self.assumptions.large_open_fraction
-                                cnt += 1
-                                start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
-
-        if self.window.cooling_season is not None:
-            if self.window.cooling_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-                for i in range(len(schedule)):
-                    if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
-                        for j in range(len(schedule[i])):
+                        for j in range(len(opening_fraction_schedule[i])):
                             if occupancy_active_mask[i][j]:
-                                schedule[i][j] = self.assumptions.small_open_fraction
-            elif self.window.cooling_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-                slots_per_day = 24 * (60 // self.resolution_mins)
-                for i in range(len(schedule)):
-                    if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
-                        day_range = 1 if i == 52 else 7
-                        for d in range(day_range):
-                            num_of_times = round(self.assumptions.short_opening_times.sample())
-                            day_start = d * slots_per_day
-                            day_end = day_start + slots_per_day
-                            occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-                            start_time_dist = CategoricalDistribution(occupancy_mask_float)
-                            cnt = 0
-                            max_attempts = num_of_times * 10 + 50
-                            attempts = 0
-                            while cnt < num_of_times and attempts < max_attempts:
-                                attempts += 1
-                                start_time = start_time_dist.sample()
-                                start_time_index = day_start + start_time
-                                duration = self.assumptions.short_open_duration.sample()
-                                duration_index = max(1, round(duration / self.resolution_mins))
-                                if start_time_index + duration_index > day_end:
-                                    continue
-                                for j in range(start_time_index, start_time_index + duration_index):
-                                    schedule[i][j] = self.assumptions.large_open_fraction
-                                cnt += 1
-                                start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
+                                opening_fraction_schedule[i][j] = self.assumptions.occasionally_open_fraction
+                                min_outdoor_temp_schedule[i][j] = -100
+            elif self.window.heating_season == WindowOpeningBehavior.LONG_OPEN:
+                for i in range(len(opening_fraction_schedule)):
+                    if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
+                        for j in range(len(opening_fraction_schedule[i])):
+                            if occupancy_active_mask[i][j]:
+                                opening_fraction_schedule[i][j] = self.assumptions.long_open_fraction
+                                min_outdoor_temp_schedule[i][j] = -100
+        if self.window.cooling_season is not None:
+            pass
         if self.window.shoulder_season is not None:
-            if self.window.shoulder_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-                for i in range(len(schedule)):
-                    for season in self.assumptions.shoulder_season:
-                        if WindowGenerator.in_week_range(i, season[0], season[1]):
-                            for j in range(len(schedule[i])):
-                                if occupancy_active_mask[i][j]:
-                                    schedule[i][j] = self.assumptions.small_open_fraction
-            elif self.window.shoulder_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-                slots_per_day = 24 * (60 // self.resolution_mins)
-                for i in range(len(schedule)):
-                    for season in self.assumptions.shoulder_season:
-                        if WindowGenerator.in_week_range(i, season[0], season[1]):
-                            day_range = 1 if i == 52 else 7
-                            for d in range(day_range):
-                                num_of_times = round(self.assumptions.short_opening_times.sample())
-                                day_start = d * slots_per_day
-                                day_end = day_start + slots_per_day
-                                occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-                                start_time_dist = CategoricalDistribution(occupancy_mask_float)
-                                cnt = 0
-                                max_attempts = num_of_times * 10 + 50
-                                attempts = 0
-                                while cnt < num_of_times and attempts < max_attempts:
-                                    attempts += 1
-                                    start_time = start_time_dist.sample()
-                                    start_time_index = day_start + start_time
-                                    duration = self.assumptions.short_open_duration.sample()
-                                    duration_index = max(1, round(duration / self.resolution_mins))
-                                    if start_time_index + duration_index > day_end:
-                                        continue
-                                    for j in range(start_time_index, start_time_index + duration_index):
-                                        schedule[i][j] = self.assumptions.large_open_fraction
-                                    cnt += 1
-                                    start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
-        return schedule
+            for i in range(len(opening_fraction_schedule)):
+                for j in range(len(opening_fraction_schedule[i])):
+                    if occupancy_active_mask[i][j]:
+                        opening_fraction_schedule[i][j] = self.assumptions.shoulder_season_opening_fraction
+        # if self.window.heating_season is not None:
+        #     if self.window.heating_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
+        #         for i in range(len(schedule)):
+        #             if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
+        #                 for j in range(len(schedule[i])):
+        #                     if occupancy_active_mask[i][j]:
+        #                         schedule[i][j] = self.assumptions.small_open_fraction
+        #     elif self.window.heating_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
+        #         slots_per_day = 24 * (60 // self.resolution_mins)
+        #         for i in range(len(schedule)):
+        #             if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
+        #                 day_range = 1 if i == 52 else 7
+        #                 for d in range(day_range):
+        #                     num_of_times = round(self.assumptions.short_opening_times.sample())
+        #                     day_start = d * slots_per_day
+        #                     day_end = day_start + slots_per_day
+        #                     occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
+        #                     start_time_dist = CategoricalDistribution(occupancy_mask_float)
+        #                     cnt = 0
+        #                     max_attempts = num_of_times * 10 + 50
+        #                     attempts = 0
+        #                     while cnt < num_of_times and attempts < max_attempts:
+        #                         attempts += 1
+        #                         start_time = start_time_dist.sample()
+        #                         start_time_index = day_start + start_time
+        #                         duration = self.assumptions.short_open_duration.sample()
+        #                         duration_index = max(1, round(duration / self.resolution_mins))
+        #                         if start_time_index + duration_index > day_end:
+        #                             continue
+        #                         for j in range(start_time_index, start_time_index + duration_index):
+        #                             schedule[i][j] = self.assumptions.large_open_fraction
+        #                         cnt += 1
+        #                         start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
+
+        # if self.window.cooling_season is not None:
+        #     if self.window.cooling_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
+        #         for i in range(len(schedule)):
+        #             if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
+        #                 for j in range(len(schedule[i])):
+        #                     if occupancy_active_mask[i][j]:
+        #                         schedule[i][j] = self.assumptions.small_open_fraction
+        #     elif self.window.cooling_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
+        #         slots_per_day = 24 * (60 // self.resolution_mins)
+        #         for i in range(len(schedule)):
+        #             if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
+        #                 day_range = 1 if i == 52 else 7
+        #                 for d in range(day_range):
+        #                     num_of_times = round(self.assumptions.short_opening_times.sample())
+        #                     day_start = d * slots_per_day
+        #                     day_end = day_start + slots_per_day
+        #                     occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
+        #                     start_time_dist = CategoricalDistribution(occupancy_mask_float)
+        #                     cnt = 0
+        #                     max_attempts = num_of_times * 10 + 50
+        #                     attempts = 0
+        #                     while cnt < num_of_times and attempts < max_attempts:
+        #                         attempts += 1
+        #                         start_time = start_time_dist.sample()
+        #                         start_time_index = day_start + start_time
+        #                         duration = self.assumptions.short_open_duration.sample()
+        #                         duration_index = max(1, round(duration / self.resolution_mins))
+        #                         if start_time_index + duration_index > day_end:
+        #                             continue
+        #                         for j in range(start_time_index, start_time_index + duration_index):
+        #                             schedule[i][j] = self.assumptions.large_open_fraction
+        #                         cnt += 1
+        #                         start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
+        # if self.window.shoulder_season is not None:
+        #     if self.window.shoulder_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
+        #         for i in range(len(schedule)):
+        #             for season in self.assumptions.shoulder_season:
+        #                 if WindowGenerator.in_week_range(i, season[0], season[1]):
+        #                     for j in range(len(schedule[i])):
+        #                         if occupancy_active_mask[i][j]:
+        #                             schedule[i][j] = self.assumptions.small_open_fraction
+        #     elif self.window.shoulder_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
+        #         slots_per_day = 24 * (60 // self.resolution_mins)
+        #         for i in range(len(schedule)):
+        #             for season in self.assumptions.shoulder_season:
+        #                 if WindowGenerator.in_week_range(i, season[0], season[1]):
+        #                     day_range = 1 if i == 52 else 7
+        #                     for d in range(day_range):
+        #                         num_of_times = round(self.assumptions.short_opening_times.sample())
+        #                         day_start = d * slots_per_day
+        #                         day_end = day_start + slots_per_day
+        #                         occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
+        #                         start_time_dist = CategoricalDistribution(occupancy_mask_float)
+        #                         cnt = 0
+        #                         max_attempts = num_of_times * 10 + 50
+        #                         attempts = 0
+        #                         while cnt < num_of_times and attempts < max_attempts:
+        #                             attempts += 1
+        #                             start_time = start_time_dist.sample()
+        #                             start_time_index = day_start + start_time
+        #                             duration = self.assumptions.short_open_duration.sample()
+        #                             duration_index = max(1, round(duration / self.resolution_mins))
+        #                             if start_time_index + duration_index > day_end:
+        #                                 continue
+        #                             for j in range(start_time_index, start_time_index + duration_index):
+        #                                 schedule[i][j] = self.assumptions.large_open_fraction
+        #                             cnt += 1
+        #                             start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
+        # return schedule
 
     
-
-
-
-
-
 
     @staticmethod
     def in_week_range(week: int, start_week: int, end_week: int) -> bool:

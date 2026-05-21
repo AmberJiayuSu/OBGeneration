@@ -52,6 +52,29 @@ def _assert_design_day_matches_extreme(
         raise ValueError(f"Unsupported mode: {mode}")
 
 
+def _state_runs(active_mask: list[bool], sleep_mask: list[bool]) -> list[tuple[int, int]]:
+    assert len(active_mask) == len(sleep_mask)
+    states = [
+        2 if active else 1 if sleep else 0
+        for active, sleep in zip(active_mask, sleep_mask)
+    ]
+    if not states:
+        return []
+
+    runs: list[tuple[int, int]] = []
+    current_state = states[0]
+    run_length = 1
+    for state in states[1:]:
+        if state == current_state:
+            run_length += 1
+            continue
+        runs.append((current_state, run_length))
+        current_state = state
+        run_length = 1
+    runs.append((current_state, run_length))
+    return runs
+
+
 @pytest.fixture
 def rng() -> np.random.Generator:
     return np.random.default_rng(0)
@@ -116,6 +139,20 @@ class TestHVACGeneration:
 
         assert smoothed_active == [False, False, False, False, False]
         assert smoothed_sleep == [True, True, True, True, True]
+
+    def test_smooth_hvac_state_sequence_eliminates_all_short_runs(self):
+        active_mask = [False, False, True, True, False, False, False, True, False, False]
+        sleep_mask = [True, True, False, False, False, False, False, False, True, True]
+
+        smoothed_active, smoothed_sleep = HVACGenerator._smooth_hvac_state_sequence(
+            active_mask,
+            sleep_mask,
+            minimum_state_bins=3,
+        )
+
+        runs = _state_runs(smoothed_active, smoothed_sleep)
+        assert runs
+        assert all(run_length >= 3 for _, run_length in runs)
 
     def test_generate_result_smoothing_removes_short_hvac_spike(self):
         hvac_json = """
