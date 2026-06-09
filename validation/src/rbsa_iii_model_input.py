@@ -28,6 +28,8 @@ class RBSA_III_ModelInput:
 
     window_to_wall_ratio: float | None = None
     total_wall_u_value_ip: float | None = None
+    total_ceiling_u_value_ip: float | None = None
+    total_floor_u_value_ip: float | None = None
     window_u_value_ip: float | None = None
     ach50: float | None = None
     pct_windows_facing_north: float | None = None
@@ -39,6 +41,7 @@ class RBSA_III_ModelInput:
     pct_windows_facing_west: float | None = None
     pct_windows_facing_northwest: float | None = None
     foundation_type: str | None = None
+    ceiling_type: str | None = None
 
     primary_heating_system_type: str | None = None
     primary_heating_fuel_type: str | None = None
@@ -72,6 +75,8 @@ SOURCE_MAPPING = {
     ),
     "window_to_wall_ratio": ("Building_Shell_One_Line.csv", "Window_to_Wall_Ratio"),
     "total_wall_u_value_ip": ("Building_Shell_One_Line.csv", "Total_Wall_U-Value"),
+    "total_ceiling_u_value_ip": ("Building_Shell_One_Line.csv", "Total_Ceiling_U-Value"),
+    "total_floor_u_value_ip": ("Building_Shell_One_Line.csv", "Total_Floor_U-Value"),
     "window_u_value_ip": ("Building_Shell_One_Line.csv", "Window_U-Value"),
     "ach50": ("Testing_Blowerdoor.csv", "ACH_50"),
     "pct_windows_facing_north": (
@@ -109,6 +114,10 @@ SOURCE_MAPPING = {
     "foundation_type": (
         "Envelope_Construction.csv",
         "Foundation_Type and Foundation_Type_Other",
+    ),
+    "ceiling_type": (
+        "Envelope_Ceiling.csv",
+        "Ceiling_Type with largest Ceiling_Area; use Ceiling_Type_Other when applicable",
     ),
     "primary_heating_system_type": (
         "Mechanical_One_Line.csv",
@@ -227,6 +236,39 @@ def _primary_water_heaters(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows).set_index("SiteID")
 
 
+def _primary_ceiling_types(path: Path) -> pd.DataFrame:
+    """Select the ceiling type covering the largest reported ceiling area."""
+    data = pd.read_csv(path, dtype=str)
+    data["_area"] = data["Ceiling_Area"].map(_clean_float)
+    rows = []
+
+    for site_id, site_rows in data.groupby("SiteID"):
+        largest_area = site_rows["_area"].max()
+        candidates = (
+            site_rows[site_rows["_area"].eq(largest_area)]
+            if pd.notna(largest_area)
+            else site_rows
+        )
+
+        types = set()
+        for _, row in candidates.iterrows():
+            ceiling_type = _clean_text(row.get("Ceiling_Type"))
+            ceiling_other = _clean_text(row.get("Ceiling_Type_Other"))
+            if ceiling_type == "Other" and ceiling_other:
+                ceiling_type = f"Other: {ceiling_other}"
+            if ceiling_type is not None:
+                types.add(ceiling_type)
+
+        rows.append(
+            {
+                "SiteID": site_id,
+                "ceiling_type": types.pop() if len(types) == 1 else None,
+            }
+        )
+
+    return pd.DataFrame(rows).set_index("SiteID")
+
+
 def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_ModelInput]:
     """Return one model input for every RBSA III site in HEMS_RBSA_BASE.csv."""
     rbsa_iii_dir = Path(rbsa_iii_dir)
@@ -244,6 +286,7 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
     blowerdoor = _read_by_site(hems_dir / "Testing_Blowerdoor.csv")
     fenestration = _read_by_site(hems_dir / "Envelope_BuildingFenestration.csv")
     water_heaters = _primary_water_heaters(hems_dir / "Mechanical_WaterHeater.csv")
+    ceiling_types = _primary_ceiling_types(hems_dir / "Envelope_Ceiling.csv")
     mechanical_detail = pd.read_csv(hems_dir / "Mechanical_HeatingAndCooling.csv", dtype=str)
     no_cooling_sites = _detailed_no_cooling_sites(mechanical_detail)
 
@@ -273,6 +316,11 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
             if site_id in water_heaters.index
             else pd.Series(dtype=object)
         )
+        ceiling_row = (
+            ceiling_types.loc[site_id]
+            if site_id in ceiling_types.index
+            else pd.Series(dtype=object)
+        )
 
         foundation_type = _clean_text(construction_row.get("Foundation_Type"))
         foundation_other = _clean_text(construction_row.get("Foundation_Type_Other"))
@@ -300,6 +348,10 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
                 ),
                 window_to_wall_ratio=_clean_float(shell_row.get("Window_to_Wall_Ratio")),
                 total_wall_u_value_ip=_clean_float(shell_row.get("Total_Wall_U-Value")),
+                total_ceiling_u_value_ip=_clean_float(
+                    shell_row.get("Total_Ceiling_U-Value")
+                ),
+                total_floor_u_value_ip=_clean_float(shell_row.get("Total_Floor_U-Value")),
                 window_u_value_ip=_clean_float(shell_row.get("Window_U-Value")),
                 ach50=_clean_float(blowerdoor_row.get("ACH_50")),
                 pct_windows_facing_north=_clean_percent(
@@ -327,6 +379,7 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
                     fenestration_row.get("Pct_Windows_Facing_NorthWest")
                 ),
                 foundation_type=foundation_type,
+                ceiling_type=_clean_text(ceiling_row.get("ceiling_type")),
                 primary_heating_system_type=_clean_text(
                     mechanical_row.get("Primary_Heating_System_Type")
                 ),
