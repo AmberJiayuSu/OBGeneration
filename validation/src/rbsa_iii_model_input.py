@@ -23,8 +23,17 @@ class RBSA_III_ModelInput:
     average_height_ft: float | None = None
     conditioned_volume_to_area_ratio_ft: float | None = None
     total_building_levels: int | None = None
+    inferred_total_building_levels: int | None = None
+    effective_total_building_levels: int | None = None
     footprint_area_ft2: float | None = None
     footprint_perimeter_ft: float | None = None
+    has_conditioned_basement: bool | None = None
+    footprint_based_conditioned_area_ft2: float | None = None
+    conditioned_area_difference_ft2: float | None = None
+    conditioned_area_absolute_difference_ft2: float | None = None
+    conditioned_area_difference_pct: float | None = None
+    footprint_conditioned_area_issue: bool | None = None
+    has_data_quality_issue: bool = False
 
     window_to_wall_ratio: float | None = None
     total_wall_u_value_ip: float | None = None
@@ -65,6 +74,14 @@ SOURCE_MAPPING = {
         "Conditioned_Volume_to_Area_Ratio",
     ),
     "total_building_levels": ("Envelope_Construction.csv", "Total_Building_Levels"),
+    "inferred_total_building_levels": (
+        "Calculated",
+        "When reported levels are missing: ceil(conditioned_area_ft2 / footprint_area_ft2), minus 1 for >90% Conditioned Basement, minimum 1",
+    ),
+    "effective_total_building_levels": (
+        "Calculated",
+        "Reported total_building_levels when available, otherwise inferred_total_building_levels",
+    ),
     "footprint_area_ft2": (
         "Envelope_Floor_Foundation.csv",
         "Sum Floor_Area for Basement, Crawlspace, and Slab rows",
@@ -72,6 +89,34 @@ SOURCE_MAPPING = {
     "footprint_perimeter_ft": (
         "Envelope_Floor_Foundation.csv",
         "Sum Perimeter for Basement, Crawlspace, and Slab rows",
+    ),
+    "has_conditioned_basement": (
+        "Envelope_Construction.csv",
+        "Foundation_Type exactly equals >90% Conditioned Basement",
+    ),
+    "footprint_based_conditioned_area_ft2": (
+        "Calculated",
+        "footprint_area_ft2 * (effective_total_building_levels + 1 only for >90% Conditioned Basement)",
+    ),
+    "conditioned_area_difference_ft2": (
+        "Calculated",
+        "conditioned_area_ft2 - footprint_based_conditioned_area_ft2",
+    ),
+    "conditioned_area_absolute_difference_ft2": (
+        "Calculated",
+        "absolute value of conditioned_area_difference_ft2",
+    ),
+    "conditioned_area_difference_pct": (
+        "Calculated",
+        "conditioned_area_absolute_difference_ft2 / conditioned_area_ft2 * 100",
+    ),
+    "footprint_conditioned_area_issue": (
+        "Calculated",
+        "True when signed difference is greater than +25% or less than -75%",
+    ),
+    "has_data_quality_issue": (
+        "Calculated",
+        "OR-union of all component data-quality issue flags",
     ),
     "window_to_wall_ratio": ("Building_Shell_One_Line.csv", "Window_to_Wall_Ratio"),
     "total_wall_u_value_ip": ("Building_Shell_One_Line.csv", "Total_Wall_U-Value"),
@@ -174,6 +219,12 @@ def _clean_percent(value: Any) -> float | None:
     if text is None:
         return None
     return _clean_float(text.removesuffix("%"))
+
+
+def _has_conditioned_basement(foundation_type: str | None) -> bool | None:
+    if foundation_type is None:
+        return None
+    return foundation_type.casefold() == ">90% conditioned basement"
 
 
 def _read_by_site(path: Path) -> pd.DataFrame:
@@ -326,6 +377,51 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
         foundation_other = _clean_text(construction_row.get("Foundation_Type_Other"))
         if foundation_type == "Other" and foundation_other:
             foundation_type = f"Other: {foundation_other}"
+        conditioned_area = _clean_float(shell_row.get("Conditioned_Area"))
+        total_building_levels = _clean_int(construction_row.get("Total_Building_Levels"))
+        footprint_area = _clean_float(footprint_row.get("footprint_area_ft2"))
+        has_conditioned_basement = _has_conditioned_basement(foundation_type)
+
+        inferred_total_building_levels = None
+        if (
+            total_building_levels is None
+            and conditioned_area is not None
+            and footprint_area is not None
+            and footprint_area > 0
+        ):
+            inferred_total_building_levels = math.ceil(conditioned_area / footprint_area)
+            if has_conditioned_basement:
+                inferred_total_building_levels -= 1
+            inferred_total_building_levels = max(1, inferred_total_building_levels)
+
+        effective_total_building_levels = (
+            total_building_levels
+            if total_building_levels is not None
+            else inferred_total_building_levels
+        )
+
+        footprint_based_conditioned_area = None
+        if footprint_area is not None and effective_total_building_levels is not None:
+            basement_levels = 1 if has_conditioned_basement else 0
+            footprint_based_conditioned_area = footprint_area * (
+                effective_total_building_levels + basement_levels
+            )
+
+        conditioned_area_difference = None
+        conditioned_area_absolute_difference = None
+        conditioned_area_difference_pct = None
+        footprint_conditioned_area_issue = None
+        if conditioned_area is not None and footprint_based_conditioned_area is not None:
+            conditioned_area_difference = conditioned_area - footprint_based_conditioned_area
+            conditioned_area_absolute_difference = abs(conditioned_area_difference)
+            if conditioned_area > 0:
+                conditioned_area_difference_pct = (
+                    conditioned_area_absolute_difference / conditioned_area * 100
+                )
+                signed_difference_pct = conditioned_area_difference / conditioned_area * 100
+                footprint_conditioned_area_issue = (
+                    signed_difference_pct > 25 or signed_difference_pct < -75
+                )
 
         primary_cooling = _clean_text(mechanical_row.get("Primary_Cooling_System_Type"))
         if primary_cooling is None and site_id in no_cooling_sites:
@@ -335,17 +431,26 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
             RBSA_III_ModelInput(
                 building_id=_clean_text(site_row.get("Building_ID")) or site_id,
                 site_id=site_id,
-                conditioned_area_ft2=_clean_float(shell_row.get("Conditioned_Area")),
+                conditioned_area_ft2=conditioned_area,
                 conditioned_volume_ft3=_clean_float(shell_row.get("Conditioned_Volume")),
                 average_height_ft=_clean_float(construction_row.get("Average_Height")),
                 conditioned_volume_to_area_ratio_ft=_clean_float(
                     shell_row.get("Conditioned_Volume_to_Area_Ratio")
                 ),
-                total_building_levels=_clean_int(construction_row.get("Total_Building_Levels")),
-                footprint_area_ft2=_clean_float(footprint_row.get("footprint_area_ft2")),
+                total_building_levels=total_building_levels,
+                inferred_total_building_levels=inferred_total_building_levels,
+                effective_total_building_levels=effective_total_building_levels,
+                footprint_area_ft2=footprint_area,
                 footprint_perimeter_ft=_clean_float(
                     footprint_row.get("footprint_perimeter_ft")
                 ),
+                has_conditioned_basement=has_conditioned_basement,
+                footprint_based_conditioned_area_ft2=footprint_based_conditioned_area,
+                conditioned_area_difference_ft2=conditioned_area_difference,
+                conditioned_area_absolute_difference_ft2=conditioned_area_absolute_difference,
+                conditioned_area_difference_pct=conditioned_area_difference_pct,
+                footprint_conditioned_area_issue=footprint_conditioned_area_issue,
+                has_data_quality_issue=footprint_conditioned_area_issue is True,
                 window_to_wall_ratio=_clean_float(shell_row.get("Window_to_Wall_Ratio")),
                 total_wall_u_value_ip=_clean_float(shell_row.get("Total_Wall_U-Value")),
                 total_ceiling_u_value_ip=_clean_float(
