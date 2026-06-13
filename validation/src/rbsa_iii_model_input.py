@@ -17,6 +17,7 @@ class RBSA_III_ModelInput:
 
     building_id: str
     site_id: str
+    #ee_site_id: str | None = None
 
     conditioned_area_ft2: float | None = None
     conditioned_volume_ft3: float | None = None
@@ -33,6 +34,9 @@ class RBSA_III_ModelInput:
     conditioned_area_absolute_difference_ft2: float | None = None
     conditioned_area_difference_pct: float | None = None
     footprint_conditioned_area_issue: bool | None = None
+    total_wall_u_value_missing_issue: bool = False
+    window_to_wall_ratio_missing_issue: bool = False
+    metered_data_high_missing_rate: bool = False
     has_data_quality_issue: bool = False
 
     window_to_wall_ratio: float | None = None
@@ -66,6 +70,7 @@ class RBSA_III_ModelInput:
 SOURCE_MAPPING = {
     "building_id": ("SiteDetail.csv", "Building_ID; falls back to SiteID"),
     "site_id": ("HEMS_RBSA_BASE.csv", "SiteID where RBSA Data Source is RBSA III"),
+    #"ee_site_id": ("SITES v9.2.csv", "ee_site_id matched on rbsa_site_id; links to metered parquet RBSA2022_{ee_site_id}"),
     "conditioned_area_ft2": ("Building_Shell_One_Line.csv", "Conditioned_Area"),
     "conditioned_volume_ft3": ("Building_Shell_One_Line.csv", "Conditioned_Volume"),
     "average_height_ft": ("Envelope_Construction.csv", "Average_Height"),
@@ -114,9 +119,21 @@ SOURCE_MAPPING = {
         "Calculated",
         "True when signed difference is greater than +25% or less than -75%",
     ),
+    "total_wall_u_value_missing_issue": (
+        "Calculated",
+        "True when total_wall_u_value_ip is missing",
+    ),
+    "window_to_wall_ratio_missing_issue": (
+        "Calculated",
+        "True when window_to_wall_ratio is missing",
+    ),
+    "metered_data_high_missing_rate": (
+        "Calculated",
+        "True when the site's 15-min metered parquet has >= 5% missing intervals",
+    ),
     "has_data_quality_issue": (
         "Calculated",
-        "OR-union of all component data-quality issue flags",
+        "OR-union of all component data-quality issue flags, including metered_data_high_missing_rate",
     ),
     "window_to_wall_ratio": ("Building_Shell_One_Line.csv", "Window_to_Wall_Ratio"),
     "total_wall_u_value_ip": ("Building_Shell_One_Line.csv", "Total_Wall_U-Value"),
@@ -182,7 +199,7 @@ SOURCE_MAPPING = {
     ),
     "primary_water_heater_fuel_type": (
         "Mechanical_WaterHeater.csv",
-        "Fuel_Type; prefer Serves_Whole_House=Yes and require agreement",
+        "Fuel_Type; prefer Serves_Whole_House=Yes and require agreement; infer Natural Gas when missing and technology is Fossil Fuel Non-Condensing",
     ),
 }
 
@@ -282,6 +299,16 @@ def _primary_water_heaters(path: Path) -> pd.DataFrame:
             }
             values[output_field] = unique_values.pop() if len(unique_values) == 1 else None
 
+        if (
+            values["primary_water_heater_fuel_type"] is None
+        ):
+            if values ["primary_water_heater_technology"] == "Fossil Fuel Non-Condensing":
+                values["primary_water_heater_fuel_type"] = "Natural Gas"
+            else:
+                values["primary_water_heater_fuel_type"] = "Electricity"
+
+            
+
         rows.append({"SiteID": site_id, **values})
 
     return pd.DataFrame(rows).set_index("SiteID")
@@ -320,8 +347,19 @@ def _primary_ceiling_types(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows).set_index("SiteID")
 
 
-def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_ModelInput]:
-    """Return one model input for every RBSA III site in HEMS_RBSA_BASE.csv."""
+def build_rbsa_iii_model_inputs(
+    rbsa_iii_dir: str | Path,
+    parquet_name: list[str,] | None = None,
+) -> list[RBSA_III_ModelInput]:
+    """Return one model input for every RBSA III site in HEMS_RBSA_BASE.csv.
+
+    Parameters
+    ----------
+    parquet_name:
+        Optional list of parquet file names (stems) to include.
+        When provided, each record's ee_site_id is populated from the list and
+        metered_data_high_missing_rate is set True for sites absent from the list.
+    """
     rbsa_iii_dir = Path(rbsa_iii_dir)
     hems_dir = rbsa_iii_dir / "HEMS"
 
@@ -427,6 +465,23 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
         if primary_cooling is None and site_id in no_cooling_sites:
             primary_cooling = "No Cooling"
 
+        window_to_wall_ratio = _clean_float(shell_row.get("Window_to_Wall_Ratio"))
+        total_wall_u_value_ip = _clean_float(shell_row.get("Total_Wall_U-Value"))
+        total_wall_u_value_missing_issue = total_wall_u_value_ip is None
+        window_to_wall_ratio_missing_issue = window_to_wall_ratio is None
+        #parquet_stem = parquet_name_map.get(site_id) if parquet_name_map is not None else None
+        metered_data_high_missing_rate = (
+            parquet_name is not None and site_id not in parquet_name
+        )
+        has_data_quality_issue = any(
+            (
+                footprint_conditioned_area_issue is True,
+                total_wall_u_value_missing_issue,
+                window_to_wall_ratio_missing_issue,
+                metered_data_high_missing_rate,
+            )
+        )
+
         records.append(
             RBSA_III_ModelInput(
                 building_id=_clean_text(site_row.get("Building_ID")) or site_id,
@@ -450,9 +505,12 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
                 conditioned_area_absolute_difference_ft2=conditioned_area_absolute_difference,
                 conditioned_area_difference_pct=conditioned_area_difference_pct,
                 footprint_conditioned_area_issue=footprint_conditioned_area_issue,
-                has_data_quality_issue=footprint_conditioned_area_issue is True,
-                window_to_wall_ratio=_clean_float(shell_row.get("Window_to_Wall_Ratio")),
-                total_wall_u_value_ip=_clean_float(shell_row.get("Total_Wall_U-Value")),
+                total_wall_u_value_missing_issue=total_wall_u_value_missing_issue,
+                window_to_wall_ratio_missing_issue=window_to_wall_ratio_missing_issue,
+                metered_data_high_missing_rate=metered_data_high_missing_rate,
+                has_data_quality_issue=has_data_quality_issue,
+                window_to_wall_ratio=window_to_wall_ratio,
+                total_wall_u_value_ip=total_wall_u_value_ip,
                 total_ceiling_u_value_ip=_clean_float(
                     shell_row.get("Total_Ceiling_U-Value")
                 ),
@@ -504,11 +562,13 @@ def build_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> list[RBSA_III_Model
     return records
 
 
-def export_rbsa_iii_model_inputs(rbsa_iii_dir: str | Path) -> dict[str, Path | int]:
+def export_rbsa_iii_model_inputs(
+    rbsa_iii_dir: str | Path,
+    parquet_name: list[str] | None = None,
+) -> dict[str, Path | int]:
     """Save all RBSA III model inputs as a JSON array and companion CSV."""
     rbsa_iii_dir = Path(rbsa_iii_dir)
-    records = build_rbsa_iii_model_inputs(rbsa_iii_dir)
-
+    records = build_rbsa_iii_model_inputs(rbsa_iii_dir, parquet_name=parquet_name)
     output_json = rbsa_iii_dir / "RBSA_III_model_inputs.json"
     output_csv = rbsa_iii_dir / "RBSA_III_model_inputs.csv"
     mapping_csv = rbsa_iii_dir / "RBSA_III_model_input_source_mapping.csv"
