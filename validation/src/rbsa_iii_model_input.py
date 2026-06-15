@@ -1,4 +1,4 @@
-"""Build one model-input record for every RBSA III site in HEMS_RBSA_BASE."""
+"""Build model and behavior input records for RBSA III sites."""
 
 from __future__ import annotations
 
@@ -61,6 +61,67 @@ class RBSA_III_ModelInput:
     primary_cooling_system_type: str | None = None
     primary_water_heater_technology: str | None = None
     primary_water_heater_fuel_type: str | None = None
+
+
+    def model_dump(self) -> dict[str, Any]:
+        """Provide the familiar Pydantic-style serialization method."""
+        return asdict(self)
+
+
+@dataclass
+class RBSA_III_BehaviorInput:
+    """Cleaned RBSA III occupant, appliance, and energy-use behavior facts."""
+
+    building_id: str
+    site_id: str
+
+    qty_occupants: int | None = None
+    tvs_total: int | None = None
+    tvs_energy_star: int | None = None
+    laundry_washer_total: int | None = None
+    laundry_washer_energy_star: int | None = None
+    laundry_dryer_total: int | None = None
+    laundry_dryer_energy_star: int | None = None
+    refrigerator_total: int | None = None
+    refrigerator_energy_star: int | None = None
+    freezer_total: int | None = None
+    freezer_energy_star: int | None = None
+    stove_oven_total: int | None = None
+    air_cleaner_total: int | None = None
+    air_cleaner_energy_star: int | None = None
+    smart_speaker_total: int | None = None
+    dehumidifier_total: int | None = None
+    dehumidifier_energy_star: int | None = None
+    dishwasher_total: int | None = None
+    dishwasher_energy_star: int | None = None
+
+    heating_setpoint: str | float | None = None
+    overnight_heating_setpoint: str | float | None = None
+    open_windows_when_heating: str | None = None
+    block_off_part_of_home_in_heating_season: str | None = None
+    percent_of_home_at_different_temp: str | float | None = None
+    cooling_setpoint: float | None = None
+    overnight_cooling_setpoint: float | None = None
+    outdoor_temp_for_cooling: str | float | None = None
+
+    qty_installed_cfl_lamps: int | None = None
+    qty_installed_led_lamps: int | None = None
+    qty_installed_incandescent_lamps: int | None = None
+    qty_installed_halogen_lamps: int | None = None
+    qty_installed_linear_fluorescent_lamps: int | None = None
+    qty_installed_unknown_lamps: int | None = None
+    qty_installed_other_lamps: int | None = None
+    total_installed_lamps: int | None = None
+
+    pool_present: str | None = None
+    pool_availability_months_per_year: float | None = None
+    pool_heat_primary_fuel_type: str | None = None
+    pool_heat_primary_fuel_type_other: str | None = None
+    pool_solar_assist: str | None = None
+    hot_tub_present: str | None = None
+    hot_tub_area: str | float | None = None
+
+    number_of_ev_charging_stations: int | None = None
 
     def model_dump(self) -> dict[str, Any]:
         """Provide the familiar Pydantic-style serialization method."""
@@ -203,6 +264,118 @@ SOURCE_MAPPING = {
     ),
 }
 
+
+BEHAVIOR_SOURCE_MAPPING = {
+    "building_id": ("SiteDetail.csv", "Building_ID; falls back to SiteID"),
+    "site_id": ("HEMS_RBSA_BASE.csv", "SiteID where RBSA Data Source is RBSA III"),
+    "qty_occupants": ("Appliance_One_Line.csv", "Qty_Occupants"),
+    "tvs_total": ("Appliance_One_Line.csv", "TVs_Total"),
+    "tvs_energy_star": ("Appliance_One_Line.csv", "TVs_EnergyStar"),
+    "laundry_washer_total": ("Appliance_One_Line.csv", "Laundry_Washer_Total"),
+    "laundry_washer_energy_star": (
+        "Appliance_One_Line.csv",
+        "Laundry_Washer_EnergyStar",
+    ),
+    "laundry_dryer_total": ("Appliance_One_Line.csv", "Laundry_Dryer_Total"),
+    "laundry_dryer_energy_star": (
+        "Appliance_One_Line.csv",
+        "Laundry_Dryer_EnergyStar",
+    ),
+    "refrigerator_total": ("Appliance_One_Line.csv", "Refrigerator_Total"),
+    "refrigerator_energy_star": (
+        "Appliance_One_Line.csv",
+        "Refrigerator_EnergyStar",
+    ),
+    "freezer_total": ("Appliance_One_Line.csv", "Freezer_Total"),
+    "freezer_energy_star": ("Appliance_One_Line.csv", "Freezer_EnergyStar"),
+    "stove_oven_total": ("Appliance_One_Line.csv", "Stove_Oven_Total"),
+    "air_cleaner_total": ("Appliance_One_Line.csv", "Air_Cleaner_Total"),
+    "air_cleaner_energy_star": (
+        "Appliance_One_Line.csv",
+        "Air_Cleaner_EnergyStar",
+    ),
+    "smart_speaker_total": ("Appliance_One_Line.csv", "Smart_Speaker_Total"),
+    "dehumidifier_total": ("Appliance_One_Line.csv", "Dehumidifier_Total"),
+    "dehumidifier_energy_star": (
+        "Appliance_One_Line.csv",
+        "Dehumidifier_EnergyStar",
+    ),
+    "dishwasher_total": ("Appliance_One_Line.csv", "Dishwasher_Total"),
+    "dishwasher_energy_star": (
+        "Appliance_One_Line.csv",
+        "Dishwasher_EnergyStar",
+    ),
+    "heating_setpoint": ("SiteInterview_HomeEnergyUse.csv", "Heating_Setpoint"),
+    "overnight_heating_setpoint": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Overnight_Heating_Setpoint",
+    ),
+    "open_windows_when_heating": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Open_Windows_When_Heating",
+    ),
+    "block_off_part_of_home_in_heating_season": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Block_Off_Part_of_Home_In_Heating_Season",
+    ),
+    "percent_of_home_at_different_temp": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Percent_of_Home_At_Different_Temp",
+    ),
+    "cooling_setpoint": ("SiteInterview_HomeEnergyUse.csv", "Cooling_Setpoint"),
+    "overnight_cooling_setpoint": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Overnight_Cooling_Setpoint",
+    ),
+    "outdoor_temp_for_cooling": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Outdoor_Temp_for_Cooling",
+    ),
+    "qty_installed_cfl_lamps": ("Lighting_One_Line.csv", "Qty_Installed_CFL_Lamps"),
+    "qty_installed_led_lamps": ("Lighting_One_Line.csv", "Qty_Installed_LED_Lamps"),
+    "qty_installed_incandescent_lamps": (
+        "Lighting_One_Line.csv",
+        "Qty_Installed_Incandescent_Lamps",
+    ),
+    "qty_installed_halogen_lamps": (
+        "Lighting_One_Line.csv",
+        "Qty_Installed_Halogen_Lamps",
+    ),
+    "qty_installed_linear_fluorescent_lamps": (
+        "Lighting_One_Line.csv",
+        "Qty_Installed_Linear_Fluor._Lamps",
+    ),
+    "qty_installed_unknown_lamps": (
+        "Lighting_One_Line.csv",
+        "Qty_Installed_Unknown_Lamps",
+    ),
+    "qty_installed_other_lamps": (
+        "Lighting_One_Line.csv",
+        "Qty_Installed_Other_Lamps",
+    ),
+    "total_installed_lamps": ("Lighting_One_Line.csv", "Total_Installed_Lamps"),
+    "pool_present": ("SiteInterview_HomeEnergyUse.csv", "Pool_Present"),
+    "pool_availability_months_per_year": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Pool_Availability_Months_Per_Year",
+    ),
+    "pool_heat_primary_fuel_type": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Pool_Heat_Primary_Fuel_Type",
+    ),
+    "pool_heat_primary_fuel_type_other": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Pool_Heat_Primary_Fuel_Type_Other",
+    ),
+    "pool_solar_assist": ("SiteInterview_HomeEnergyUse.csv", "Pool_Solar_Assist"),
+    "hot_tub_present": ("SiteInterview_HomeEnergyUse.csv", "Hot_Tub_Present"),
+    "hot_tub_area": ("SiteInterview_HomeEnergyUse.csv", "Hot_Tub_Area"),
+    "number_of_ev_charging_stations": (
+        "ElectricVehicleChargers.csv",
+        "Number_Of_EV_Charging_Stations",
+    ),
+}
+
 _SENTINELS = {"", "unknown", "not available", "n/a", "na", "none", "null"}
 
 
@@ -222,6 +395,25 @@ def _clean_float(value: Any) -> float | None:
     except ValueError:
         return None
     return number if math.isfinite(number) else None
+
+
+def _clean_float_or_text(value: Any) -> str | float | None:
+    text = _clean_text(value)
+    if text is None:
+        return None
+    number = _clean_float(text)
+    return number if number is not None else text
+
+
+def _clean_bounded_float(
+    value: Any,
+    minimum: float,
+    maximum: float,
+) -> float | None:
+    number = _clean_float(value)
+    if number is None or not minimum <= number <= maximum:
+        return None
+    return number
 
 
 def _clean_int(value: Any) -> int | None:
@@ -562,6 +754,162 @@ def build_rbsa_iii_model_inputs(
     return records
 
 
+def build_rbsa_iii_behavior_inputs(
+    rbsa_iii_dir: str | Path,
+) -> list[RBSA_III_BehaviorInput]:
+    """Return one behavior input for every RBSA III site in HEMS_RBSA_BASE.csv."""
+    rbsa_iii_dir = Path(rbsa_iii_dir)
+    hems_dir = rbsa_iii_dir / "HEMS"
+
+    base = pd.read_csv(rbsa_iii_dir.parent / "HEMS_RBSA_BASE.csv", dtype=str)
+    rbsa_iii_base = base[base["RBSA Data Source"].str.strip().eq("RBSA III")]
+    site_ids = rbsa_iii_base["SiteID"].dropna().str.strip().drop_duplicates().tolist()
+
+    site = _read_by_site(hems_dir / "SiteDetail.csv")
+    appliances = _read_by_site(hems_dir / "Appliance_One_Line.csv")
+    home_energy_use = _read_by_site(hems_dir / "SiteInterview_HomeEnergyUse.csv")
+    lighting = _read_by_site(hems_dir / "Lighting_One_Line.csv")
+    ev_chargers = _read_by_site(hems_dir / "ElectricVehicleChargers.csv")
+
+    records = []
+    for site_id in site_ids:
+        site_row = site.loc[site_id] if site_id in site.index else pd.Series(dtype=object)
+        appliance_row = (
+            appliances.loc[site_id]
+            if site_id in appliances.index
+            else pd.Series(dtype=object)
+        )
+        home_energy_use_row = (
+            home_energy_use.loc[site_id]
+            if site_id in home_energy_use.index
+            else pd.Series(dtype=object)
+        )
+        lighting_row = (
+            lighting.loc[site_id] if site_id in lighting.index else pd.Series(dtype=object)
+        )
+        ev_charger_row = (
+            ev_chargers.loc[site_id]
+            if site_id in ev_chargers.index
+            else pd.Series(dtype=object)
+        )
+
+        records.append(
+            RBSA_III_BehaviorInput(
+                building_id=_clean_text(site_row.get("Building_ID")) or site_id,
+                site_id=site_id,
+                qty_occupants=_clean_int(appliance_row.get("Qty_Occupants")),
+                tvs_total=_clean_int(appliance_row.get("TVs_Total")),
+                tvs_energy_star=_clean_int(appliance_row.get("TVs_EnergyStar")),
+                laundry_washer_total=_clean_int(
+                    appliance_row.get("Laundry_Washer_Total")
+                ),
+                laundry_washer_energy_star=_clean_int(
+                    appliance_row.get("Laundry_Washer_EnergyStar")
+                ),
+                laundry_dryer_total=_clean_int(appliance_row.get("Laundry_Dryer_Total")),
+                laundry_dryer_energy_star=_clean_int(
+                    appliance_row.get("Laundry_Dryer_EnergyStar")
+                ),
+                refrigerator_total=_clean_int(appliance_row.get("Refrigerator_Total")),
+                refrigerator_energy_star=_clean_int(
+                    appliance_row.get("Refrigerator_EnergyStar")
+                ),
+                freezer_total=_clean_int(appliance_row.get("Freezer_Total")),
+                freezer_energy_star=_clean_int(appliance_row.get("Freezer_EnergyStar")),
+                stove_oven_total=_clean_int(appliance_row.get("Stove_Oven_Total")),
+                air_cleaner_total=_clean_int(appliance_row.get("Air_Cleaner_Total")),
+                air_cleaner_energy_star=_clean_int(
+                    appliance_row.get("Air_Cleaner_EnergyStar")
+                ),
+                smart_speaker_total=_clean_int(appliance_row.get("Smart_Speaker_Total")),
+                dehumidifier_total=_clean_int(appliance_row.get("Dehumidifier_Total")),
+                dehumidifier_energy_star=_clean_int(
+                    appliance_row.get("Dehumidifier_EnergyStar")
+                ),
+                dishwasher_total=_clean_int(appliance_row.get("Dishwasher_Total")),
+                dishwasher_energy_star=_clean_int(
+                    appliance_row.get("Dishwasher_EnergyStar")
+                ),
+                heating_setpoint=_clean_float_or_text(
+                    home_energy_use_row.get("Heating_Setpoint")
+                ),
+                overnight_heating_setpoint=_clean_float_or_text(
+                    home_energy_use_row.get("Overnight_Heating_Setpoint")
+                ),
+                open_windows_when_heating=_clean_text(
+                    home_energy_use_row.get("Open_Windows_When_Heating")
+                ),
+                block_off_part_of_home_in_heating_season=_clean_text(
+                    home_energy_use_row.get(
+                        "Block_Off_Part_of_Home_In_Heating_Season"
+                    )
+                ),
+                percent_of_home_at_different_temp=_clean_float_or_text(
+                    home_energy_use_row.get("Percent_of_Home_At_Different_Temp")
+                ),
+                cooling_setpoint=_clean_float(
+                    home_energy_use_row.get("Cooling_Setpoint")
+                ),
+                overnight_cooling_setpoint=_clean_float(
+                    home_energy_use_row.get("Overnight_Cooling_Setpoint")
+                ),
+                outdoor_temp_for_cooling=_clean_float_or_text(
+                    home_energy_use_row.get("Outdoor_Temp_for_Cooling")
+                ),
+                qty_installed_cfl_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_CFL_Lamps")
+                ),
+                qty_installed_led_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_LED_Lamps")
+                ),
+                qty_installed_incandescent_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_Incandescent_Lamps")
+                ),
+                qty_installed_halogen_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_Halogen_Lamps")
+                ),
+                qty_installed_linear_fluorescent_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_Linear_Fluor._Lamps")
+                ),
+                qty_installed_unknown_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_Unknown_Lamps")
+                ),
+                qty_installed_other_lamps=_clean_int(
+                    lighting_row.get("Qty_Installed_Other_Lamps")
+                ),
+                total_installed_lamps=_clean_int(
+                    lighting_row.get("Total_Installed_Lamps")
+                ),
+                pool_present=_clean_text(home_energy_use_row.get("Pool_Present")),
+                pool_availability_months_per_year=_clean_bounded_float(
+                    home_energy_use_row.get("Pool_Availability_Months_Per_Year"),
+                    minimum=0,
+                    maximum=12,
+                ),
+                pool_heat_primary_fuel_type=_clean_text(
+                    home_energy_use_row.get("Pool_Heat_Primary_Fuel_Type")
+                ),
+                pool_heat_primary_fuel_type_other=_clean_text(
+                    home_energy_use_row.get("Pool_Heat_Primary_Fuel_Type_Other")
+                ),
+                pool_solar_assist=_clean_text(
+                    home_energy_use_row.get("Pool_Solar_Assist")
+                ),
+                hot_tub_present=_clean_text(
+                    home_energy_use_row.get("Hot_Tub_Present")
+                ),
+                hot_tub_area=_clean_float_or_text(
+                    home_energy_use_row.get("Hot_Tub_Area")
+                ),
+                number_of_ev_charging_stations=_clean_int(
+                    ev_charger_row.get("Number_Of_EV_Charging_Stations")
+                ),
+            )
+        )
+
+    return records
+
+
 def export_rbsa_iii_model_inputs(
     rbsa_iii_dir: str | Path,
     parquet_name: list[str] | None = None,
@@ -580,6 +928,34 @@ def export_rbsa_iii_model_inputs(
         [
             {"model_field": field, "source_file": source[0], "source_column": source[1]}
             for field, source in SOURCE_MAPPING.items()
+        ]
+    ).to_csv(mapping_csv, index=False)
+
+    return {
+        "records": len(records),
+        "json": output_json,
+        "csv": output_csv,
+        "mapping_csv": mapping_csv,
+    }
+
+
+def export_rbsa_iii_behavior_inputs(
+    rbsa_iii_dir: str | Path,
+) -> dict[str, Path | int]:
+    """Save all RBSA III behavior inputs as a JSON array and companion CSV."""
+    rbsa_iii_dir = Path(rbsa_iii_dir)
+    records = build_rbsa_iii_behavior_inputs(rbsa_iii_dir)
+    output_json = rbsa_iii_dir / "RBSA_III_behavior_inputs.json"
+    output_csv = rbsa_iii_dir / "RBSA_III_behavior_inputs.csv"
+    mapping_csv = rbsa_iii_dir / "RBSA_III_behavior_input_source_mapping.csv"
+
+    dumped = [record.model_dump() for record in records]
+    output_json.write_text(json.dumps(dumped, indent=2), encoding="utf-8")
+    pd.DataFrame(dumped).to_csv(output_csv, index=False)
+    pd.DataFrame(
+        [
+            {"behavior_field": field, "source_file": source[0], "source_column": source[1]}
+            for field, source in BEHAVIOR_SOURCE_MAPPING.items()
         ]
     ).to_csv(mapping_csv, index=False)
 
