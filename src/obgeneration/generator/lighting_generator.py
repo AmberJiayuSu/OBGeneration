@@ -23,11 +23,11 @@ class LightingAssumptions(BaseModel):
         return cls(
             watts_per_m2_led=DistributionConfig(
                 dist_type="normal",
-                params={"mean": 4.0, "std": 0.9, "lower": 0.5, "int": False},
+                params={"mean": 2.5, "std": 0.8, "lower": 0.5, "int": False},
             ).build(),
             watts_per_m2_non_led=DistributionConfig(
                 dist_type="normal",
-                params={"mean": 9.0, "std": 1.5, "lower": 1.0, "int": False},
+                params={"mean": 9.0, "std": 2.0, "lower": 1.0, "int": False},
             ).build(),
         )
 
