@@ -11,7 +11,7 @@ matplotlib.use("Agg")  # headless-friendly
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-from ob_generation.generator.occupancy_generator_normal import (
+from obgeneration.generator.occupancy_generator_normal import (
     OccupantRole,
     RoleAssumption,
     OccupancyAssumptions,
@@ -19,7 +19,7 @@ from ob_generation.generator.occupancy_generator_normal import (
     SingleOccupantTracker,
     OccupancyGenerator
 )
-from ob_generation.model.occupancy_old import (
+from obgeneration.model.occupancy_old import (
     Occupancy,
     HouseholdComposition,
     TimeRange,

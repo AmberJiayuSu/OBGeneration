@@ -1,0 +1,178 @@
+from pydantic import BaseModel, Field, ConfigDict
+import json
+from pathlib import Path
+from collections.abc import Sequence
+from obgeneration.generator.ob_utils import ScheduleUtils
+from obgeneration.generator.results import DHWResult
+import obgeneration.model.equipment as Equipment
+
+
+class DHWAssumptions(BaseModel):
+    """DHW usage level assumptions."""
+    model_config = ConfigDict(validate_assignment=True)
+    hot_water_per_person_per_day: float = Field(..., description="Hot water usage per person per day in liters.")
+    efficient_washer_per_cycle: float = Field(..., description="Hot water usage per washing machine cycle in liters.")
+    inefficient_washer_per_cycle: float = Field(..., description="Hot water usage per washing machine cycle in liters.")
+    efficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.")
+    inefficient_dishwasher_per_cycle: float = Field( ... , description="Hot water usage per dishwasher cycle in liters.")
+
+    @classmethod
+    def from_json_file(cls, path: str | Path) -> "DHWAssumptions":
+        """Load DHW assumptions from a JSON file."""
+        data = json.loads(Path(path).read_text())
+        return cls(**data)
+    
+    @classmethod
+    def default(cls) -> "DHWAssumptions":
+        """Returns the standard/default assumptions for DHW usage.
+           TODO: These values are deterministic, and we can rethink if we want to add some variability to them."""
+        return cls(
+            hot_water_per_person_per_day= 56.7812, # 15 gallons in liters
+            efficient_washer_per_cycle=6.0,
+            inefficient_washer_per_cycle=15.0,
+            efficient_dishwasher_per_cycle=15.0,
+            inefficient_dishwasher_per_cycle=30.0
+        )
+    
+class DHWGenerator:
+    
+    def __init__(
+        self,
+        dhw_assumptions: DHWAssumptions,
+        equipment: Equipment.Equipment,
+        num_occupants: int,
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
+        resolution_mins: int = 15,
+    ):
+        self.dhw_assumptions = dhw_assumptions
+        self.equipment = equipment
+        self.num_occupants = num_occupants
+        self.laundry_cycles_per_day = laundry_cycles_per_day
+        self.dishwasher_cycles_per_day = dishwasher_cycles_per_day
+        self.resolution_mins = resolution_mins
+
+    @staticmethod
+    def generate_result(
+        num_occupants: int,
+        equipment: Equipment.Equipment ,
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
+        resolution_mins: int,
+        dhw_assumptions: DHWAssumptions,
+    ) -> DHWResult:
+        """Generate an annual DHW result with explicit assumptions."""
+        generator = DHWGenerator(
+            dhw_assumptions=dhw_assumptions,
+            equipment=equipment,
+            num_occupants=num_occupants,
+            laundry_cycles_per_day=laundry_cycles_per_day,
+            dishwasher_cycles_per_day=dishwasher_cycles_per_day,
+            resolution_mins=resolution_mins
+        )
+        flow_rate, annual_schedule = generator.dhw_annual_schedule()
+        flattened_schedule = ScheduleUtils.flatten_schedule(annual_schedule)
+        
+        bins_per_day = 1440 // resolution_mins
+        max_avg = float("-inf")
+        max_day = None
+
+        for day in range(365):
+            day_start = day * bins_per_day
+            day_schedule = flattened_schedule[day_start : day_start + bins_per_day]
+            day_avg = sum(day_schedule) / bins_per_day
+
+            if day_avg > max_avg:
+                max_avg = day_avg
+                max_day = day_schedule.copy()
+                
+
+        return DHWResult(
+            peak_value=flow_rate,
+            annual_schedule=flattened_schedule,
+            summer_design_day_schedule=max_day,
+            winter_design_day_schedule=max_day,
+        )
+
+    @staticmethod
+    def generate_with_defaults(
+        num_occupants: int,
+        equipment: Equipment.Equipment ,
+        laundry_cycles_per_day: Sequence[Sequence[int]],
+        dishwasher_cycles_per_day: Sequence[Sequence[int]],
+        resolution_mins: int
+    ) -> DHWResult:
+        """Generate an annual DHW result using default assumptions."""
+        return DHWGenerator.generate_result(
+            num_occupants=num_occupants,
+            equipment=equipment,
+            laundry_cycles_per_day=laundry_cycles_per_day,
+            dishwasher_cycles_per_day=dishwasher_cycles_per_day,
+            resolution_mins=resolution_mins,
+            dhw_assumptions=DHWAssumptions.default(),
+        )
+       
+    
+
+    def dhw_annual_schedule(self) -> tuple[float, list[list[float]]]:
+        """Generates an annual DHW usage schedule in cubic meters per second.
+           Returns: Tuple of (max_flow_rate_m3_per_s, annual_dhw_schedule)"""
+        annual_schedule = []
+        annual_daily = []
+        for week_index in range(len(self.laundry_cycles_per_day)):
+            weekly_daily_dhw = self.dhw_weekly_schedule(self.laundry_cycles_per_day[week_index], self.dishwasher_cycles_per_day[week_index])
+            annual_daily.append(weekly_daily_dhw) 
+        max_flow = max(max(week) for week in annual_daily)  
+        fraction = [ [day / max_flow for day in week] for week in annual_daily]
+        flow_rate = self.litter_per_day_to_m3_per_second(max_flow)
+        for week_fraction in fraction:
+            week_schedule = []
+            for day_fraction in week_fraction:
+                week_schedule.extend([day_fraction] * (24 * (60 // self.resolution_mins)))
+            annual_schedule.append(week_schedule)
+        return flow_rate, annual_schedule
+
+
+
+    def dhw_weekly_schedule(self, weekly_laundry_cycles_per_day: Sequence[int], weekly_dishwasher_cycles_per_day: Sequence[int]) -> list[float]:
+        """Generates a weekly DHW usage schedule in cubic meters per second."""
+        daily_occupants_dhw = self.occupants_dhw()
+        daily_laundry_dhw = self.weekly_laundry_dhw(weekly_laundry_cycles_per_day)
+        daily_dishwasher_dhw = self.weekly_dishwasher_dhw(weekly_dishwasher_cycles_per_day)
+        total_daily_dhw = [daily_occupants_dhw + laundry + dishwasher for laundry, dishwasher in zip(daily_laundry_dhw, daily_dishwasher_dhw)]
+        return total_daily_dhw
+
+
+    def litter_per_day_to_m3_per_second(self, liters_per_day: float) -> float:
+        """Converts liters per day to cubic meters per second."""
+        cubic_meters_per_day = liters_per_day / 1000.0
+        seconds_per_day = 24 * 3600
+        return cubic_meters_per_day / seconds_per_day
+
+    def occupants_dhw(self) -> float:
+        """Calculates daily DHW usage based on number of occupants."""
+        return self.num_occupants * self.dhw_assumptions.hot_water_per_person_per_day
+    
+    def weekly_laundry_dhw(self,  weekly_laundry_cycles_per_day: Sequence[int]) -> float:
+        """Calculates weekly DHW usage based on laundry cycles."""
+        laundry = self.equipment.laundry if self.equipment is not None else None
+        if laundry is None or not laundry.has_washer:
+            return [0.0] * len(weekly_laundry_cycles_per_day)
+        else:
+            per_cycle = self.dhw_assumptions.efficient_washer_per_cycle if laundry.washer_efficient else self.dhw_assumptions.inefficient_washer_per_cycle
+            daily_dhw = []
+            for day_cycles in weekly_laundry_cycles_per_day:
+                daily_dhw.append(day_cycles * per_cycle)
+            return daily_dhw
+        
+    def weekly_dishwasher_dhw(self, weekly_dishwasher_cycles_per_day: Sequence[int]) -> float:
+        """Calculates weekly DHW usage based on dishwasher cycles."""
+        dishwasher = self.equipment.dishwasher if self.equipment is not None else None
+        if dishwasher is None or not dishwasher.has_dishwasher:
+            return [0.0] * len(weekly_dishwasher_cycles_per_day)
+        else:
+            per_cycle = self.dhw_assumptions.efficient_dishwasher_per_cycle if dishwasher.dishwasher_efficient else self.dhw_assumptions.inefficient_dishwasher_per_cycle
+            daily_dhw = []
+            for day_cycles in weekly_dishwasher_cycles_per_day:
+                daily_dhw.append(day_cycles * per_cycle)
+            return daily_dhw

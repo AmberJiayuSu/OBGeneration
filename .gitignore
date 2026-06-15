@@ -216,7 +216,10 @@ __marimo__/
 *.jpg
 *.jpeg
 *.csv
+!src/**/*.csv
 *.xlsx
 *.parquet
 *.epw
 
+#internal note
+*.md

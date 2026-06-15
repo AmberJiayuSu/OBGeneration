@@ -4,18 +4,18 @@ build-backend = "hatchling.build"
 
 [project]
 name = "obgeneration"
-version = "0.1.0"
+version = "0.1.1"
 description = "Occupancy generation models"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = [
     "numpy>=1.24.0",
     "scipy>=1.10.0",
     "pydantic>=2.0.0",
     "matplotlib>=3.7.0",
     "pandas>=2.3.3",
-    "ipykernel>=7.2.0",
-    "openpyxl>=3.1.5",
 ]
 
 [project.optional-dependencies]
@@ -29,6 +29,21 @@ dev = [
 [tool.uv.workspace]
 members = ["validation"]
 
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/obgeneration",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+exclude = [
+    ".gitignore",
+]
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/ob_generation"]
-include = ["src/ob_generation/data/**"]
+packages = ["src/obgeneration"]
+only-packages = true
+include = [
+    "src/obgeneration/data/**/*.csv",
+    "src/obgeneration/data/**/*.json",
+]
