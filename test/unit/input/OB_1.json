@@ -72,7 +72,7 @@
     },
     "dishwasher": {
       "has_dishwasher": true,
-      "efficient_dishwasher": true,
+      "dishwasher_efficient": true,
       "dishwashing_operational_logic": {
         "pattern_type": "whenever_full"
       }

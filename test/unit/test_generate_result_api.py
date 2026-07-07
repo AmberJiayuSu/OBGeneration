@@ -5,6 +5,7 @@ from obgeneration.generator.equipment_generator import EquipmentAssumptions, Equ
 from obgeneration.generator.hvac_generator import HVACAssumptions, HVACGenerator
 from obgeneration.generator.lighting_generator import LightingAssumptions, LightingGenerator
 from obgeneration.generator.occupancy_generator import ClusterAssumptions, OccupancyGenerator
+from obgeneration.generator.types import HouseholdOccupancyFractions
 from obgeneration.model.builders import build_equipment, build_hvac, build_lighting, build_occupancy
 from obgeneration.model.hvac import HVAC as HVACModel
 from obgeneration.stochastic.distribution import Constant
@@ -132,16 +133,18 @@ def test_dhw_generate_result_matches_defaults():
     result = DHWGenerator.generate_result(
         num_occupants=occupancy.num_occupants,
         equipment=equipment,
-        laundry_cycles_per_day=equipment_result.laundry_cycles,
-        dishwasher_cycles_per_day=equipment_result.dishwasher_cycles,
+        occupancy_states=occupancy_result.occupancy_states,
+        laundry_event_schedule=equipment_result.laundry_dhw_event_schedule,
+        dishwasher_event_schedule=equipment_result.dishwasher_dhw_event_schedule,
         resolution_mins=30,
         dhw_assumptions=DHWAssumptions.default(),
     )
     default_result = DHWGenerator.generate_with_defaults(
         num_occupants=occupancy.num_occupants,
         equipment=equipment,
-        laundry_cycles_per_day=equipment_result.laundry_cycles,
-        dishwasher_cycles_per_day=equipment_result.dishwasher_cycles,
+        occupancy_states=occupancy_result.occupancy_states,
+        laundry_event_schedule=equipment_result.laundry_dhw_event_schedule,
+        dishwasher_event_schedule=equipment_result.dishwasher_dhw_event_schedule,
         resolution_mins=30,
     )
 
@@ -272,18 +275,25 @@ def test_dhw_generate_result_uses_explicit_assumptions():
         efficient_dishwasher_per_cycle=7.0,
         inefficient_dishwasher_per_cycle=11.0,
     )
+    weekly_occupancy_states = [[
+        HouseholdOccupancyFractions(home=1.0, sleep=0.0) for _ in range(7 * 24)
+    ] for _ in range(53)]
+    laundry_event_schedule = [[0] * (7 * 24) for _ in range(53)]
+    dishwasher_event_schedule = [[0] * (7 * 24) for _ in range(53)]
+    dishwasher_event_schedule[0][24] = 1
 
     result = DHWGenerator.generate_result(
         num_occupants=2,
         equipment=equipment,
-        laundry_cycles_per_day=[[1, 0, 0, 0, 0, 0, 0]],
-        dishwasher_cycles_per_day=[[0, 1, 0, 0, 0, 0, 0]],
+        occupancy_states=weekly_occupancy_states,
+        laundry_event_schedule=laundry_event_schedule,
+        dishwasher_event_schedule=dishwasher_event_schedule,
         resolution_mins=60,
         dhw_assumptions=assumptions,
     )
 
-    expected_daily_peak_liters = 2 * 10.0 + 11.0
-    expected_peak_m3_s = expected_daily_peak_liters / 1000.0 / (24 * 3600)
+    expected_peak_bin_liters = (2 * 10.0) / 24.0 + 11.0
+    expected_peak_m3_s = expected_peak_bin_liters / 1000.0 / 3600.0
 
     assert result.peak_value == expected_peak_m3_s
     assert max(result.annual_schedule) == 1.0

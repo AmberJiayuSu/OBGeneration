@@ -77,7 +77,7 @@
     },
     "dishwasher": {
       "has_dishwasher": true,
-      "efficient_dishwasher": false,
+      "dishwasher_efficient": false,
       "dishwashing_operational_logic": {
         "pattern_type": "daily_batch_if_cooked"
       }
