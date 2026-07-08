@@ -19,6 +19,9 @@ class RBSA_III_ModelInput:
     site_id: str
     #ee_site_id: str | None = None
 
+    home_vintage: int | None = None
+    zip: str | None = None
+    state: str | None = None
     conditioned_area_ft2: float | None = None
     conditioned_volume_ft3: float | None = None
     average_height_ft: float | None = None
@@ -94,6 +97,16 @@ class RBSA_III_BehaviorInput:
     dehumidifier_energy_star: int | None = None
     dishwasher_total: int | None = None
     dishwasher_energy_star: int | None = None
+    qty_clothes_washer_loads_per_week: float | None = None
+    qty_dishwasher_loads_per_week: float | None = None
+    ownership: bool | None = None
+    household_income: str | None = None
+    qty_occupants_between_1_and_5_years: int | None = None
+    qty_occupants_between_6_and_10_years: int | None = None
+    qty_occupants_between_11_and_18_years: int | None = None
+    qty_occupants_between_19_and_45_years: int | None = None
+    qty_occupants_between_46_and_64_years: int | None = None
+    qty_occupants_65_years_or_older: int | None = None
 
     heating_setpoint: str | float | None = None
     overnight_heating_setpoint: str | float | None = None
@@ -132,6 +145,9 @@ SOURCE_MAPPING = {
     "building_id": ("SiteDetail.csv", "Building_ID; falls back to SiteID"),
     "site_id": ("HEMS_RBSA_BASE.csv", "SiteID where RBSA Data Source is RBSA III"),
     #"ee_site_id": ("SITES v9.2.csv", "ee_site_id matched on rbsa_site_id; links to metered parquet RBSA2022_{ee_site_id}"),
+    "home_vintage": ("HEMS_RBSA_BASE.csv", "Home_Vintage"),
+    "zip": ("HEMS_RBSA_BASE.csv", "Zip"),
+    "state": ("HEMS_RBSA_BASE.csv", "State"),
     "conditioned_area_ft2": ("Building_Shell_One_Line.csv", "Conditioned_Area"),
     "conditioned_volume_ft3": ("Building_Shell_One_Line.csv", "Conditioned_Volume"),
     "average_height_ft": ("Envelope_Construction.csv", "Average_Height"),
@@ -305,6 +321,40 @@ BEHAVIOR_SOURCE_MAPPING = {
         "Appliance_One_Line.csv",
         "Dishwasher_EnergyStar",
     ),
+    "qty_clothes_washer_loads_per_week": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Qty_Clothes_Washer_Loads_Per_Week",
+    ),
+    "qty_dishwasher_loads_per_week": (
+        "SiteInterview_HomeEnergyUse.csv",
+        "Qty_Dishwasher_Loads_Per_Week",
+    ),
+    "ownership": ("SiteInterview_Demographics.csv", "Ownership"),
+    "household_income": ("SiteInterview_Demographics.csv", "Household_Income"),
+    "qty_occupants_between_1_and_5_years": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_Between_1_and_5_Years",
+    ),
+    "qty_occupants_between_6_and_10_years": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_Between_6_and_10_Years",
+    ),
+    "qty_occupants_between_11_and_18_years": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_Between_11_and_18_Years",
+    ),
+    "qty_occupants_between_19_and_45_years": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_Between_19_and_45_Years",
+    ),
+    "qty_occupants_between_46_and_64_years": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_Between_46_and_64_Years",
+    ),
+    "qty_occupants_65_years_or_older": (
+        "SiteInterview_Demographics.csv",
+        "Qty_Occupants_65_Years_Or_Older",
+    ),
     "heating_setpoint": ("SiteInterview_HomeEnergyUse.csv", "Heating_Setpoint"),
     "overnight_heating_setpoint": (
         "SiteInterview_HomeEnergyUse.csv",
@@ -421,6 +471,18 @@ def _clean_int(value: Any) -> int | None:
     if number is None or not number.is_integer():
         return None
     return int(number)
+
+
+def _clean_ownership_bool(value: Any) -> bool | None:
+    text = _clean_text(value)
+    if text is None:
+        return None
+    normalized = text.casefold()
+    if normalized in {"own", "own / buying", "owner", "owned"}:
+        return True
+    if normalized in {"rent", "renter", "occupy without rent"}:
+        return False
+    return None
 
 
 def _clean_percent(value: Any) -> float | None:
@@ -558,6 +620,7 @@ def build_rbsa_iii_model_inputs(
     base = pd.read_csv(rbsa_iii_dir.parent / "HEMS_RBSA_BASE.csv", dtype=str)
     rbsa_iii_base = base[base["RBSA Data Source"].str.strip().eq("RBSA III")]
     site_ids = rbsa_iii_base["SiteID"].dropna().str.strip().drop_duplicates().tolist()
+    rbsa_iii_base = rbsa_iii_base.drop_duplicates("SiteID").set_index("SiteID")
 
     site = _read_by_site(hems_dir / "SiteDetail.csv")
     shell = _read_by_site(hems_dir / "Building_Shell_One_Line.csv")
@@ -573,6 +636,11 @@ def build_rbsa_iii_model_inputs(
 
     records = []
     for site_id in site_ids:
+        base_row = (
+            rbsa_iii_base.loc[site_id]
+            if site_id in rbsa_iii_base.index
+            else pd.Series(dtype=object)
+        )
         site_row = site.loc[site_id] if site_id in site.index else pd.Series(dtype=object)
         shell_row = shell.loc[site_id] if site_id in shell.index else pd.Series(dtype=object)
         construction_row = (
@@ -678,6 +746,9 @@ def build_rbsa_iii_model_inputs(
             RBSA_III_ModelInput(
                 building_id=_clean_text(site_row.get("Building_ID")) or site_id,
                 site_id=site_id,
+                home_vintage=_clean_int(base_row.get("Home_Vintage")),
+                zip=_clean_text(base_row.get("Zip")),
+                state=_clean_text(base_row.get("State")),
                 conditioned_area_ft2=conditioned_area,
                 conditioned_volume_ft3=_clean_float(shell_row.get("Conditioned_Volume")),
                 average_height_ft=_clean_float(construction_row.get("Average_Height")),
@@ -768,6 +839,7 @@ def build_rbsa_iii_behavior_inputs(
     site = _read_by_site(hems_dir / "SiteDetail.csv")
     appliances = _read_by_site(hems_dir / "Appliance_One_Line.csv")
     home_energy_use = _read_by_site(hems_dir / "SiteInterview_HomeEnergyUse.csv")
+    demographics = _read_by_site(hems_dir / "SiteInterview_Demographics.csv")
     lighting = _read_by_site(hems_dir / "Lighting_One_Line.csv")
     ev_chargers = _read_by_site(hems_dir / "ElectricVehicleChargers.csv")
 
@@ -782,6 +854,11 @@ def build_rbsa_iii_behavior_inputs(
         home_energy_use_row = (
             home_energy_use.loc[site_id]
             if site_id in home_energy_use.index
+            else pd.Series(dtype=object)
+        )
+        demographics_row = (
+            demographics.loc[site_id]
+            if site_id in demographics.index
             else pd.Series(dtype=object)
         )
         lighting_row = (
@@ -829,6 +906,34 @@ def build_rbsa_iii_behavior_inputs(
                 dishwasher_total=_clean_int(appliance_row.get("Dishwasher_Total")),
                 dishwasher_energy_star=_clean_int(
                     appliance_row.get("Dishwasher_EnergyStar")
+                ),
+                qty_clothes_washer_loads_per_week=_clean_float(
+                    home_energy_use_row.get("Qty_Clothes_Washer_Loads_Per_Week")
+                ),
+                qty_dishwasher_loads_per_week=_clean_float(
+                    home_energy_use_row.get("Qty_Dishwasher_Loads_Per_Week")
+                ),
+                ownership=_clean_ownership_bool(demographics_row.get("Ownership")),
+                household_income=_clean_text(
+                    demographics_row.get("Household_Income")
+                ),
+                qty_occupants_between_1_and_5_years=_clean_int(
+                    demographics_row.get("Qty_Occupants_Between_1_and_5_Years")
+                ),
+                qty_occupants_between_6_and_10_years=_clean_int(
+                    demographics_row.get("Qty_Occupants_Between_6_and_10_Years")
+                ),
+                qty_occupants_between_11_and_18_years=_clean_int(
+                    demographics_row.get("Qty_Occupants_Between_11_and_18_Years")
+                ),
+                qty_occupants_between_19_and_45_years=_clean_int(
+                    demographics_row.get("Qty_Occupants_Between_19_and_45_Years")
+                ),
+                qty_occupants_between_46_and_64_years=_clean_int(
+                    demographics_row.get("Qty_Occupants_Between_46_and_64_Years")
+                ),
+                qty_occupants_65_years_or_older=_clean_int(
+                    demographics_row.get("Qty_Occupants_65_Years_Or_Older")
                 ),
                 heating_setpoint=_clean_float_or_text(
                     home_energy_use_row.get("Heating_Setpoint")
