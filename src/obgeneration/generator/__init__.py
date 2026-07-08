@@ -16,7 +16,7 @@ from obgeneration.generator.occupancy_generator import (
 from obgeneration.generator.types import HouseholdOccupancyFractions
 from obgeneration.generator.ob_generator import OccupantBehavior
 from obgeneration.generator.lighting_generator import LightingGenerator
-from obgeneration.generator.dhw_generator import DHWGenerator, DHWAssumptions
+from obgeneration.generator.dhw_generator import DHWGenerator, DHWFlatGenerator, DHWAssumptions
 from obgeneration.generator.hvac_generator import (
     HVACGenerator,
     HVACAssumptions,

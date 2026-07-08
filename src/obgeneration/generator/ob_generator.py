@@ -73,9 +73,23 @@ class OccupantBehavior(BaseModel):
         lighting_schedule, _, _ = lighting_gen.lighting_annual_schedule(occupancy_states, sleep_mask)
 
         equipment_gen = EquipmentGenerator(occupant_profile.equipment,occupancy_states, occupant_profile.occupancy.num_occupants, resolution_mins, EquipmentAssumptions.default())
-        equipment_schedule, laundry_cycles, dishwasher_cycles = equipment_gen.equipment_annual_schedule(rng)
+        (
+            equipment_schedule,
+            laundry_cycles,
+            dishwasher_cycles,
+            laundry_dhw_event_schedule,
+            dishwasher_dhw_event_schedule,
+        ) = equipment_gen.equipment_annual_schedule_with_dhw_events(rng)
 
-        dhw_gen = DHWGenerator( DHWAssumptions.default(), occupant_profile.equipment, occupant_profile.occupancy.num_occupants, laundry_cycles, dishwasher_cycles, resolution_mins)
+        dhw_gen = DHWGenerator(
+            DHWAssumptions.default(),
+            occupant_profile.equipment,
+            occupant_profile.occupancy.num_occupants,
+            occupancy_states,
+            laundry_dhw_event_schedule,
+            dishwasher_dhw_event_schedule,
+            resolution_mins,
+        )
         flow_rate, dhw_schedule = dhw_gen.dhw_annual_schedule()
 
         hvac_gen = HVACGenerator( occupant_profile.hvac, HVACAssumptions.default())
@@ -151,4 +165,3 @@ class OccupantBehavior(BaseModel):
         
     #     return OccupantBehavior.aggregate_occupant_behavior(behaviors)
         
-

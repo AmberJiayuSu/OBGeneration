@@ -38,6 +38,8 @@ class EquipmentResult(FractionalScheduleResult):
     """Equipment output plus appliance-cycle metadata used downstream."""
     laundry_cycles: list[list[int]]
     dishwasher_cycles: list[list[int]]
+    laundry_dhw_event_schedule: list[list[int]] | None = None
+    dishwasher_dhw_event_schedule: list[list[int]] | None = None
     peak_units: Literal["W"] = "W"
 
 class DHWResult(FractionalScheduleResult):

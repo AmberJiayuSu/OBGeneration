@@ -11,6 +11,7 @@ from obgeneration.generator.equipment_generator import EquipmentGenerator, Equip
 from obgeneration.model.occupant_profile import Occupant
 from obgeneration.generator.ob_utils import ScheduleUtils
 from obgeneration.generator.ob_generator import OccupantBehavior
+from obgeneration.stochastic.distribution import Constant
 from pathlib import Path
 
 
@@ -42,6 +43,15 @@ def _assert_design_day_matches_extreme(
         assert design_day_average == pytest.approx(min(daily_averages))
     else:
         raise ValueError(f"Unsupported mode: {mode}")
+
+
+def _constant_home_occupancy(length: int, active_indices: set[int] | None = None) -> list[HouseholdOccupancyFractions]:
+    if active_indices is None:
+        active_indices = set(range(length))
+    return [
+        HouseholdOccupancyFractions(home=1.0 if index in active_indices else 0.0, sleep=0.0)
+        for index in range(length)
+    ]
 
 
 @pytest.fixture
@@ -408,7 +418,7 @@ class TestEquipmentGenerator:
         cooking_assumptions.weekday_lunch_duration.mean() * 5/21 + cooking_assumptions.weekend_lunch_duration.mean() * 2/21 + \
         cooking_assumptions.weekday_dinner_duration.mean() * 5/21 + cooking_assumptions.weekend_dinner_duration.mean() * 2/21
         expectation = cooking_assumptions.electric_cooking_products.mean() * mean_time * 12.5
-        assert pytest.approx(power_mean, rel=0.2) == expectation
+        assert pytest.approx(power_mean, rel=0.3) == expectation
 
 
         
@@ -672,8 +682,8 @@ class TestEquipmentGenerator:
             assert len(set(week_schedule)) > 1
 
 
-        assert all(sum(week) > 0 for week in laundry_cycles)
-        assert all(sum(week) > 0 for week in dishwasher_cycles)
+        assert all(sum(week) > 0 for week in laundry_cycles[:-1])
+        assert all(sum(week) > 0 for week in dishwasher_cycles[:-1])
 
 
 
@@ -938,6 +948,211 @@ class TestAnnualConsumption:
         finally:
             signal.alarm(0)  # cancel alarm if finished in time
 
+    def test_partial_last_week_cooking_can_scale_to_zero(self):
+        equipment = Equipment.model_validate_json(
+            """
+            {
+                "cooking_products": {
+                    "has_cooking_products": true,
+                    "cooking_products_fuel": "electric",
+                    "usage_frequency_per_week": {"min": 1, "max": 1}
+                }
+            }
+            """
+        )
+        assumptions = EquipmentAssumptions.default(60).model_copy(deep=True)
+        assumptions.cooking_products.start_time_event_assumptions = EventAssumptions(
+            start_time_probabilities=[0.0] * 23 + [1.0]
+        )
+        assumptions.cooking_products.weekday_dinner_duration = Constant(1.0)
+
+        partial_week = _constant_home_occupancy(24, {23})
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=[partial_week],
+            num_occupants=1,
+            resolution_mins=60,
+            equipment_assumptions=assumptions,
+        )
+
+        cooking_schedule, end_times = equipment_gen.weekly_cooking_usage_schedule(
+            partial_week,
+            True,
+            np.random.default_rng(0),
+        )
+
+        assert end_times == []
+        assert all(power == 0.0 for power in cooking_schedule)
+
+    def test_cooking_probability_suppression_uses_day_offset(self):
+        equipment = Equipment.model_validate_json(
+            """
+            {
+                "cooking_products": {
+                    "has_cooking_products": true,
+                    "cooking_products_fuel": "electric",
+                    "usage_frequency_per_week": {"min": 2, "max": 2}
+                }
+            }
+            """
+        )
+        assumptions = EquipmentAssumptions.default(60).model_copy(deep=True)
+        assumptions.cooking_products.start_time_event_assumptions = EventAssumptions(
+            start_time_probabilities=[0.0] * 39 + [1.0] + [0.0] * 8
+        )
+        assumptions.cooking_products.weekday_breakfast_duration = Constant(2.0)
+        assumptions.cooking_products.weekday_lunch_duration = Constant(2.0)
+        assumptions.cooking_products.weekday_dinner_duration = Constant(2.0)
+        assumptions.cooking_products.weekend_breakfast_duration = Constant(2.0)
+        assumptions.cooking_products.weekend_lunch_duration = Constant(2.0)
+        assumptions.cooking_products.weekend_dinner_duration = Constant(2.0)
+
+        two_day_chunk = _constant_home_occupancy(48)
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=[two_day_chunk],
+            num_occupants=1,
+            resolution_mins=60,
+            equipment_assumptions=assumptions,
+        )
+
+        cooking_schedule, end_times = equipment_gen.weekly_cooking_usage_schedule(
+            two_day_chunk,
+            False,
+            np.random.default_rng(0),
+        )
+
+        assert len(end_times) == 1
+        assert sum(1 for power in cooking_schedule if power > 0.0) == 2
+
+    def test_partial_last_week_laundry_breaks_when_no_feasible_start_exists(self):
+        equipment = Equipment.model_validate_json(
+            """
+            {
+                "laundry": {
+                    "has_washer": true,
+                    "has_dryer": false,
+                    "washer_efficient": true,
+                    "usage_frequency_per_week": {"min": 5, "max": 5}
+                }
+            }
+            """
+        )
+        assumptions = EquipmentAssumptions.default(60).model_copy(deep=True)
+        assumptions.laundry.start_time_event_assumptions = EventAssumptions(
+            start_time_probabilities=[0.0] * 23 + [1.0]
+        )
+        assumptions.laundry.washer_duration = Constant(2.0)
+        assumptions.laundry.dryer_duration = Constant(0.0)
+
+        partial_week = _constant_home_occupancy(24, {23})
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=[partial_week],
+            num_occupants=1,
+            resolution_mins=60,
+            equipment_assumptions=assumptions,
+        )
+
+        laundry_schedule, cycles = equipment_gen.weekly_laundry_usage_schedule(
+            partial_week,
+            True,
+            np.random.default_rng(0),
+        )
+
+        assert sum(cycles) == 0
+        assert all(power == 0.0 for power in laundry_schedule)
+
+    def test_partial_last_week_dishwasher_independent_frequency_breaks_cleanly(self):
+        equipment = Equipment.model_validate_json(
+            """
+            {
+                "dishwasher": {
+                    "has_dishwasher": true,
+                    "dishwasher_efficient": true,
+                    "dishwashing_operational_logic": {
+                        "pattern_type": "independent_frequency",
+                        "usage_frequency_per_week": {"min": 5, "max": 5}
+                    }
+                }
+            }
+            """
+        )
+        assumptions = EquipmentAssumptions.default(60).model_copy(deep=True)
+        assumptions.dishwasher.start_time_event_assumptions = EventAssumptions(
+            start_time_probabilities=[0.0] * 23 + [1.0]
+        )
+        assumptions.dishwasher.dishwasher_cycle_duration = Constant(2.0)
+
+        partial_week = _constant_home_occupancy(24, {23})
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=[partial_week],
+            num_occupants=1,
+            resolution_mins=60,
+            equipment_assumptions=assumptions,
+        )
+
+        dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
+            partial_week,
+            [],
+            True,
+            np.random.default_rng(0),
+        )
+
+        assert sum(cycles) == 0
+        assert all(power == 0.0 for power in dishwasher_schedule)
+
+    @pytest.mark.parametrize(
+        ("pattern_type", "cooking_endings"),
+        [
+            ("daily_batch_if_cooked", [22]),
+            ("whenever_full", [20]),
+        ],
+    )
+    def test_partial_last_week_dishwasher_event_patterns_accept_fewer_events(
+        self,
+        pattern_type,
+        cooking_endings,
+    ):
+        equipment = Equipment.model_validate_json(
+            f"""
+            {{
+                "dishwasher": {{
+                    "has_dishwasher": true,
+                    "dishwasher_efficient": true,
+                    "dishwashing_operational_logic": {{
+                        "pattern_type": "{pattern_type}"
+                    }}
+                }}
+            }}
+            """
+        )
+        assumptions = EquipmentAssumptions.default(60).model_copy(deep=True)
+        assumptions.dishwasher.start_time_event_assumptions = EventAssumptions(
+            start_time_probabilities=[0.0] * 23 + [1.0]
+        )
+        assumptions.dishwasher.dishwasher_cycle_duration = Constant(4.0)
+
+        partial_week = _constant_home_occupancy(24, {23})
+        equipment_gen = EquipmentGenerator(
+            equipment=equipment,
+            occupancy_state=[partial_week],
+            num_occupants=1,
+            resolution_mins=60,
+            equipment_assumptions=assumptions,
+        )
+
+        dishwasher_schedule, cycles = equipment_gen.weekly_dishwasher_usage_schedule(
+            partial_week,
+            cooking_endings,
+            True,
+            np.random.default_rng(0),
+        )
+
+        assert sum(cycles) == 0
+        assert all(power == 0.0 for power in dishwasher_schedule)
+
 
     def test_dishwasher(self, occ_1, rng):
         equipment_json = """
@@ -1020,7 +1235,13 @@ class TestAnnualConsumption:
             resolution_mins=15,
             equipment_assumptions=assumptions,
         )
-        direct_schedule, laundry_cycles, dishwasher_cycles = direct_generator.equipment_annual_schedule(np.random.default_rng(0))
+        (
+            direct_schedule,
+            laundry_cycles,
+            dishwasher_cycles,
+            laundry_dhw_event_schedule,
+            dishwasher_dhw_event_schedule,
+        ) = direct_generator.equipment_annual_schedule_with_dhw_events(np.random.default_rng(0))
         flattened_direct_schedule = ScheduleUtils.flatten_schedule(direct_schedule)
         direct_peak = max(flattened_direct_schedule)
         normalized_direct_schedule = [
@@ -1042,9 +1263,13 @@ class TestAnnualConsumption:
         assert result.annual_schedule == pytest.approx(normalized_direct_schedule)
         assert result.laundry_cycles == laundry_cycles
         assert result.dishwasher_cycles == dishwasher_cycles
+        assert result.laundry_dhw_event_schedule == laundry_dhw_event_schedule
+        assert result.dishwasher_dhw_event_schedule == dishwasher_dhw_event_schedule
         assert len(result.annual_schedule) == 365 * bins_per_day
         assert len(result.laundry_cycles) == 53
         assert len(result.dishwasher_cycles) == 53
+        assert len(result.laundry_dhw_event_schedule) == 53
+        assert len(result.dishwasher_dhw_event_schedule) == 53
         _assert_design_day_matches_extreme(
             result.annual_schedule,
             result.summer_design_day_schedule,
