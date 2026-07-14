@@ -354,11 +354,17 @@ class OccupancyGenerator:
         )
     
     @staticmethod
-    def active_sleep_mask(occ_states: Sequence[Sequence[HouseholdOccupancyFractions]], active_threshold: float = 0.3) -> tuple[list[list[bool]], list[list[bool]]]:
+    def active_sleep_mask(
+        occ_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
+    ) -> tuple[list[list[bool]], list[list[bool]]]:
         """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
 
         A bin is considered "active" if the home fraction >= active_threshold.
         A bin is considered "sleep" otherwise.
+        A bin is considered "away" (neither active nor sleep) if home + sleep <= away_threshold,
+        i.e. the household fraction that is home or asleep is too small to reliably classify.
         """
         active_mask = [[False] * len(week) for week in occ_states]
         sleep_mask = [[False] * len(week) for week in occ_states]
@@ -367,7 +373,7 @@ class OccupancyGenerator:
             for t in range(len(week)):
                 time_bin = week[t]
                 total_home_sleep = time_bin.home + time_bin.sleep
-                if total_home_sleep > 0.0: 
+                if total_home_sleep > away_threshold:
                     ratio = time_bin.home / total_home_sleep
                     if ratio >= active_threshold:
                         active_mask[w][t] = True

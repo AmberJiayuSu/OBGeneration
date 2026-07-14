@@ -871,29 +871,29 @@ class TestActiveSleepMask:
         assert all(v is False for week in sleep  for v in week)
 
     def test_high_home_ratio_is_active(self):
-        """home=0.8, sleep=0.1 → ratio≈0.89 ≥ default threshold 0.3 → active."""
+        """home=0.8, sleep=0.1 → ratio≈0.89 ≥ default threshold 0.5 → active."""
         states = self._states(home=0.8, sleep=0.1)
         active, sleep = OccupancyGenerator.active_sleep_mask(states)
         assert all(v is True  for week in active for v in week)
         assert all(v is False for week in sleep  for v in week)
 
     def test_low_home_ratio_is_sleep(self):
-        """home=0.05, sleep=0.9 → ratio≈0.05 < 0.3 → sleep."""
+        """home=0.05, sleep=0.9 → ratio≈0.05 < 0.5 → sleep."""
         states = self._states(home=0.05, sleep=0.9)
         active, sleep = OccupancyGenerator.active_sleep_mask(states)
         assert all(v is False for week in active for v in week)
         assert all(v is True  for week in sleep  for v in week)
 
     def test_threshold_boundary_is_active(self):
-        """ratio exactly at threshold (home=0.3, sleep=0.7 → ratio=0.3) → active."""
-        states = self._states(home=0.3, sleep=0.7)
+        """ratio exactly at threshold (home=0.5, sleep=0.5 → ratio=0.5) → active."""
+        states = self._states(home=0.5, sleep=0.5)
         active, sleep = OccupancyGenerator.active_sleep_mask(states)
         assert all(v is True  for week in active for v in week)
         assert all(v is False for week in sleep  for v in week)
 
     def test_just_below_threshold_is_sleep(self):
-        """ratio just below threshold (home=0.29, sleep=0.71 → ratio<0.3) → sleep."""
-        states = self._states(home=0.29, sleep=0.71)
+        """ratio just below threshold (home=0.49, sleep=0.51 → ratio<0.5) → sleep."""
+        states = self._states(home=0.49, sleep=0.51)
         active, sleep = OccupancyGenerator.active_sleep_mask(states)
         assert all(v is False for week in active for v in week)
         assert all(v is True  for week in sleep  for v in week)

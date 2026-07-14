@@ -91,7 +91,7 @@ class HVACGenerator:
     ) -> HVACResult:
         """Generate annual heating and cooling results with explicit assumptions."""
         generator = HVACGenerator(hvac, assumptions)
-        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
         if min_state_mins is not None and min_state_mins > 0:
             minutes_per_bin = (7 * 24 * 60) / len(occupancy_states[0])
             min_state_bins = max(1, math.ceil(min_state_mins / minutes_per_bin))

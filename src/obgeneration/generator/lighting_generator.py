@@ -48,7 +48,7 @@ class LightingGenerator:
         """Generate an annual lighting result with explicit assumptions."""
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
-        _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states, 0.3)
+        _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
         generator = LightingGenerator(lighting, lighting_assumptions)
         dimming = generator.get_dimming()
         schedule, max_day, min_day = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
