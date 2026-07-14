@@ -361,7 +361,7 @@ class OccupancyGenerator:
     ) -> tuple[list[list[bool]], list[list[bool]]]:
         """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
 
-        A bin is considered "active" if the home fraction >= active_threshold.
+        A bin is considered "active" if the home fraction > active_threshold.
         A bin is considered "sleep" otherwise.
         A bin is considered "away" (neither active nor sleep) if home + sleep <= away_threshold,
         i.e. the household fraction that is home or asleep is too small to reliably classify.

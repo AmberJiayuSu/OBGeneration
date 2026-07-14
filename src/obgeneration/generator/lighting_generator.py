@@ -44,8 +44,8 @@ class LightingGenerator:
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         lighting_assumptions: LightingAssumptions,
         rng: np.random.Generator | int,
-        active_threshold: float = 0.5,
-        away_threshold: float = 0.0,
+        active_threshold: float = 0.51,
+        away_threshold: float = 0.01,
     ) -> LightingResult:
         """Generate an annual lighting result with explicit assumptions.
 
@@ -78,8 +78,8 @@ class LightingGenerator:
         lighting: Lighting.Lighting,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         rng: np.random.Generator | int,
-        active_threshold: float = 0.5,
-        away_threshold: float = 0.0,
+        active_threshold: float = 0.51,
+        away_threshold: float = 0.01,
     ) -> LightingResult:
         """Generate an annual lighting result using default assumptions."""
         return LightingGenerator.generate_result(
