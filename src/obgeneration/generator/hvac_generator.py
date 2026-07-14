@@ -88,10 +88,18 @@ class HVACGenerator:
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> HVACResult:
-        """Generate annual heating and cooling results with explicit assumptions."""
+        """Generate annual heating and cooling results with explicit assumptions.
+
+        active_threshold / away_threshold classify occupancy bins into active/sleep/away
+        before applying setpoints; see OccupancyGenerator.active_sleep_mask.
+        """
         generator = HVACGenerator(hvac, assumptions)
-        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
+        active_mask, sleep_mask = OccupancyGenerator.active_sleep_mask(
+            occupancy_states, active_threshold=active_threshold, away_threshold=away_threshold
+        )
         if min_state_mins is not None and min_state_mins > 0:
             minutes_per_bin = (7 * 24 * 60) / len(occupancy_states[0])
             min_state_bins = max(1, math.ceil(min_state_mins / minutes_per_bin))
@@ -115,8 +123,10 @@ class HVACGenerator:
     @staticmethod
     def generate_with_defaults(
         hvac: HVAC.HVAC,
-        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]], 
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> HVACResult:
         """Generate annual heating and cooling results using default assumptions."""
         return HVACGenerator.generate_result(
@@ -124,6 +134,8 @@ class HVACGenerator:
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
             min_state_mins=min_state_mins,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
 
     @staticmethod
@@ -132,6 +144,8 @@ class HVACGenerator:
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> SetpointResult | None:
         """Generate an annual cooling setpoint result with explicit assumptions."""
         result = HVACGenerator.generate_result(
@@ -139,6 +153,8 @@ class HVACGenerator:
             occupancy_states=occupancy_states,
             assumptions=assumptions,
             min_state_mins=min_state_mins,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
         if result.cooling is None:
             return None
@@ -149,6 +165,8 @@ class HVACGenerator:
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> SetpointResult | None:
         """Generate an annual cooling setpoint result using default assumptions."""
         return HVACGenerator.generate_cooling_result(
@@ -156,6 +174,8 @@ class HVACGenerator:
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
             min_state_mins=min_state_mins,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
 
     @staticmethod
@@ -164,6 +184,8 @@ class HVACGenerator:
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         assumptions: HVACAssumptions,
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> SetpointResult | None:
         """Generate an annual heating setpoint result with explicit assumptions."""
         result = HVACGenerator.generate_result(
@@ -171,6 +193,8 @@ class HVACGenerator:
             occupancy_states=occupancy_states,
             assumptions=assumptions,
             min_state_mins=min_state_mins,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
         if result.heating is None:
             return None
@@ -181,6 +205,8 @@ class HVACGenerator:
         hvac: HVAC.HVAC,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         min_state_mins: int | None = None,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> SetpointResult | None:
         """Generate an annual heating setpoint result using default assumptions."""
         return HVACGenerator.generate_heating_result(
@@ -188,6 +214,8 @@ class HVACGenerator:
             occupancy_states=occupancy_states,
             assumptions=HVACAssumptions.default(),
             min_state_mins=min_state_mins,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
 
     @staticmethod

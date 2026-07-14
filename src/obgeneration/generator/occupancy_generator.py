@@ -356,8 +356,8 @@ class OccupancyGenerator:
     @staticmethod
     def active_sleep_mask(
         occ_states: Sequence[Sequence[HouseholdOccupancyFractions]],
-        active_threshold: float = 0.5,
-        away_threshold: float = 0.0,
+        active_threshold: float = 0.51,
+        away_threshold: float = 0.01,
     ) -> tuple[list[list[bool]], list[list[bool]]]:
         """Given the generated occupancy states, produce binary masks for active and sleep states based on the specified active_threshold.
 
@@ -375,7 +375,7 @@ class OccupancyGenerator:
                 total_home_sleep = time_bin.home + time_bin.sleep
                 if total_home_sleep > away_threshold:
                     ratio = time_bin.home / total_home_sleep
-                    if ratio >= active_threshold:
+                    if ratio > active_threshold:
                         active_mask[w][t] = True
                     else:
                         sleep_mask[w][t] = True

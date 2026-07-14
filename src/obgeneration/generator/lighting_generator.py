@@ -44,11 +44,19 @@ class LightingGenerator:
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         lighting_assumptions: LightingAssumptions,
         rng: np.random.Generator | int,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> LightingResult:
-        """Generate an annual lighting result with explicit assumptions."""
+        """Generate an annual lighting result with explicit assumptions.
+
+        active_threshold / away_threshold classify occupancy bins into active/sleep/away
+        before building the lighting schedule; see OccupancyGenerator.active_sleep_mask.
+        """
         if isinstance(rng, int):
             rng = np.random.default_rng(rng)
-        _, sleep_mask = OccupancyGenerator.active_sleep_mask(occupancy_states)
+        _, sleep_mask = OccupancyGenerator.active_sleep_mask(
+            occupancy_states, active_threshold=active_threshold, away_threshold=away_threshold
+        )
         generator = LightingGenerator(lighting, lighting_assumptions)
         dimming = generator.get_dimming()
         schedule, max_day, min_day = generator.lighting_annual_schedule(occupancy_states, sleep_mask)
@@ -70,6 +78,8 @@ class LightingGenerator:
         lighting: Lighting.Lighting,
         occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
         rng: np.random.Generator | int,
+        active_threshold: float = 0.5,
+        away_threshold: float = 0.0,
     ) -> LightingResult:
         """Generate an annual lighting result using default assumptions."""
         return LightingGenerator.generate_result(
@@ -77,6 +87,8 @@ class LightingGenerator:
             occupancy_states=occupancy_states,
             lighting_assumptions=LightingAssumptions.default(),
             rng=rng,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
         )
 
 
