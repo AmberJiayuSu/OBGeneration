@@ -223,3 +223,6 @@ __marimo__/
 
 #internal note
 *.md
+
+#inputs
+validation/src/data/
