@@ -6,6 +6,7 @@ Tests the occupancy generation logic in src/generator/occupancy_generator.py
 
 import pytest
 import numpy as np
+from pydantic import ValidationError
 import matplotlib
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -191,6 +192,25 @@ def rng() -> np.random.Generator:
 
 
 SIM_RES = 15  # minutes — used throughout tests
+
+
+def test_household_composition_is_required():
+    with pytest.raises(ValidationError):
+        Occupancy(num_occupants=1)
+
+
+@pytest.mark.parametrize("resolution", [15, 30])
+def test_missing_pattern_fill_does_not_mutate_caller(
+    single_long_day_away_occupant, default_cluster_assumptions, rng, resolution
+):
+    occupancy = Occupancy(
+        num_occupants=1,
+        household_composition=HouseholdComposition(occupants=[single_long_day_away_occupant]),
+        weekday_pattern=WeekdayOccupancyPattern(is_always_occupied=True),
+    )
+    OccupancyGenerator(occupancy, default_cluster_assumptions, resolution).occupancy_annual_schedule(rng)
+    assert occupancy.weekend_pattern is None
+    assert occupancy.weekday_pattern.is_always_occupied is True
 
 
 def _daily_slices_from_annual_schedule(

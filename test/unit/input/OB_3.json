@@ -56,11 +56,6 @@
     },
     "cooling": null
   },
-  "window": {
-    "heating_season": "occasionally_open",
-    "cooling_season": "frequently_open",
-    "shoulder_season": "frequently_open"
-  },
   "equipment": {
     "laundry": {
       "has_washer": true,

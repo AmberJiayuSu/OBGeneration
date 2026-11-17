@@ -342,15 +342,7 @@
           "type": "integer"
         },
         "household_composition": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/HouseholdComposition"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "default": null
+          "$ref": "#/$defs/HouseholdComposition"
         },
         "weekday_pattern": {
           "anyOf": [
@@ -387,7 +379,8 @@
         }
       },
       "required": [
-        "num_occupants"
+        "num_occupants",
+        "household_composition"
       ],
       "title": "Occupancy",
       "type": "object"

@@ -1,13 +1,22 @@
+import json
+from pathlib import Path
+
 import numpy as np
+import pytest
 
 from obgeneration.generator.dhw_generator import DHWAssumptions, DHWGenerator
 from obgeneration.generator.equipment_generator import EquipmentAssumptions, EquipmentGenerator
 from obgeneration.generator.hvac_generator import HVACAssumptions, HVACGenerator
 from obgeneration.generator.lighting_generator import LightingAssumptions, LightingGenerator
 from obgeneration.generator.occupancy_generator import ClusterAssumptions, OccupancyGenerator
+from obgeneration.generator.occupant_behavior_generator import OccupantBehaviorGenerator
+from obgeneration.generator.results import HVACResult
 from obgeneration.generator.types import HouseholdOccupancyFractions
+from obgeneration.generator.window_generator import WindowAssumptions, WindowGenerator
 from obgeneration.model.builders import build_equipment, build_hvac, build_lighting, build_occupancy
 from obgeneration.model.hvac import HVAC as HVACModel
+from obgeneration.model.occupant_profile import Occupant
+from obgeneration.model.window import Window, WindowOpeningBehavior
 from obgeneration.stochastic.distribution import Constant
 from obgeneration.model.occupancy import MobilityCluster
 
@@ -351,3 +360,146 @@ def test_equipment_generate_result_wrapper_keeps_normalized_schedule():
     assert min(result.annual_schedule) >= 0.0
     assert len(result.laundry_cycles) == 53
     assert len(result.dishwasher_cycles) == 53
+
+
+def _sample_profile() -> Occupant:
+    occupancy, equipment, lighting, hvac = _sample_inputs()
+    return Occupant(
+        occupancy=occupancy,
+        lighting=lighting,
+        equipment=equipment,
+        hvac=hvac,
+        window=Window(),
+    )
+
+
+def test_profile_generate_with_defaults_matches_end_use_chain():
+    """Same seed and order as StochasticScheduleGenerator.generate_schedules."""
+    resolution_mins = 30
+    profile = _sample_profile()
+    chained_rng = np.random.default_rng(7)
+
+    occupancy = OccupancyGenerator.generate_with_defaults(
+        occupancy=profile.occupancy,
+        resolution_mins=resolution_mins,
+        rng=chained_rng,
+    )
+    hvac = HVACGenerator.generate_with_defaults(
+        hvac=profile.hvac,
+        occupancy_states=occupancy.occupancy_states,
+        active_threshold=0.51,
+        away_threshold=0.01,
+    )
+    lighting = LightingGenerator.generate_with_defaults(
+        lighting=profile.lighting,
+        occupancy_states=occupancy.occupancy_states,
+        rng=chained_rng,
+        active_threshold=0.51,
+        away_threshold=0.01,
+    )
+    equipment = EquipmentGenerator.generate_with_defaults(
+        equipment=profile.equipment,
+        occupancy_states=occupancy.occupancy_states,
+        num_occupants=profile.occupancy.num_occupants,
+        resolution_mins=resolution_mins,
+        rng=chained_rng,
+    )
+    dhw = DHWGenerator.generate_with_defaults(
+        profile.occupancy.num_occupants,
+        profile.equipment,
+        occupancy.occupancy_states,
+        equipment.laundry_dhw_event_schedule,
+        equipment.dishwasher_dhw_event_schedule,
+        resolution_mins,
+    )
+
+    result = OccupantBehaviorGenerator.generate_with_defaults(
+        _sample_profile(),
+        resolution_mins,
+        rng=7,
+    )
+
+    assert result.occupancy.model_dump() == occupancy.model_dump()
+    assert result.lighting.model_dump() == lighting.model_dump()
+    assert result.equipment.model_dump() == equipment.model_dump()
+    assert result.dhw.model_dump() == dhw.model_dump()
+    assert result.hvac.model_dump() == hvac.model_dump()
+    assert result.equipment.peak_units == "W"
+    assert result.dhw.peak_units == "m3/s"
+    assert result.lighting.peak_units == "W/m2"
+    assert result.window is None
+
+
+def test_profile_json_omits_window():
+    """Sample profiles carry no window input. The loader fills an empty Window."""
+    input_dir = Path(__file__).parent / "input"
+    for name in ("OB_1.json", "OB_2.json", "OB_3.json"):
+        path = input_dir / name
+        raw = json.loads(path.read_text())
+        assert "window" not in raw
+        occupant = Occupant.from_json_file(path)
+        assert occupant.window.heating_season is None
+        assert occupant.window.cooling_season is None
+        assert occupant.window.shoulder_season is None
+
+
+def test_profile_json_requires_occupancy_and_lighting(tmp_path):
+    lighting_only = tmp_path / "no_occupancy.json"
+    lighting_only.write_text(json.dumps({"lighting": {"if_led": True}}), encoding="utf-8")
+    with pytest.raises(KeyError, match="occupancy"):
+        Occupant.from_json_file(lighting_only)
+
+    occupancy_only = tmp_path / "no_lighting.json"
+    occupancy_only.write_text(
+        json.dumps({
+            "occupancy": {
+                "num_occupants": 1,
+                "household_composition": {
+                    "occupants": [{
+                        "weekday_cluster": "mostly_home",
+                        "weekend_cluster": "mostly_home",
+                    }]
+                },
+            }
+        }),
+        encoding="utf-8",
+    )
+    with pytest.raises(KeyError, match="lighting"):
+        Occupant.from_json_file(occupancy_only)
+
+
+def test_window_generate_result_returns_none():
+    """The window call is wired through, and the schedule is still unspecified."""
+    window = Window(
+        heating_season=WindowOpeningBehavior.NATURAL_VENTILATION,
+        cooling_season=WindowOpeningBehavior.OCCASIONALLY_OPEN,
+        shoulder_season=WindowOpeningBehavior.LONG_OPEN,
+    )
+    occupancy_states = [[HouseholdOccupancyFractions(home=1.0, sleep=0.0)]]
+
+    result = WindowGenerator.generate_result(
+        window=window,
+        occupancy_states=occupancy_states,
+        assumptions=WindowAssumptions.default(),
+        resolution_mins=15,
+        rng=0,
+        hvac=HVACResult(),
+    )
+    default_result = WindowGenerator.generate_with_defaults(
+        window=window,
+        occupancy_states=occupancy_states,
+        resolution_mins=15,
+        rng=0,
+        hvac=HVACResult(),
+    )
+
+    assert result is None
+    assert default_result is None
+    assert WindowGenerator(window, WindowAssumptions.default(), 15).window_annual_schedule(
+        [[True, False]]
+    ) is None
+    assert WindowGenerator.in_week_range(42, 42, 19)
+    assert WindowGenerator.in_week_range(19, 42, 19)
+    assert not WindowGenerator.in_week_range(30, 42, 19)
+    assert WindowGenerator.in_week_range(22, 20, 24)
+    assert not WindowGenerator.in_week_range(19, 20, 24)

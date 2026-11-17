@@ -109,7 +109,7 @@ class SleepPattern(BaseModel):
 class Occupancy(BaseModel):
     """The occupancy of the household (number of occupants, household composition, occupancy patterns)."""
     num_occupants: int = Field(..., ge=1)
-    household_composition: Optional[HouseholdComposition] = None
+    household_composition: HouseholdComposition = Field(...)
     weekday_pattern: Optional[WeekdayOccupancyPattern] = None
     weekend_pattern: Optional[WeekendOccupancyPattern] = None
     sleep_pattern: Optional[SleepPattern] = None
@@ -117,8 +117,6 @@ class Occupancy(BaseModel):
     @model_validator(mode='after')
     def validate_household_composition(self):
         """Validate that the number of occupant profiles matches num_occupants."""
-        if self.household_composition is None:
-            return self
         n = len(self.household_composition.occupants)
         if n != self.num_occupants:
             raise ValueError(f"household_composition has {n} occupant(s), expected {self.num_occupants}.")

@@ -1,10 +1,16 @@
-from obgeneration.stochastic.distribution import Distribution, CategoricalDistribution
-from pydantic import BaseModel, Field, ConfigDict
-from obgeneration.stochastic.distribution_config import DistributionConfig
+from collections.abc import Sequence
 import json
 from pathlib import Path
-from obgeneration.model.window import Window, WindowOpeningBehavior
 from typing import Tuple
+
+import numpy as np
+from pydantic import BaseModel, Field, ConfigDict
+
+from obgeneration.generator.results import HVACResult, WindowResult
+from obgeneration.generator.types import HouseholdOccupancyFractions
+from obgeneration.model.window import Window
+from obgeneration.stochastic.distribution import Distribution
+from obgeneration.stochastic.distribution_config import DistributionConfig
 
 
 WeekRange = Tuple[int, int]  # (start_week, end_week) where weeks are 1-52
@@ -56,8 +62,8 @@ class WindowAssumptions(BaseModel):
     def default(cls) -> "WindowAssumptions":
         """Returns the standard/default assumptions for window operation."""
         return cls(
-            heating_season=(42, 19),  # Weeks 42-20 (Oct 15 - May 13)
-            cooling_season=(25, 35),  # Weeks 25-10 (Jun 18 - Sep 2)
+            heating_season=(42, 19),  # Weeks 42-19
+            cooling_season=(25, 35),  # Weeks 25-35
             shoulder_season=[(20, 24), (36, 41)],  # Weeks 20-24 and 36-41
             short_open_duration=DistributionConfig(dist_type="normal", params={"mean": 10, "std": 5, "lower": 0, "upper": 30, "int": False}).build(),
             short_opening_times=DistributionConfig(dist_type="normal", params={"mean": 2, "std": 1, "lower": 0, "upper": 3, "int": False}).build(),
@@ -69,157 +75,98 @@ class WindowAssumptions(BaseModel):
         )
 
 class WindowGenerator:
-    """Generates the annual opening fraction schedule for window, 
-       ZoneVentilation:WindandStackOpenArea - Opening Area Fraction Schedule Name"""
+    """Hook for an annual window opening-fraction schedule.
+
+    `generate_result` is on the household call so a later implementation can
+    fill `WindowResult` without changing the orchestrator. It returns `None`
+    until that schedule is specified. The method does not draw from `rng`.
+    """
     def __init__(self, window: Window, assumptions: WindowAssumptions, resolution_mins: int = 15):
         self.window = window
         self.assumptions = assumptions
         self.resolution_mins = resolution_mins
 
-    def window_annual_schedule(self, lowest_cooling_setpoint, highest_heating_setpoint, occupancy_active_mask: list[list[bool]]) -> list[list[float]]:
-        raise NotImplementedError("Window schedule generation is not yet implemented. This will produce a schedule of window opening fractions based on the specified window behavior and assumptions, coordinated with occupancy patterns and HVAC setpoints.")
-        opening_fraction_schedule = [[0.0 for _ in row] for row in occupancy_active_mask] #start with all off
-        max_outdoor_temp_schedule = [[lowest_cooling_setpoint for _ in row] for row in occupancy_active_mask] 
-        min_outdoor_temp_schedule = [[highest_heating_setpoint for _ in row] for row in occupancy_active_mask]
-        if self.window.heating_season is not None:
-            if self.window.heating_season == WindowOpeningBehavior.NATURAL_VENTILATION:
-                for i in range(len(opening_fraction_schedule)):
-                    for j in range(len(opening_fraction_schedule[i])):
-                        if occupancy_active_mask[i][j]:
-                            opening_fraction_schedule[i][j] = self.assumptions.natural_ventilation_opening_fraction
-            elif self.window.heating_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-                for i in range(len(opening_fraction_schedule)):
-                    if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-                        for j in range(len(opening_fraction_schedule[i])):
-                            if occupancy_active_mask[i][j]:
-                                opening_fraction_schedule[i][j] = self.assumptions.occasionally_open_fraction
-                                min_outdoor_temp_schedule[i][j] = -100
-            elif self.window.heating_season == WindowOpeningBehavior.LONG_OPEN:
-                for i in range(len(opening_fraction_schedule)):
-                    if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-                        for j in range(len(opening_fraction_schedule[i])):
-                            if occupancy_active_mask[i][j]:
-                                opening_fraction_schedule[i][j] = self.assumptions.long_open_fraction
-                                min_outdoor_temp_schedule[i][j] = -100
-        if self.window.cooling_season is not None:
-            pass
-        if self.window.shoulder_season is not None:
-            for i in range(len(opening_fraction_schedule)):
-                for j in range(len(opening_fraction_schedule[i])):
-                    if occupancy_active_mask[i][j]:
-                        opening_fraction_schedule[i][j] = self.assumptions.shoulder_season_opening_fraction
-        # if self.window.heating_season is not None:
-        #     if self.window.heating_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-        #         for i in range(len(schedule)):
-        #             if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-        #                 for j in range(len(schedule[i])):
-        #                     if occupancy_active_mask[i][j]:
-        #                         schedule[i][j] = self.assumptions.small_open_fraction
-        #     elif self.window.heating_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-        #         slots_per_day = 24 * (60 // self.resolution_mins)
-        #         for i in range(len(schedule)):
-        #             if WindowGenerator.in_week_range(i, self.assumptions.heating_season[0], self.assumptions.heating_season[1]):
-        #                 day_range = 1 if i == 52 else 7
-        #                 for d in range(day_range):
-        #                     num_of_times = round(self.assumptions.short_opening_times.sample())
-        #                     day_start = d * slots_per_day
-        #                     day_end = day_start + slots_per_day
-        #                     occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-        #                     start_time_dist = CategoricalDistribution(occupancy_mask_float)
-        #                     cnt = 0
-        #                     max_attempts = num_of_times * 10 + 50
-        #                     attempts = 0
-        #                     while cnt < num_of_times and attempts < max_attempts:
-        #                         attempts += 1
-        #                         start_time = start_time_dist.sample()
-        #                         start_time_index = day_start + start_time
-        #                         duration = self.assumptions.short_open_duration.sample()
-        #                         duration_index = max(1, round(duration / self.resolution_mins))
-        #                         if start_time_index + duration_index > day_end:
-        #                             continue
-        #                         for j in range(start_time_index, start_time_index + duration_index):
-        #                             schedule[i][j] = self.assumptions.large_open_fraction
-        #                         cnt += 1
-        #                         start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
+    @staticmethod
+    def generate_result(
+        window: Window,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        assumptions: WindowAssumptions,
+        resolution_mins: int,
+        rng: np.random.Generator | int,
+        *,
+        hvac: HVACResult | None = None,
+        active_threshold: float = 0.51,
+        away_threshold: float = 0.01,
+    ) -> WindowResult | None:
+        """Reserved entry for the opening-fraction schedule.
 
-        # if self.window.cooling_season is not None:
-        #     if self.window.cooling_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-        #         for i in range(len(schedule)):
-        #             if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
-        #                 for j in range(len(schedule[i])):
-        #                     if occupancy_active_mask[i][j]:
-        #                         schedule[i][j] = self.assumptions.small_open_fraction
-        #     elif self.window.cooling_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-        #         slots_per_day = 24 * (60 // self.resolution_mins)
-        #         for i in range(len(schedule)):
-        #             if WindowGenerator.in_week_range(i, self.assumptions.cooling_season[0], self.assumptions.cooling_season[1]):
-        #                 day_range = 1 if i == 52 else 7
-        #                 for d in range(day_range):
-        #                     num_of_times = round(self.assumptions.short_opening_times.sample())
-        #                     day_start = d * slots_per_day
-        #                     day_end = day_start + slots_per_day
-        #                     occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-        #                     start_time_dist = CategoricalDistribution(occupancy_mask_float)
-        #                     cnt = 0
-        #                     max_attempts = num_of_times * 10 + 50
-        #                     attempts = 0
-        #                     while cnt < num_of_times and attempts < max_attempts:
-        #                         attempts += 1
-        #                         start_time = start_time_dist.sample()
-        #                         start_time_index = day_start + start_time
-        #                         duration = self.assumptions.short_open_duration.sample()
-        #                         duration_index = max(1, round(duration / self.resolution_mins))
-        #                         if start_time_index + duration_index > day_end:
-        #                             continue
-        #                         for j in range(start_time_index, start_time_index + duration_index):
-        #                             schedule[i][j] = self.assumptions.large_open_fraction
-        #                         cnt += 1
-        #                         start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
-        # if self.window.shoulder_season is not None:
-        #     if self.window.shoulder_season == WindowOpeningBehavior.FREQUENTLY_OPEN:
-        #         for i in range(len(schedule)):
-        #             for season in self.assumptions.shoulder_season:
-        #                 if WindowGenerator.in_week_range(i, season[0], season[1]):
-        #                     for j in range(len(schedule[i])):
-        #                         if occupancy_active_mask[i][j]:
-        #                             schedule[i][j] = self.assumptions.small_open_fraction
-        #     elif self.window.shoulder_season == WindowOpeningBehavior.OCCASIONALLY_OPEN:
-        #         slots_per_day = 24 * (60 // self.resolution_mins)
-        #         for i in range(len(schedule)):
-        #             for season in self.assumptions.shoulder_season:
-        #                 if WindowGenerator.in_week_range(i, season[0], season[1]):
-        #                     day_range = 1 if i == 52 else 7
-        #                     for d in range(day_range):
-        #                         num_of_times = round(self.assumptions.short_opening_times.sample())
-        #                         day_start = d * slots_per_day
-        #                         day_end = day_start + slots_per_day
-        #                         occupancy_mask_float = [1.0 if occupancy_active_mask[i][j] else 0.0 for j in range(day_start, day_end)]
-        #                         start_time_dist = CategoricalDistribution(occupancy_mask_float)
-        #                         cnt = 0
-        #                         max_attempts = num_of_times * 10 + 50
-        #                         attempts = 0
-        #                         while cnt < num_of_times and attempts < max_attempts:
-        #                             attempts += 1
-        #                             start_time = start_time_dist.sample()
-        #                             start_time_index = day_start + start_time
-        #                             duration = self.assumptions.short_open_duration.sample()
-        #                             duration_index = max(1, round(duration / self.resolution_mins))
-        #                             if start_time_index + duration_index > day_end:
-        #                                 continue
-        #                             for j in range(start_time_index, start_time_index + duration_index):
-        #                                 schedule[i][j] = self.assumptions.large_open_fraction
-        #                             cnt += 1
-        #                             start_time_dist.update_probabilities_by_factor({0.0: list(range(start_time, start_time + duration_index))})
-        # return schedule
+        Arguments are the inputs a later implementation should use: the
+        seasonal behavior on `window`, `assumptions` (week ranges and opening
+        fractions), household `occupancy_states`, the HVAC setpoints on
+        `hvac`, and `resolution_mins`. `active_threshold` and `away_threshold`
+        match the masks used for HVAC. `rng` is accepted so sampling can be
+        added here without moving this call ahead of lighting or equipment.
 
-    
+        Returns `None`. The arguments are unused until the schedule exists.
+        """
+        del (
+            window,
+            occupancy_states,
+            assumptions,
+            resolution_mins,
+            rng,
+            hvac,
+            active_threshold,
+            away_threshold,
+        )
+        return None
+
+    @staticmethod
+    def generate_with_defaults(
+        window: Window,
+        occupancy_states: Sequence[Sequence[HouseholdOccupancyFractions]],
+        resolution_mins: int,
+        rng: np.random.Generator | int,
+        *,
+        hvac: HVACResult | None = None,
+        active_threshold: float = 0.51,
+        away_threshold: float = 0.01,
+    ) -> WindowResult | None:
+        """Same hook as `generate_result`, with packaged window assumptions."""
+        return WindowGenerator.generate_result(
+            window=window,
+            occupancy_states=occupancy_states,
+            assumptions=WindowAssumptions.default(),
+            resolution_mins=resolution_mins,
+            rng=rng,
+            hvac=hvac,
+            active_threshold=active_threshold,
+            away_threshold=away_threshold,
+        )
+
+    def window_annual_schedule(
+        self,
+        occupancy_active_mask: list[list[bool]],
+        lowest_cooling_setpoint: float | None = None,
+        highest_heating_setpoint: float | None = None,
+    ) -> list[list[float]] | None:
+        """Instance hook kept for `OccupantBehavior.to_OB_annual`.
+
+        Returns `None`. The first argument is the occupancy mask that call
+        already passes; the setpoint arguments are optional so that call does
+        not have to supply them.
+        """
+        del occupancy_active_mask, lowest_cooling_setpoint, highest_heating_setpoint
+        return None
 
     @staticmethod
     def in_week_range(week: int, start_week: int, end_week: int) -> bool:
-        """Check if week number is within a week range (inclusive)."""
+        """Check if week number is within a week range (inclusive).
+
+        A range that wraps the year (`start_week` > `end_week`) includes
+        both ends, so weeks 42 through 19 covers late year and early year.
+        """
         if start_week <= end_week:
             return start_week <= week <= end_week
         else:
             return week >= start_week or week <= end_week
-    
-    

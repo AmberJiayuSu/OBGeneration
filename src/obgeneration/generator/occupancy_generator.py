@@ -330,9 +330,13 @@ class OccupancyGenerator:
             3. Post-process the generated occupancy states to enforce the away_time and sleep_time constraints. For bins that fall within an away_time, set occupancy to fully away; for bins that fall within a sleep_time, set occupancy to fully sleep.
         """
         native_resolution = self.cluster_assumptions.assumption_resolution_min
-        working_generator = self
-        if self.sim_resolution_min != native_resolution:
-            working_generator = OccupancyGenerator(self.occupancy, self.cluster_assumptions, native_resolution)
+        # Copy before filling a missing weekday or weekend pattern. The caller's
+        # Occupancy object stays as they passed it.
+        working_generator = OccupancyGenerator(
+            self.occupancy.model_copy(deep=True),
+            self.cluster_assumptions,
+            native_resolution,
+        )
 
         occ_states = working_generator.household_mc_state_annually(rng)
         occupancy = working_generator.occupancy

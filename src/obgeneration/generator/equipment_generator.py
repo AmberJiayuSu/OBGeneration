@@ -699,8 +699,8 @@ class EquipmentGenerator:
         if cooking_products.has_cooking_products:
             if cooking_products.cooking_products_fuel == Equipment.FuelType.ELECTRIC:
                 return assumptions.electric_cooking_products.sample(rng)
-            else:
-                raise NotImplementedError("non-electric cooking products to be implemented.")
+            # TODO: gas and other non-electric cooking. Deferred until the fuel schedule is specified.
+            raise NotImplementedError("non-electric cooking products are not implemented yet.")
         else:
             return 0.0
         

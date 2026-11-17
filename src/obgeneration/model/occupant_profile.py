@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel, Field
 from pathlib import Path
 import json
@@ -20,11 +19,11 @@ class Occupant(BaseModel):
         """Load occupancy behavior from a JSON file."""
         data = json.loads(Path(path).read_text())
         return cls(
-            occupancy=Occupancy.model_validate(data["occupancy"])if "occupancy" in data else Occupancy(),
-            lighting=Lighting.model_validate(data["lighting"]) if "lighting" in data else Lighting(),
+            occupancy=Occupancy.model_validate(data["occupancy"]),
+            lighting=Lighting.model_validate(data["lighting"]),
             equipment=Equipment.model_validate(data["equipment"]) if "equipment" in data else Equipment(),
             hvac=HVAC.model_validate(data["hvac"]) if "hvac" in data else HVAC(),
-            window=Window.model_validate(data["window"]) if "window" in data else Window()
+            window=Window.model_validate(data["window"]) if "window" in data else Window(),
         )
 
     def to_json_file(self, path: str | Path) -> None:
